@@ -16,4 +16,29 @@ MonoBehaviour:
   _runSpeed: 6.04
   _groundDamping: 1
   _inAirDamping: 0
-  _jumpHeight: 5
+  _jumpHeight: 20
+  _jumpSpeed:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 3
+      inSlope: 424.78714
+      outSlope: 424.78714
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.035545
+    - serializedVersion: 3
+      time: 0.5
+      value: 100
+      inSlope: -111.39539
+      outSlope: -111.39539
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.041074276
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _canDoubleJump: 0

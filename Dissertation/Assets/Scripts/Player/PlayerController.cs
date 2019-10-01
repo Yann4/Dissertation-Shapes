@@ -158,6 +158,11 @@ namespace Dissertation.Player
 		private RaycastHit2D _lastControllerColliderHit;
 		private Vector3 _velocity;
 
+		//Jumping state variables
+		private float _jumpStartTime;
+		private float _jumpAvailable; //The amount of "jump power" that you have left for this jump. To allow tapping the button and holding it to jump to different heights
+		private bool _canJump = false;
+
 		private void Awake()
 		{
 			Debug.Assert(_config != null);
@@ -188,6 +193,12 @@ namespace Dissertation.Player
 				_velocity.y = 0;
 			}
 
+			if ( (_config.CanDoubleJump || IsGrounded) && !InputManager.GetButton(InputAction.Jump))
+			{
+				_jumpAvailable = _config.JumpHeight;
+				_canJump = true;
+			}
+
 			float horizontalMovement = InputManager.GetAxis(InputAction.MoveHorizontal);
 			if (horizontalMovement > 0)
 			{
@@ -205,15 +216,29 @@ namespace Dissertation.Player
 			}
 
 			// we can only jump whilst grounded
-			if (IsGrounded && InputManager.GetButtonDown(InputAction.Jump))
+			if ( _canJump && InputManager.GetButton(InputAction.Jump) && _jumpAvailable > 0.0f )
 			{
-				_velocity.y = Mathf.Sqrt(2f * _config.JumpHeight * -_config.Gravity);
+				if(InputManager.GetButtonDown(InputAction.Jump))
+				{
+					_jumpStartTime = Time.time;
+				}
+
+				float jumpThisFrame = _config.GetJumpSpeed(Time.time - _jumpStartTime) * Time.deltaTime;
+				_jumpAvailable -= jumpThisFrame;
+				_velocity.y = Mathf.Sqrt(2f * jumpThisFrame * -_config.Gravity);
+			}
+			else
+			{
+				// apply gravity before moving
+				_velocity.y += _config.Gravity * Time.deltaTime;
+			}
+
+			if(InputManager.GetButtonUp(InputAction.Jump))
+			{
+				_canJump = false;
 			}
 
 			_velocity.x = horizontalMovement * _config.RunSpeed;
-
-			// apply gravity before moving
-			_velocity.y += _config.Gravity * Time.deltaTime;
 
 			// if holding down bump up our movement amount and turn off one way platform detection for a frame.
 			// this lets us jump down through one way platforms
@@ -242,7 +267,6 @@ namespace Dissertation.Player
 			_isGoingUpSlope = false;
 
 			PrimeRaycastOrigins();
-
 
 			// first, we check for a slope below us before moving
 			// only check slopes if we are going down and grounded
