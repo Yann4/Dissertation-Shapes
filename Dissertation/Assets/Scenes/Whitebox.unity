@@ -120,38 +120,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &743031130 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7664931976867771201, guid: b96cec5ee4fd1ee49ab234742631bb65,
-    type: 3}
-  m_PrefabInstance: {fileID: 7664931977975917854}
-  m_PrefabAsset: {fileID: 0}
---- !u!61 &743031134
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 743031130}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.56}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.56, y: 2.56}
-    newSize: {x: 2.56, y: 2.56}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 2.56, y: 2.56}
-  m_EdgeRadius: 0
 --- !u!1001 &6926578970260043913
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -293,16 +261,5 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7664931976867771262, guid: b96cec5ee4fd1ee49ab234742631bb65,
-        type: 3}
-      propertyPath: m_LinearDrag
-      value: 1000
-      objectReference: {fileID: 0}
-    - target: {fileID: 5476157921208611347, guid: b96cec5ee4fd1ee49ab234742631bb65,
-        type: 3}
-      propertyPath: platformMask.m_Bits
-      value: 256
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 7664931976401259966, guid: b96cec5ee4fd1ee49ab234742631bb65, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b96cec5ee4fd1ee49ab234742631bb65, type: 3}

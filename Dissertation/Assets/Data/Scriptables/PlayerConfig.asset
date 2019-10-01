@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a6e95cea8ecb954c819f450278ffd7a, type: 3}
   m_Name: PlayerConfig
   m_EditorClassIdentifier: 
-  _jumpForce: 1000
-  _moveForce: 365
-  _maxSpeed: 5
+  _gravity: -25
+  _runSpeed: 6.04
+  _groundDamping: 1
+  _inAirDamping: 0
+  _jumpHeight: 5
