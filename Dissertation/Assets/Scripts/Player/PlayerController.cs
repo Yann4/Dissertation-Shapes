@@ -1,11 +1,18 @@
-﻿#define DEBUG_CC2D_RAYS
+﻿#if UNITY_EDITOR
+#define DEBUG_CC2D_RAYS
+#endif
+
 using UnityEngine;
 using Dissertation.Input;
-using Dissertation.Util;
 using System;
 using System.Collections.Generic;
 
-//https://github.com/prime31/CharacterController2D/tree/master/Assets/demo
+/*
+ * This code has been adapted from https://github.com/prime31/CharacterController2D
+ * which was released under Attribution-NonCommercial-ShareAlike 3.0 Unported
+ * (https://creativecommons.org/licenses/by-nc-sa/3.0/legalcode) (with a simplified 
+ * explanation here https://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US)
+*/
 
 namespace Dissertation.Player
 {
