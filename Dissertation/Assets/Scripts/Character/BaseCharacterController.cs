@@ -2,6 +2,7 @@
 #define DEBUG_CC2D_RAYS
 #endif
 
+using Dissertation.Input;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -143,7 +144,14 @@ namespace Dissertation.Character
 		private bool _isGoingUpSlope = false;
 
 		private RaycastHit2D _lastControllerColliderHit;
-		protected Vector3 _velocity;
+		private Vector3 _velocity;
+
+		//Jumping state variables
+		private float _jumpStartTime;
+		private float _jumpAvailable; //The amount of "jump power" that you have left for this jump. To allow tapping the button and holding it to jump to different heights
+		private bool _canJump = false;
+
+		public Yoke CharacterYoke { get; private set; }
 
 		protected virtual void Awake()
 		{
@@ -163,6 +171,73 @@ namespace Dissertation.Character
 					Physics2D.IgnoreLayerCollision(gameObject.layer, i);
 				}
 			}
+
+			CharacterYoke = new Yoke();
+		}
+
+		protected virtual void Update()
+		{
+			if (IsGrounded)
+			{
+				_velocity.y = 0;
+			}
+
+			float horizontalMovement = CharacterYoke.Movement.x;
+			if (horizontalMovement > 0)
+			{
+				if (transform.localScale.x < 0f)
+				{
+					transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+				}
+			}
+			else if (horizontalMovement < 0)
+			{
+				if (transform.localScale.x > 0f)
+				{
+					transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+				}
+			}
+
+			if ((_config.CanDoubleJump || IsGrounded) && !CharacterYoke.Jump)
+			{
+				_jumpAvailable = _config.JumpHeight;
+				_canJump = true;
+			}
+
+			// we can only jump whilst grounded
+			if (_canJump && CharacterYoke.Jump && _jumpAvailable > 0.0f)
+			{
+				if (CharacterYoke.GetButtonDown(InputAction.Jump))
+				{
+					_jumpStartTime = Time.time;
+				}
+
+				float jumpThisFrame = _config.GetJumpSpeed(Time.time - _jumpStartTime) * Time.deltaTime;
+				_jumpAvailable -= jumpThisFrame;
+				_velocity.y = Mathf.Sqrt(2f * jumpThisFrame * -_config.Gravity);
+			}
+			else
+			{
+				// apply gravity before moving
+				_velocity.y += _config.Gravity * Time.deltaTime;
+			}
+
+			if (CharacterYoke.GetButtonUp(InputAction.Jump))
+			{
+				_canJump = false;
+			}
+
+			_velocity.x = horizontalMovement * _config.RunSpeed;
+
+			// if holding down bump up our movement amount and turn off one way platform detection for a frame.
+			// this lets us jump down through one way platforms
+			if (IsGrounded && CharacterYoke.GetButtonDown(InputAction.Drop))
+			{
+				_velocity.y *= 3f;
+				IgnoreOneWayPlatformsThisFrame = true;
+			}
+
+			_velocity = MoveBy(_velocity, _velocity * Time.deltaTime);
 		}
 
 		/// <summary>
@@ -170,7 +245,7 @@ namespace Dissertation.Character
 		/// stop when run into.
 		/// </summary>
 		/// <param name="deltaMovement">Delta movement.</param>
-		protected Vector3 MoveBy(Vector3 velocity, Vector3 deltaMovement)
+		private Vector3 MoveBy(Vector3 velocity, Vector3 deltaMovement)
 		{
 			// save off our current grounded state which we will use for wasGroundedLastFrame and becameGroundedThisFrame
 			_collisionState.WasGroundedLastFrame = _collisionState.Below;

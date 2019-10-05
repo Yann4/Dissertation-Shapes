@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7664931976401259905}
   - component: {fileID: 7664931976401259967}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 5476157921208611347}
   - component: {fileID: 7664931976867771262}
   - component: {fileID: 743031134}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -127,17 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4ff3d0b854401f4e9a18d712b461f37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IgnoreOneWayPlatformsThisFrame: 0
   _skinWidth: 0.02
-  _platformMask:
-    serializedVersion: 2
-    m_Bits: 256
-  _triggerMask:
-    serializedVersion: 2
-    m_Bits: 0
-  _oneWayPlatformMask:
-    serializedVersion: 2
-    m_Bits: 0
   _slopeLimit: 30
   _jumpingThreshold: 0.07
   _slopeSpeedMultiplier:
@@ -236,7 +226,7 @@ GameObject:
   - component: {fileID: 7664931977463387550}
   - component: {fileID: 7664931977463387489}
   - component: {fileID: 7664931977463387491}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}

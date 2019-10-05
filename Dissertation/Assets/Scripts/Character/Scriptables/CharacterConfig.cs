@@ -22,7 +22,7 @@ public class CharacterConfig : ScriptableObject
 	/// mask with all layers that trigger events should fire when intersected
 	/// </summary>
 	[SerializeField] private LayerMask _triggerMask = 0;
-	public LayerMask TriggerMask { get { return TriggerMask; } }
+	public LayerMask TriggerMask { get { return _triggerMask; } }
 
 	[Header("Movement config")]
 	[SerializeField] private float _gravity = -25f;
@@ -31,9 +31,12 @@ public class CharacterConfig : ScriptableObject
 	[SerializeField] private float _runSpeed = 8f;
 	public float RunSpeed { get { return _runSpeed; } }
 
-	[SerializeField, Tooltip("How fast do we change direction? higher means faster")] private float _groundDamping = 20f;
-	public float GroundDamping { get { return _groundDamping; } }
+	[SerializeField] private float _jumpHeight = 3f;
+	public float JumpHeight { get { return _jumpHeight; } }
 
-	[SerializeField] private float _inAirDamping = 5f;
-	public float InAirDamping { get { return _inAirDamping; } }
+	[SerializeField] private AnimationCurve _jumpSpeed;
+	public float GetJumpSpeed(float t) { return _jumpSpeed.Evaluate(t); }
+
+	[SerializeField] private bool _canDoubleJump;
+	public bool CanDoubleJump { get { return _canDoubleJump; } }
 }

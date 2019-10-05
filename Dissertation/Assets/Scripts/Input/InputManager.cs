@@ -11,6 +11,14 @@ namespace Dissertation.Input
 		Drop
 	}
 
+	/*
+	 * Steps to add a new InputAction:
+	 * 1. Add it to the InputAction Enum
+	 * 2. Add it to the Unity Input system
+	 * 3. Add it to Yoke (as a member, to Reset() and in all of the accessor function switch statements)
+	 * 4. Add it to PlayerController Update
+	*/ 
+
 	public static class InputManager
 	{
 		private static readonly string[] _inputActions = Enum.GetNames(typeof(InputAction));
