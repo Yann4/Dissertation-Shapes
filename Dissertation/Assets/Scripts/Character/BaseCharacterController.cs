@@ -2,22 +2,21 @@
 #define DEBUG_CC2D_RAYS
 #endif
 
-using UnityEngine;
-using Dissertation.Input;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-/*
- * This code has been adapted from https://github.com/prime31/CharacterController2D
- * which was released under Attribution-NonCommercial-ShareAlike 3.0 Unported
- * (https://creativecommons.org/licenses/by-nc-sa/3.0/legalcode) (with a simplified 
- * explanation here https://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US)
-*/
-
-namespace Dissertation.Player
+namespace Dissertation.Character
 {
-	public class PlayerController : MonoBehaviour
+	public class BaseCharacterController : MonoBehaviour
 	{
+		/*
+		 * This code has been adapted from https://github.com/prime31/CharacterController2D
+		 * which was released under Attribution-NonCommercial-ShareAlike 3.0 Unported
+		 * (https://creativecommons.org/licenses/by-nc-sa/3.0/legalcode) (with a simplified 
+		 * explanation here https://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US)
+		*/
+
 		struct CharacterRaycastOrigins
 		{
 			public Vector3 TopLeft;
@@ -72,24 +71,6 @@ namespace Dissertation.Player
 			}
 		}
 
-
-		/// <summary>
-		/// mask with all layers that the player should interact with
-		/// </summary>
-		[SerializeField] private LayerMask _platformMask = 0;
-
-		/// <summary>
-		/// mask with all layers that trigger events should fire when intersected
-		/// </summary>
-		[SerializeField] private LayerMask _triggerMask = 0;
-
-		/// <summary>
-		/// mask with all layers that should act as one-way platforms. Note that one-way platforms should always be EdgeCollider2Ds. This is because it does not support being
-		/// updated anytime outside of the inspector for now.
-		/// </summary>
-		[SerializeField]
-		private LayerMask _oneWayPlatformMask = 0;
-
 		/// <summary>
 		/// the max slope angle that the CC2D can climb
 		/// </summary>
@@ -102,7 +83,6 @@ namespace Dissertation.Player
 		/// <value>The jumping threshold.</value>
 		[SerializeField] private float _jumpingThreshold = 0.07f;
 
-
 		/// <summary>
 		/// curve for multiplying speed based on slope (negative = down slope and positive = up slope)
 		/// </summary>
@@ -111,7 +91,7 @@ namespace Dissertation.Player
 		[SerializeField, Range(2, 20)] private int _totalHorizontalRays = 8;
 		[SerializeField, Range(2, 20)] private int _totalVerticalRays = 4;
 
-		[SerializeField] private PlayerConfig _config;
+		[SerializeField] protected CharacterConfig _config;
 
 		[SerializeField] private BoxCollider2D _boxCollider;
 		[SerializeField] private Rigidbody2D _rigidBody2D;
@@ -126,7 +106,7 @@ namespace Dissertation.Player
 		/// <summary>
 		/// when true, one way platforms will be ignored when moving vertically for a single frame
 		/// </summary>
-		private bool IgnoreOneWayPlatformsThisFrame;
+		protected bool IgnoreOneWayPlatformsThisFrame;
 
 		/// <summary>
 		/// this is used to calculate the downward ray that is cast to check for slopes. We use the somewhat arbitrary value 75 degrees
@@ -163,21 +143,13 @@ namespace Dissertation.Player
 		private bool _isGoingUpSlope = false;
 
 		private RaycastHit2D _lastControllerColliderHit;
-		private Vector3 _velocity;
+		protected Vector3 _velocity;
 
-		//Jumping state variables
-		private float _jumpStartTime;
-		private float _jumpAvailable; //The amount of "jump power" that you have left for this jump. To allow tapping the button and holding it to jump to different heights
-		private bool _canJump = false;
-
-		private void Awake()
+		protected virtual void Awake()
 		{
 			Debug.Assert(_config != null);
 			Debug.Assert(_boxCollider != null);
 			Debug.Assert(_rigidBody2D != null);
-
-			// add our one-way platforms to our normal platform mask so that we can land on them from above
-			_platformMask |= _oneWayPlatformMask;
 
 			// here, we trigger our properties that have setters with bodies
 			SkinWidth = _skinWidth;
@@ -186,76 +158,11 @@ namespace Dissertation.Player
 			for (var i = 0; i < 32; i++)
 			{
 				// see if our triggerMask contains this layer and if not ignore it
-				if ((_triggerMask.value & 1 << i) == 0)
+				if ((_config.TriggerMask.value & 1 << i) == 0)
 				{
 					Physics2D.IgnoreLayerCollision(gameObject.layer, i);
 				}
 			}
-		}
-
-		private void Update()
-		{
-			if (IsGrounded)
-			{
-				_velocity.y = 0;
-			}
-
-			if ( (_config.CanDoubleJump || IsGrounded) && !InputManager.GetButton(InputAction.Jump))
-			{
-				_jumpAvailable = _config.JumpHeight;
-				_canJump = true;
-			}
-
-			float horizontalMovement = InputManager.GetAxis(InputAction.MoveHorizontal);
-			if (horizontalMovement > 0)
-			{
-				if (transform.localScale.x < 0f)
-				{
-					transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-				}
-			}
-			else if (horizontalMovement < 0)
-			{
-				if (transform.localScale.x > 0f)
-				{
-					transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-				}
-			}
-
-			// we can only jump whilst grounded
-			if ( _canJump && InputManager.GetButton(InputAction.Jump) && _jumpAvailable > 0.0f )
-			{
-				if(InputManager.GetButtonDown(InputAction.Jump))
-				{
-					_jumpStartTime = Time.time;
-				}
-
-				float jumpThisFrame = _config.GetJumpSpeed(Time.time - _jumpStartTime) * Time.deltaTime;
-				_jumpAvailable -= jumpThisFrame;
-				_velocity.y = Mathf.Sqrt(2f * jumpThisFrame * -_config.Gravity);
-			}
-			else
-			{
-				// apply gravity before moving
-				_velocity.y += _config.Gravity * Time.deltaTime;
-			}
-
-			if(InputManager.GetButtonUp(InputAction.Jump))
-			{
-				_canJump = false;
-			}
-
-			_velocity.x = horizontalMovement * _config.RunSpeed;
-
-			// if holding down bump up our movement amount and turn off one way platform detection for a frame.
-			// this lets us jump down through one way platforms
-			if (IsGrounded && InputManager.GetButtonDown(InputAction.Drop))
-			{
-				_velocity.y *= 3f;
-				IgnoreOneWayPlatformsThisFrame = true;
-			}
-
-			_velocity = MoveBy(_velocity, _velocity * Time.deltaTime);
 		}
 
 		/// <summary>
@@ -263,7 +170,7 @@ namespace Dissertation.Player
 		/// stop when run into.
 		/// </summary>
 		/// <param name="deltaMovement">Delta movement.</param>
-		private Vector3 MoveBy(Vector3 velocity, Vector3 deltaMovement)
+		protected Vector3 MoveBy(Vector3 velocity, Vector3 deltaMovement)
 		{
 			// save off our current grounded state which we will use for wasGroundedLastFrame and becameGroundedThisFrame
 			_collisionState.WasGroundedLastFrame = _collisionState.Below;
@@ -385,9 +292,13 @@ namespace Dissertation.Player
 				// if we are grounded we will include oneWayPlatforms only on the first ray (the bottom one). this will allow us to
 				// walk up sloped oneWayPlatforms
 				if (i == 0 && _collisionState.WasGroundedLastFrame)
-					_raycastHit = Physics2D.Raycast(ray, rayDirection, rayDistance, _platformMask);
+				{
+					_raycastHit = Physics2D.Raycast(ray, rayDirection, rayDistance, _config.PlatformMaskAndOneWay);
+				}
 				else
-					_raycastHit = Physics2D.Raycast(ray, rayDirection, rayDistance, _platformMask & ~_oneWayPlatformMask);
+				{
+					_raycastHit = Physics2D.Raycast(ray, rayDirection, rayDistance, _config.PlatformMask);
+				}
 
 				if (_raycastHit)
 				{
@@ -466,9 +377,9 @@ namespace Dissertation.Player
 					var ray = isGoingRight ? _raycastOrigins.BottomRight : _raycastOrigins.BottomLeft;
 					RaycastHit2D raycastHit;
 					if (_collisionState.WasGroundedLastFrame)
-						raycastHit = Physics2D.Raycast(ray, deltaMovement.normalized, deltaMovement.magnitude, _platformMask);
+						raycastHit = Physics2D.Raycast(ray, deltaMovement.normalized, deltaMovement.magnitude, _config.PlatformMaskAndOneWay);
 					else
-						raycastHit = Physics2D.Raycast(ray, deltaMovement.normalized, deltaMovement.magnitude, _platformMask & ~_oneWayPlatformMask);
+						raycastHit = Physics2D.Raycast(ray, deltaMovement.normalized, deltaMovement.magnitude, _config.PlatformMask);
 
 					if (raycastHit)
 					{
@@ -505,9 +416,15 @@ namespace Dissertation.Player
 			initialRayOrigin.x += deltaMovement.x;
 
 			// if we are moving up, we should ignore the layers in oneWayPlatformMask
-			var mask = _platformMask;
+			LayerMask mask = 0;
 			if ((isGoingUp && !_collisionState.WasGroundedLastFrame) || IgnoreOneWayPlatformsThisFrame)
-				mask &= ~_oneWayPlatformMask;
+			{
+				mask = _config.PlatformMask;
+			}
+			else
+			{
+				mask = _config.PlatformMaskAndOneWay;
+			}
 
 			for (var i = 0; i < _totalVerticalRays; i++)
 			{
@@ -566,7 +483,7 @@ namespace Dissertation.Player
 			var slopeRay = new Vector2(centerOfCollider, _raycastOrigins.BottomLeft.y);
 			DrawRay(slopeRay, rayDirection * slopeCheckRayDistance, Color.yellow);
 
-			_raycastHit = Physics2D.Raycast(slopeRay, rayDirection, slopeCheckRayDistance, _platformMask);
+			_raycastHit = Physics2D.Raycast(slopeRay, rayDirection, slopeCheckRayDistance, _config.PlatformMaskAndOneWay);
 
 			if (_raycastHit)
 			{
