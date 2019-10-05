@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _platformMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   _oneWayPlatformMask:
     serializedVersion: 2
     m_Bits: 0
@@ -23,5 +23,12 @@ MonoBehaviour:
     m_Bits: 0
   _gravity: -25
   _runSpeed: 8
-  _groundDamping: 20
-  _inAirDamping: 5
+  _jumpHeight: 3
+  _jumpSpeed:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _canDoubleJump: 0
+  _defaultState: 2
