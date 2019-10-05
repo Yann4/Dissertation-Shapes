@@ -54,22 +54,9 @@ namespace Dissertation.Input
 
 		public void Reset()
 		{
-			int currentFrame = Time.frameCount;
-
-			if (_movement.Item2 != currentFrame)
-			{
-				Movement = Vector2.zero;
-			}
-
-			if (_jump.Item2 != currentFrame)
-			{
-				Jump = false;
-			}
-
-			if (_drop.Item2 != currentFrame)
-			{
-				Drop = false;
-			}
+			Movement = Vector2.zero;
+			Jump = false;
+			Drop = false;
 		}
 
 		public bool GetButton(InputAction action)

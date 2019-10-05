@@ -57,15 +57,18 @@ namespace Dissertation.Character.AI
 
 		public virtual void OnDisable()
 		{
+			Config.Owner.CharacterYoke.Reset();
 		}
 
-		public virtual void Update()
+		public virtual bool Update()
 		{
 			if(!IsValid())
 			{
 				Config.Owner.PopState(this);
-				return;
+				return false;
 			}
+
+			return true;
 		}
 
 		public virtual void Destroy()

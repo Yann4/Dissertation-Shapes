@@ -19,6 +19,14 @@ namespace Dissertation.Character.AI
 					Debug.Assert(config is IdleState.IdleConfig);
 					state = new IdleState(config as IdleState.IdleConfig);
 					break;
+				case States.Traverse:
+					Debug.Assert(config is TraverseState.TraverseStateConfig);
+					state = new TraverseState(config as TraverseState.TraverseStateConfig);
+					break;
+				case States.PathTo:
+					Debug.Assert(config is PathToState.PathToConfig);
+					state = new PathToState(config as PathToState.PathToConfig);
+					break;
 				case States.INVALID:
 				default:
 					Debug.LogError("Factory not set up for state type " + config.StateType);

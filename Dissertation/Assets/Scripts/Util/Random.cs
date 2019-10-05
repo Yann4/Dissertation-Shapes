@@ -31,11 +31,6 @@ namespace Dissertation.Util
 			return UnityEngine.Random.Range(min, max);
 		}
 
-		public static Positional.Direction GetRandomDirection()
-		{
-			return (Positional.Direction)Next(0, 2);
-		}
-
 		//Assumes a flat platform
 		public static Vector2 GetRandomPointOnPlatform(Transform platform)
 		{

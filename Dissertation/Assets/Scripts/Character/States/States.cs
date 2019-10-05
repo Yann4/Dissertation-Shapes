@@ -5,5 +5,7 @@
 		INVALID,
 		MoveTo,
 		Idle,
+		Traverse,
+		PathTo
 	}
 }

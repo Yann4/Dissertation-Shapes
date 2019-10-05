@@ -31,26 +31,28 @@ namespace Dissertation.Character.AI
 		{
 			base.OnEnable();
 
-			RaycastHit2D hit = Physics2D.Raycast(Config.Owner.transform.position, Vector2.down, 200.0f, Layers.GroundMask);
-			
-			_currentPlatform = hit.transform;
+			_currentPlatform = Positional.GetCurrentPlatform(Config.Owner.transform);
 			Debug.Assert(_currentPlatform != null);
 			_currentTarget = Rand.GetRandomPointOnPlatform(_currentPlatform);
 			Debug.DrawLine(Config.Owner.transform.position, _currentTarget, Color.red, 500.0f, false);
 			_waitTimeRemaining = Rand.Next(_idleConfig.MaxWaitDuration);
 		}
 
-		public override void Update()
+		public override bool Update()
 		{
-			base.Update();
+			if(!base.Update())
+			{
+				return false;
+			}
 
 			if(_waitTimeRemaining > 0.0f)
 			{
 				_waitTimeRemaining -= Time.deltaTime;
-				return;
+				return true;
 			}
 
 			Config.Owner.PushState(new MoveToState.MoveToConfig(_currentTarget, Config.Owner));
+			return true;
 		}
 
 		protected override bool IsValid()

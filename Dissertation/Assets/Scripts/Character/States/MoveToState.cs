@@ -25,9 +25,12 @@ namespace Dissertation.Character.AI
 			_config = config;
 		}
 
-		public override void Update()
+		public override bool Update()
 		{
-			base.Update();
+			if(!base.Update())
+			{
+				return false;
+			}
 
 			float horizontalMovement = 0.0f;
 			Vector3 position = Config.Owner.transform.position;
@@ -42,6 +45,8 @@ namespace Dissertation.Character.AI
 			}
 
 			Config.Owner.CharacterYoke.Movement = new Vector2(horizontalMovement, 0.0f);
+
+			return true;
 		}
 
 		protected override bool IsValid()

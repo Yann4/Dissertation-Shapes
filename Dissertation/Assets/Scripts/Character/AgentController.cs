@@ -42,6 +42,8 @@ namespace Dissertation.Character.AI
 			_agentConfig = _config as AgentConfig;
 
 			PushState( StateFactory.GetDefaultState(_agentConfig.DefaultState, this) );
+			PushState(new PathToState.PathToConfig(this, new Vector3(-38, -5))); //Testing stuff
+			PushState(new PathToState.PathToConfig(this, new Vector3(46, 2))); //Testing stuff
 		}
 
 		protected override void Update()
@@ -52,8 +54,6 @@ namespace Dissertation.Character.AI
 			Current.Update();
 			UnityEngine.Profiling.Profiler.EndSample();
 			UnityEngine.Profiling.Profiler.EndSample();
-
-			CharacterYoke.Reset();
 
 			base.Update();
 		}
