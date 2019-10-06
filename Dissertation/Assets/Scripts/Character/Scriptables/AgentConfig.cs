@@ -2,7 +2,7 @@
 
 namespace Dissertation.Character.AI
 {
-	[CreateAssetMenu(fileName = "AgentConfig.asset", menuName = "Dissertation/Scriptables/Agent Config")]
+	[CreateAssetMenu(fileName = "AgentConfig.asset", menuName = "Dissertation/Scriptables/Character Config/Agent Config")]
 	public class AgentConfig : CharacterConfig
 	{
 		[SerializeField] private States _defaultState = 0;

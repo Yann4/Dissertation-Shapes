@@ -7,9 +7,9 @@ namespace Dissertation.Character.Player
 	{
 		private PlayerConfig _playerConfig;
 
-		protected override void Awake()
+		protected override void Start()
 		{
-			base.Awake();
+			base.Start();
 
 			Debug.Assert(_config is PlayerConfig);
 			_playerConfig = _config as PlayerConfig;

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "CharacterConfig.asset", menuName = "Dissertation/Scriptables/Character Config")]
+[CreateAssetMenu(fileName = "CharacterConfig.asset", menuName = "Dissertation/Scriptables/Character Config/Character Config")]
 public class CharacterConfig : ScriptableObject
 {
 	/// <summary>

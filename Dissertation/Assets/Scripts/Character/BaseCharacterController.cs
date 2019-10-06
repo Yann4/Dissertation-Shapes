@@ -153,7 +153,7 @@ namespace Dissertation.Character
 
 		public Yoke CharacterYoke { get; private set; }
 
-		protected virtual void Awake()
+		protected virtual void Start()
 		{
 			Debug.Assert(_config != null);
 			Debug.Assert(_boxCollider != null);

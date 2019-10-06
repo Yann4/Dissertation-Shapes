@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Dissertation.UI;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Dissertation.Character.AI
@@ -34,9 +35,11 @@ namespace Dissertation.Character.AI
 
 		private AgentConfig _agentConfig;
 
-		protected override void Awake()
+		private AgentDebugUI _debugUI;
+
+		protected override void Start()
 		{
-			base.Awake();
+			base.Start();
 			Debug.Assert(_config is AgentConfig);
 
 			_agentConfig = _config as AgentConfig;
@@ -44,11 +47,13 @@ namespace Dissertation.Character.AI
 			PushState( StateFactory.GetDefaultState(_agentConfig.DefaultState, this) );
 			PushState(new PathToState.PathToConfig(this, new Vector3(-38, -5))); //Testing stuff
 			PushState(new PathToState.PathToConfig(this, new Vector3(46, 2))); //Testing stuff
+
+			_debugUI = HUD.Instance.CreateMenu<AgentDebugUI>();
+			_debugUI.Setup(this);
 		}
 
 		protected override void Update()
 		{
-
 			UnityEngine.Profiling.Profiler.BeginSample("Update agent state");
 			UnityEngine.Profiling.Profiler.BeginSample("Update agent state " + Current.Config.StateType);
 			Current.Update();
@@ -139,6 +144,21 @@ namespace Dissertation.Character.AI
 				state.Destroy();
 				Current.OnEnable();
 			}
+		}
+
+		public State[] GetImmediateStack_Debug()
+		{
+			return _immediate.ToArray();
+		}
+
+		public State[] GetNormalStack_Debug()
+		{
+			return _normal.ToArray();
+		}
+
+		public State[] GetLongTermStack_Debug()
+		{
+			return _longTerm.ToArray();
 		}
 	}
 }
