@@ -9,14 +9,14 @@ namespace Dissertation.Util
 			return Vector3.SqrMagnitude(transform.position - position) < (tolerance * tolerance);
 		}
 
-		public static Transform GetCurrentPlatform(Transform character)
+		public static Transform GetCurrentPlatform(Transform character, float distanceToCheck = 3.0f)
 		{
-			return GetPlatform(character.position);
+			return GetPlatform(character.position, distanceToCheck);
 		}
 
-		public static Transform GetPlatform(Vector3 position)
+		public static Transform GetPlatform(Vector3 position, float distanceToCheck = 3.0f)
 		{
-			RaycastHit2D hit = Physics2D.Raycast(position, Vector2.down, 20.0f, Layers.GroundMask);
+			RaycastHit2D hit = Physics2D.Raycast(position, Vector2.down, distanceToCheck, Layers.GroundMask);
 			return hit.transform;
 		}
 	}

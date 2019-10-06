@@ -91,7 +91,7 @@ namespace Dissertation.Character.AI
 
 		protected override bool IsValid()
 		{
-			return !(Config.Owner.IsGrounded && Positional.GetCurrentPlatform(Config.Owner.transform) == _config.Target);
+			return Positional.GetCurrentPlatform(Config.Owner.transform) != _config.Target; //Distance being small means that we're also implicitly checking that we're grounded
 		}
 	}
 }
