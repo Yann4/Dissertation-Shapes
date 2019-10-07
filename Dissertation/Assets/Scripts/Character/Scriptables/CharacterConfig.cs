@@ -39,4 +39,8 @@ public class CharacterConfig : ScriptableObject
 
 	[SerializeField] private bool _canDoubleJump;
 	public bool CanDoubleJump { get { return _canDoubleJump; } }
+
+	[Header("Character attributes")]
+	[SerializeField] private int _maxHealth = 5;
+	public int MaxHealth { get { return _maxHealth; } }
 }

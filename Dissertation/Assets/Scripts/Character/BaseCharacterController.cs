@@ -91,6 +91,7 @@ namespace Dissertation.Character
 		[SerializeField, Range(2, 20)] private int _totalVerticalRays = 4;
 
 		[SerializeField] protected CharacterConfig _config;
+		public CharacterConfig Config { get { return _config; } }
 
 		[SerializeField] private BoxCollider2D _boxCollider;
 		[SerializeField] private Rigidbody2D _rigidBody2D;

@@ -20,7 +20,7 @@ MonoBehaviour:
     m_Bits: 0
   _triggerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2048
   _gravity: -25
   _runSpeed: 8
   _jumpHeight: 3
@@ -31,4 +31,5 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   _canDoubleJump: 0
+  _maxHealth: 5
   _defaultState: 2
