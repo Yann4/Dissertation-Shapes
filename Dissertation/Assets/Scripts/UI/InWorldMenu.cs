@@ -13,7 +13,7 @@ namespace Dissertation.UI
 
 		private void Start()
 		{
-			_canvasTransform = _canvas.transform as RectTransform; ;
+			_canvasTransform = _canvas.transform as RectTransform;
 			_canvasOffset = new Vector2(_canvasTransform.sizeDelta.x / 2f, _canvasTransform.sizeDelta.y / 2f);
 		}
 

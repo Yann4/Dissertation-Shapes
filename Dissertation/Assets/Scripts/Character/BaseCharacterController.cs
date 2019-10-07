@@ -36,7 +36,6 @@ namespace Dissertation.Character
 			public bool MovingDownSlope;
 			public float SlopeAngle;
 
-
 			public bool HasCollision()
 			{
 				return Below || Right || Left || Above;
@@ -47,7 +46,6 @@ namespace Dissertation.Character
 				Right = Left = Above = Below = BecameGroundedThisFrame = MovingDownSlope = false;
 				SlopeAngle = 0f;
 			}
-
 
 			public override string ToString()
 			{
@@ -183,19 +181,14 @@ namespace Dissertation.Character
 			}
 
 			float horizontalMovement = CharacterYoke.Movement.x;
-			if (horizontalMovement > 0)
+
+			if (horizontalMovement > 0 && transform.localScale.x < 0f)
 			{
-				if (transform.localScale.x < 0f)
-				{
-					transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-				}
+				transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
 			}
-			else if (horizontalMovement < 0)
+			else if (horizontalMovement < 0 && transform.localScale.x > 0f)
 			{
-				if (transform.localScale.x > 0f)
-				{
-					transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-				}
+				transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
 			}
 
 			if ((_config.CanDoubleJump || IsGrounded) && !CharacterYoke.Jump)
@@ -298,7 +291,6 @@ namespace Dissertation.Character
 			return velocity;
 		}
 
-
 		/// <summary>
 		/// moves directly down until grounded
 		/// </summary>
@@ -310,7 +302,6 @@ namespace Dissertation.Character
 			} while (!IsGrounded);
 		}
 
-
 		/// <summary>
 		/// this should be called anytime you have to modify the BoxCollider2D at runtime. It will recalculate the distance between the rays used for collision detection.
 		/// It is also used in the skinWidth setter in case it is changed at runtime.
@@ -319,11 +310,11 @@ namespace Dissertation.Character
 		{
 			// figure out the distance between our rays in both directions
 			// horizontal
-			var colliderUseableHeight = _boxCollider.size.y * Mathf.Abs(transform.localScale.y) - (2f * SkinWidth);
+			float colliderUseableHeight = (_boxCollider.size.y * Mathf.Abs(transform.localScale.y)) - (2f * SkinWidth);
 			_verticalDistanceBetweenRays = colliderUseableHeight / (_totalHorizontalRays - 1);
 
 			// vertical
-			var colliderUseableWidth = _boxCollider.size.x * Mathf.Abs(transform.localScale.x) - (2f * SkinWidth);
+			float colliderUseableWidth = (_boxCollider.size.x * Mathf.Abs(transform.localScale.x)) - (2f * SkinWidth);
 			_horizontalDistanceBetweenRays = colliderUseableWidth / (_totalVerticalRays - 1);
 		}
 
@@ -344,7 +335,6 @@ namespace Dissertation.Character
 			_raycastOrigins.BottomLeft = modifiedBounds.min;
 		}
 
-
 		/// <summary>
 		/// we have to use a bit of trickery in this one. The rays must be cast from a small distance inside of our
 		/// collider (skinWidth) to avoid zero distance rays which will get the wrong normal. Because of this small offset
@@ -360,7 +350,7 @@ namespace Dissertation.Character
 
 			for (var i = 0; i < _totalHorizontalRays; i++)
 			{
-				var ray = new Vector2(initialRayOrigin.x, initialRayOrigin.y + i * _verticalDistanceBetweenRays);
+				var ray = new Vector2(initialRayOrigin.x, initialRayOrigin.y + (i * _verticalDistanceBetweenRays));
 
 				DrawRay(ray, rayDirection * rayDistance, Color.red);
 
@@ -416,7 +406,6 @@ namespace Dissertation.Character
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// handles adjusting deltaMovement if we are going up a slope.
@@ -479,7 +468,6 @@ namespace Dissertation.Character
 			return true;
 		}
 
-
 		private void MoveVertically(ref Vector3 deltaMovement)
 		{
 			var isGoingUp = deltaMovement.y > 0;
@@ -503,7 +491,7 @@ namespace Dissertation.Character
 
 			for (var i = 0; i < _totalVerticalRays; i++)
 			{
-				var ray = new Vector2(initialRayOrigin.x + i * _horizontalDistanceBetweenRays, initialRayOrigin.y);
+				var ray = new Vector2(initialRayOrigin.x + (i * _horizontalDistanceBetweenRays), initialRayOrigin.y);
 
 				DrawRay(ray, rayDirection * rayDistance, Color.red);
 				_raycastHit = Physics2D.Raycast(ray, rayDirection, rayDistance, mask);
@@ -539,7 +527,6 @@ namespace Dissertation.Character
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// checks the center point under the BoxCollider2D for a slope. If it finds one then the deltaMovement is adjusted so that
@@ -594,7 +581,6 @@ namespace Dissertation.Character
 			if (OnTriggerStayEvent != null)
 				OnTriggerStayEvent(col);
 		}
-
 
 		public void OnTriggerExit2D(Collider2D col)
 		{

@@ -57,7 +57,6 @@ namespace Dissertation.Character.AI
 			}
 		}
 
-
 		protected override bool IsValid()
 		{
 			return _currentPathIndex < _path.Count;
