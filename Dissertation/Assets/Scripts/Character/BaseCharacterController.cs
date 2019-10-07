@@ -180,16 +180,9 @@ namespace Dissertation.Character
 				_velocity.y = 0;
 			}
 
-			float horizontalMovement = CharacterYoke.Movement.x;
+			HandleSpriteFacing();
 
-			if (horizontalMovement > 0 && transform.localScale.x < 0f)
-			{
-				transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-			}
-			else if (horizontalMovement < 0 && transform.localScale.x > 0f)
-			{
-				transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-			}
+			float horizontalMovement = CharacterYoke.Movement.x;
 
 			if ((_config.CanDoubleJump || IsGrounded) && !CharacterYoke.Jump)
 			{
@@ -231,6 +224,20 @@ namespace Dissertation.Character
 			}
 
 			_velocity = MoveBy(_velocity, _velocity * Time.deltaTime);
+		}
+
+		private void HandleSpriteFacing()
+		{
+			float horizontalMovement = CharacterYoke.Movement.x;
+
+			if (horizontalMovement > 0 && transform.localScale.x < 0f)
+			{
+				transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+			}
+			else if (horizontalMovement < 0 && transform.localScale.x > 0f)
+			{
+				transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+			}
 		}
 
 		/// <summary>
