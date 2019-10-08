@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Dissertation.Input;
 using Dissertation.UI;
+using System.Collections;
 
 namespace Dissertation.Character.Player
 {
@@ -16,6 +17,13 @@ namespace Dissertation.Character.Player
 			_playerConfig = _config as PlayerConfig;
 
 			HUD.Instance.CreateMenu<PlayerHealthUI>().Setup(this);
+
+			Health.OnDied += OnDie;
+		}
+
+		private void OnDestroy()
+		{
+			Health.OnDied -= OnDie;
 		}
 
 		protected override void Update()
@@ -25,6 +33,24 @@ namespace Dissertation.Character.Player
 			CharacterYoke.Drop = InputManager.GetButton(InputAction.Drop);
 
 			base.Update();
+		}
+
+		private void OnDie()
+		{
+			Debug.Log("You died"); // ToDo some UI
+			StartCoroutine(HandleDeath());
+		}
+
+		private IEnumerator HandleDeath()
+		{
+			_sprite.enabled = false;
+
+			yield return new WaitForSeconds(1.0f);
+
+			transform.position = _spawnedBy.transform.position;
+			_sprite.enabled = true;
+
+			Health.ModifyHealth(Config.MaxHealth);
 		}
 	}
 }

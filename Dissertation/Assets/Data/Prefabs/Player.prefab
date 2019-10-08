@@ -170,6 +170,7 @@ MonoBehaviour:
   _boxCollider: {fileID: 743031134}
   _rigidBody2D: {fileID: 7664931976867771262}
   _health: {fileID: 4657874958287762254}
+  _sprite: {fileID: 7664931976401259967}
 --- !u!50 &7664931976867771262
 Rigidbody2D:
   serializedVersion: 4

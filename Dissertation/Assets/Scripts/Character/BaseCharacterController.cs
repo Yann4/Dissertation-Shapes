@@ -99,6 +99,8 @@ namespace Dissertation.Character
 		[SerializeField] private CharacterHealth _health;
 		public CharacterHealth Health { get { return _health; } }
 
+		[SerializeField] protected SpriteRenderer _sprite;
+
 		public event Action<RaycastHit2D> OnControllerCollidedEvent;
 		public event Action<Collider2D> OnTriggerEnterEvent;
 		public event Action<Collider2D> OnTriggerStayEvent;
@@ -155,6 +157,13 @@ namespace Dissertation.Character
 
 		public Yoke CharacterYoke { get; private set; }
 
+		protected Spawner _spawnedBy;
+
+		public virtual void OnSpawn(Spawner spawner)
+		{
+			_spawnedBy = spawner;
+		}
+
 		protected virtual void Start()
 		{
 			Debug.Assert(_config != null);
@@ -186,45 +195,52 @@ namespace Dissertation.Character
 
 			HandleSpriteFacing();
 
-			float horizontalMovement = CharacterYoke.Movement.x;
-
-			if ((_config.CanDoubleJump || IsGrounded) && !CharacterYoke.Jump)
+			if (!Health.IsDead)
 			{
-				_jumpAvailable = _config.JumpHeight;
-				_canJump = true;
-			}
+				float horizontalMovement = CharacterYoke.Movement.x;
 
-			// we can only jump whilst grounded
-			if (_canJump && CharacterYoke.Jump && _jumpAvailable > 0.0f)
-			{
-				if (CharacterYoke.GetButtonDown(InputAction.Jump))
+				if ((_config.CanDoubleJump || IsGrounded) && !CharacterYoke.Jump)
 				{
-					_jumpStartTime = Time.time;
+					_jumpAvailable = _config.JumpHeight;
+					_canJump = true;
 				}
 
-				float jumpThisFrame = _config.GetJumpSpeed(Time.time - _jumpStartTime) * Time.deltaTime;
-				_jumpAvailable -= jumpThisFrame;
-				_velocity.y = Mathf.Sqrt(2f * jumpThisFrame * -_config.Gravity);
+				// we can only jump whilst grounded
+				if (_canJump && CharacterYoke.Jump && _jumpAvailable > 0.0f)
+				{
+					if (CharacterYoke.GetButtonDown(InputAction.Jump))
+					{
+						_jumpStartTime = Time.time;
+					}
+
+					float jumpThisFrame = _config.GetJumpSpeed(Time.time - _jumpStartTime) * Time.deltaTime;
+					_jumpAvailable -= jumpThisFrame;
+					_velocity.y = Mathf.Sqrt(2f * jumpThisFrame * -_config.Gravity);
+				}
+				else
+				{
+					// apply gravity before moving
+					_velocity.y += _config.Gravity * Time.deltaTime;
+				}
+
+				if (CharacterYoke.GetButtonUp(InputAction.Jump))
+				{
+					_canJump = false;
+				}
+
+				_velocity.x = horizontalMovement * _config.RunSpeed;
+
+				// if holding down bump up our movement amount and turn off one way platform detection for a frame.
+				// this lets us jump down through one way platforms
+				if (IsGrounded && CharacterYoke.GetButtonDown(InputAction.Drop))
+				{
+					_velocity.y *= 3f;
+					IgnoreOneWayPlatformsThisFrame = true;
+				}
 			}
 			else
 			{
-				// apply gravity before moving
-				_velocity.y += _config.Gravity * Time.deltaTime;
-			}
-
-			if (CharacterYoke.GetButtonUp(InputAction.Jump))
-			{
-				_canJump = false;
-			}
-
-			_velocity.x = horizontalMovement * _config.RunSpeed;
-
-			// if holding down bump up our movement amount and turn off one way platform detection for a frame.
-			// this lets us jump down through one way platforms
-			if (IsGrounded && CharacterYoke.GetButtonDown(InputAction.Drop))
-			{
-				_velocity.y *= 3f;
-				IgnoreOneWayPlatformsThisFrame = true;
+				_velocity.x = 0.0f;
 			}
 
 			_velocity = MoveBy(_velocity, _velocity * Time.deltaTime);

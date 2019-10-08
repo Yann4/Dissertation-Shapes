@@ -25,6 +25,8 @@ namespace Dissertation.Character
 			}
 		}
 
+		public bool IsDead { get { return CurrentHealth <= 0; } }
+
 		public Action<int> OnHealthChanged;
 		public Action OnDied;
 
