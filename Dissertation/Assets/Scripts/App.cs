@@ -14,11 +14,12 @@ namespace Dissertation
 			LoadScene(_whiteboxScene);
 		}
 
-		private void LoadScene(string scene)
+		private void LoadScene(string sceneName)
 		{
-			if (SceneManager.GetSceneByName(scene) != null)
+			Scene scene = SceneManager.GetSceneByName(sceneName);
+			if (scene != null && !scene.isLoaded)
 			{
-				SceneManager.LoadScene(scene, LoadSceneMode.Additive);
+				SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
 			}
 		}
 
