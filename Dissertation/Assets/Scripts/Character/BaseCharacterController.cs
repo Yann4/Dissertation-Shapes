@@ -96,6 +96,9 @@ namespace Dissertation.Character
 		[SerializeField] private BoxCollider2D _boxCollider;
 		[SerializeField] private Rigidbody2D _rigidBody2D;
 
+		[SerializeField] private CharacterHealth _health;
+		public CharacterHealth Health { get { return _health; } }
+
 		public event Action<RaycastHit2D> OnControllerCollidedEvent;
 		public event Action<Collider2D> OnTriggerEnterEvent;
 		public event Action<Collider2D> OnTriggerStayEvent;
