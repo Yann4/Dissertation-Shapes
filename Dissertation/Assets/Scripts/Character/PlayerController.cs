@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Dissertation.Input;
+using Dissertation.UI;
 
 namespace Dissertation.Character.Player
 {
@@ -13,6 +14,8 @@ namespace Dissertation.Character.Player
 
 			Debug.Assert(_config is PlayerConfig);
 			_playerConfig = _config as PlayerConfig;
+
+			HUD.Instance.CreateMenu<PlayerHealthUI>().Setup(this);
 		}
 
 		protected override void Update()
