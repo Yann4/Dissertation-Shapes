@@ -8,7 +8,8 @@ namespace Dissertation.Input
 		MoveHorizontal,
 		MoveVertical,
 		Jump,
-		Drop
+		Drop,
+		TogglePause,
 	}
 
 	/*

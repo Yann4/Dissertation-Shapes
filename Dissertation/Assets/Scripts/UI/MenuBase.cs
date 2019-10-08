@@ -18,5 +18,18 @@ namespace Dissertation.UI
 
 		protected virtual void Update()
 		{ }
+
+		public virtual void SetVisible(bool visible)
+		{
+			if(gameObject.activeSelf != visible)
+			{
+				gameObject.SetActive(visible);
+			}
+		}
+
+		public virtual bool IsVisible()
+		{
+			return gameObject.activeSelf;
+		}
 	}
 }

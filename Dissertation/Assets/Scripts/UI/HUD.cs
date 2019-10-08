@@ -31,6 +31,16 @@ namespace Dissertation.UI
 			}
 		}
 
+		private void Start()
+		{
+			CreateMenu<PauseMenu>();
+		}
+
+		private void OnDestroy()
+		{
+			DestroyMenu<PauseMenu>();
+		}
+
 		private T FindPrefab<T>() where T : MenuBase
 		{
 			if(_prefabMap.TryGetValue(typeof(T), out MenuBase prefab))
@@ -53,10 +63,54 @@ namespace Dissertation.UI
 			return menu;
 		}
 
+		//Returns first menu of type. Don't use if you're expecting there to be
+		//multiple menus of the same type
+		public T FindMenu<T>() where T : MenuBase
+		{
+			Type type = typeof(T);
+			foreach (MenuBase menu in _instantiatedMenus)
+			{
+				if(menu.GetType() == type)
+				{
+					return menu as T;
+				}
+			}
+
+			return null;
+		}
+
+		public List<T> FindMenus<T>() where T : MenuBase
+		{
+			List<T> toReturn = new List<T>();
+
+			Type type = typeof(T);
+			foreach(MenuBase menu in _instantiatedMenus)
+			{
+				if(menu.GetType() == type)
+				{
+					toReturn.Add(menu as T);
+				}
+			}
+
+			return toReturn;
+		}
+
 		public void DestroyMenu(MenuBase menu)
 		{
-			_instantiatedMenus.Remove(menu);
-			Destroy(menu.gameObject);
+			if (menu != null)
+			{
+				_instantiatedMenus.Remove(menu);
+				Destroy(menu.gameObject);
+			}
+			else
+			{
+				Debug.LogError("Can't destroy null menu");
+			}
+		}
+
+		public void DestroyMenu<T>() where T : MenuBase
+		{
+			DestroyMenu(FindMenu<T>());
 		}
 	}
 }
