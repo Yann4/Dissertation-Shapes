@@ -51,7 +51,7 @@ namespace Dissertation.Character.Player
 			transform.position = _spawnedBy.transform.position;
 			_sprite.enabled = true;
 
-			Health.ModifyHealth(Config.MaxHealth);
+			Health.Respawn();
 		}
 	}
 }

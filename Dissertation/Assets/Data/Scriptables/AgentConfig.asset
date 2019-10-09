@@ -20,7 +20,7 @@ MonoBehaviour:
     m_Bits: 0
   _triggerMask:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 6144
   _gravity: -25
   _runSpeed: 8
   _jumpHeight: 3
@@ -32,4 +32,8 @@ MonoBehaviour:
     m_RotationOrder: 4
   _canDoubleJump: 0
   _maxHealth: 5
+  _defaultContents:
+    Currency: 0
+  _dropInventoryPrefab: {fileID: 2193934937260656237, guid: e2f2ecf3cfd66b84a934ace6555d9644,
+    type: 3}
   _defaultState: 2

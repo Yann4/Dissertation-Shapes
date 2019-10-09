@@ -29,6 +29,7 @@ namespace Dissertation.Character
 
 		public Action<int> OnHealthChanged;
 		public Action OnDied;
+		public Action OnRespawn;
 
 		private void Start()
 		{
@@ -40,6 +41,12 @@ namespace Dissertation.Character
 		{
 			int healTo = Mathf.Clamp(CurrentHealth + (int)modifyBy, 0, _character.Config.MaxHealth);
 			CurrentHealth = healTo;
+		}
+
+		public void Respawn()
+		{
+			_currentHealth = _character.Config.MaxHealth;
+			OnRespawn.InvokeSafe();
 		}
 
 		private void OnTriggerEnter2D(Collider2D collision)

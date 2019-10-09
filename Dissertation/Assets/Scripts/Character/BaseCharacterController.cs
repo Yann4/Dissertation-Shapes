@@ -101,6 +101,9 @@ namespace Dissertation.Character
 
 		[SerializeField] protected SpriteRenderer _sprite;
 
+		[SerializeField] private Inventory _inventory;
+		public Inventory Inventory { get { return _inventory; } private set { _inventory = value; } }
+
 		public event Action<RaycastHit2D> OnControllerCollidedEvent;
 		public event Action<Collider2D> OnTriggerEnterEvent;
 		public event Action<Collider2D> OnTriggerStayEvent;
@@ -184,6 +187,8 @@ namespace Dissertation.Character
 			}
 
 			CharacterYoke = new Yoke();
+
+			Inventory.Initialise(this, Config.DefaultContents);
 		}
 
 		protected virtual void Update()

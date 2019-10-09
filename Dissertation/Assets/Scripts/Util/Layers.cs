@@ -18,5 +18,7 @@ namespace Dissertation.Util
 		public static readonly int AgentMask = LayerMask.GetMask("Agent");
 		public static readonly int DamageSource = LayerMask.NameToLayer("Damage Source");
 		public static readonly int DamageSourceMask = LayerMask.GetMask("Damage Source");
+		public static readonly int Interactable = LayerMask.NameToLayer("Interactable");
+		public static readonly int InteractableMask = LayerMask.GetMask("Interactable");
 	}
 }

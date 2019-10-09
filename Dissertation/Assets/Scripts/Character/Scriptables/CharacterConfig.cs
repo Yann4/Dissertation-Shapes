@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Dissertation.Character;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "CharacterConfig.asset", menuName = "Dissertation/Scriptables/Character Config/Character Config")]
 public class CharacterConfig : ScriptableObject
@@ -43,4 +44,11 @@ public class CharacterConfig : ScriptableObject
 	[Header("Character attributes")]
 	[SerializeField] private int _maxHealth = 5;
 	public int MaxHealth { get { return _maxHealth; } }
+
+	[Header("Character inventory")]
+	[SerializeField] private Inventory.InventoryContents _defaultContents;
+	public Inventory.InventoryContents DefaultContents { get { return _defaultContents; } }
+
+	[SerializeField] private GameObject _dropInventoryPrefab;
+	public GameObject DropInventoryPrefab { get { return _dropInventoryPrefab; } }
 }

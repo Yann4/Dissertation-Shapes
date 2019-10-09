@@ -1,4 +1,5 @@
 ﻿using Dissertation.Character.Player;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,6 +24,7 @@ namespace Dissertation.UI
 			Debug.Assert(_healthObjectPrefab != null);
 
 			_player.Health.OnHealthChanged += OnPlayerHealthChanged;
+			_player.Health.OnRespawn += OnRespawn;
 
 			for (int idx = 0; idx < _player.Config.MaxHealth; idx++)
 			{
@@ -35,6 +37,7 @@ namespace Dissertation.UI
 		private void OnDestroy()
 		{
 			_player.Health.OnHealthChanged -= OnPlayerHealthChanged;
+			_player.Health.OnRespawn -= OnRespawn;
 		}
 
 		private void OnPlayerHealthChanged(int currentHealth)
@@ -47,6 +50,11 @@ namespace Dissertation.UI
 			}
 
 			StartCoroutine(DelayedToggleLayout());
+		}
+
+		private void OnRespawn()
+		{
+			OnPlayerHealthChanged(_player.Health.CurrentHealth);
 		}
 
 		private IEnumerator DelayedToggleLayout()
