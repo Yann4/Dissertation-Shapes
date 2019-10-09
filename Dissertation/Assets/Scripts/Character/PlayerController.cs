@@ -37,12 +37,13 @@ namespace Dissertation.Character.Player
 
 		private void OnDie()
 		{
-			Debug.Log("You died"); // ToDo some UI
 			StartCoroutine(HandleDeath());
 		}
 
 		private IEnumerator HandleDeath()
 		{
+			HUD.Instance.CreateMenu<PlayerDeathScreen>();
+
 			_sprite.enabled = false;
 
 			yield return new WaitForSeconds(1.0f);
