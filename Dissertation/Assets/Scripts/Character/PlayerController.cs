@@ -39,7 +39,6 @@ namespace Dissertation.Character.Player
 			if(InputManager.GetButtonDown(InputAction.ShowInventory))
 			{
 				_inventoryUI.Toggle();
-
 			}
 
 			base.Update();
