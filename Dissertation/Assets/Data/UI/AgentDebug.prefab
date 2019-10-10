@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2087005787685206871}
   - component: {fileID: 5750279607859662265}
   - component: {fileID: 7007142600937251810}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Normal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,7 +87,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1656073134093804086}
   - component: {fileID: 3928275994976564672}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: AgentDebug
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -128,6 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e00460ce92b5ed4eb2021346d898526, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _destroyOnClose: 0
   _offset: {x: 0, y: 70}
   _longTerm: {fileID: 4458390550744797253}
   _normal: {fileID: 7007142600937251810}
@@ -143,7 +144,7 @@ GameObject:
   - component: {fileID: 2308462564163660200}
   - component: {fileID: 7101928336205312324}
   - component: {fileID: 6439184071261290273}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Immediate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -220,7 +221,7 @@ GameObject:
   - component: {fileID: 8694631649595134577}
   - component: {fileID: 5159198302621220894}
   - component: {fileID: 4458390550744797253}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: LongTerm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
