@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4229547699674894758}
   - component: {fileID: 2785402888046750394}
   - component: {fileID: 7655132415925235423}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: HealthUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 12.68, y: -7.45}
-  m_SizeDelta: {x: 300, y: 62}
+  m_SizeDelta: {x: 300, y: 40}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2785402888046750394
 MonoBehaviour:
@@ -49,6 +49,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1f6b2545a06fe34a983843089875cc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _destroyOnClose: 1
+  _defaultSelectable: {fileID: 0}
   _layout: {fileID: 7655132415925235423}
   _healthObjectPrefab: {fileID: 2204591616071331043, guid: 2e4fd6f24dff7074795b5805ce75847b,
     type: 3}
