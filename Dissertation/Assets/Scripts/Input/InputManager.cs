@@ -10,6 +10,7 @@ namespace Dissertation.Input
 		Jump,
 		Drop,
 		TogglePause,
+		ShowInventory,
 	}
 
 	/*

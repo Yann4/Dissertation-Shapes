@@ -8,10 +8,16 @@ namespace Dissertation
 		[SerializeField] private string _HUDSceneName = "HUD";
 		[SerializeField] private string _whiteboxScene = "Whitebox";
 
+		public static bool Paused { get { return _pause > 0; } }
+		private static int _pause = 0;
+		private static float _timeScale;
+
 		private void Start()
 		{
 			LoadScene(_HUDSceneName);
 			LoadScene(_whiteboxScene);
+
+			_timeScale = Time.timeScale;
 		}
 
 		private void LoadScene(string sceneName)
@@ -26,6 +32,28 @@ namespace Dissertation
 		private void UnloadScene(string scene)
 		{
 			SceneManager.UnloadSceneAsync(scene);
+		}
+
+		public static void Pause()
+		{
+			if (!Paused && _pause + 1 > 0)
+			{
+				_timeScale = Time.timeScale;
+				Time.timeScale = 0;
+			}
+
+			_pause++;
+		}
+
+		public static void Resume()
+		{
+			if(Paused && _pause - 1 == 0)
+			{
+				Time.timeScale = _timeScale;
+			}
+
+			_pause--;
+			Debug.Assert(_pause >= 0);
 		}
 	}
 }

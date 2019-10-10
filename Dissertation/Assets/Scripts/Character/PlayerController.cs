@@ -9,6 +9,8 @@ namespace Dissertation.Character.Player
 	{
 		private PlayerConfig _playerConfig;
 
+		private PlayerInventory _inventoryUI;
+
 		protected override void Start()
 		{
 			base.Start();
@@ -17,6 +19,8 @@ namespace Dissertation.Character.Player
 			_playerConfig = _config as PlayerConfig;
 
 			HUD.Instance.CreateMenu<PlayerHealthUI>().Setup(this);
+			_inventoryUI = HUD.Instance.CreateMenu<PlayerInventory>();
+			_inventoryUI.Setup(this);
 
 			Health.OnDied += OnDie;
 		}
@@ -31,6 +35,12 @@ namespace Dissertation.Character.Player
 			CharacterYoke.Movement = new Vector2(InputManager.GetAxis(InputAction.MoveHorizontal), InputManager.GetAxis(InputAction.MoveVertical));
 			CharacterYoke.Jump = InputManager.GetButton(InputAction.Jump);
 			CharacterYoke.Drop = InputManager.GetButton(InputAction.Drop);
+
+			if(InputManager.GetButtonDown(InputAction.ShowInventory))
+			{
+				_inventoryUI.Toggle();
+
+			}
 
 			base.Update();
 		}
