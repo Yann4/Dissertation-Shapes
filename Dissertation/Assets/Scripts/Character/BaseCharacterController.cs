@@ -3,7 +3,9 @@
 #endif
 
 using Dissertation.Input;
+using Dissertation.Util;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -104,12 +106,10 @@ namespace Dissertation.Character
 		[SerializeField] private Inventory _inventory;
 		public Inventory Inventory { get { return _inventory; } private set { _inventory = value; } }
 
-		public event Action<RaycastHit2D> OnControllerCollidedEvent;
-		public event Action<Collider2D> OnTriggerEnterEvent;
-		public event Action<Collider2D> OnTriggerStayEvent;
-		public event Action<Collider2D> OnTriggerExitEvent;
+		public CharacterEvents Events { get; private set; } = new CharacterEvents();
 
 		public bool IsGrounded { get { return _collisionState.Below; } }
+		protected bool CanMove { get { return !Health.IsDead && !IsMeleeAttacking; } }
 
 		/// <summary>
 		/// when true, one way platforms will be ignored when moving vertically for a single frame
@@ -152,15 +152,21 @@ namespace Dissertation.Character
 
 		private RaycastHit2D _lastControllerColliderHit;
 		private Vector3 _velocity;
+		protected Facing FacingDirection { get; private set; } = Facing.Right;
 
 		//Jumping state variables
 		private float _jumpStartTime;
 		private float _jumpAvailable; //The amount of "jump power" that you have left for this jump. To allow tapping the button and holding it to jump to different heights
 		private bool _canJump = false;
 
+		//Attacking state variables
+		protected bool IsMeleeAttacking { get; private set; }
+
 		public Yoke CharacterYoke { get; private set; }
 
 		protected Spawner _spawnedBy;
+
+		protected GameObject _meleeAttack;
 
 		public virtual void OnSpawn(Spawner spawner)
 		{
@@ -189,6 +195,21 @@ namespace Dissertation.Character
 			CharacterYoke = new Yoke();
 
 			Inventory.Initialise(this, Config.DefaultContents);
+
+			Debug.Assert(Config.MeleeAttackPrefab != null);
+			_meleeAttack = Instantiate(Config.MeleeAttackPrefab, transform);
+			Debug.Assert(_meleeAttack != null);
+			_meleeAttack.SetActive(false);
+			DamageSource source = _meleeAttack.GetComponentInChildren<DamageSource>();
+			source.Setup(this, Config.BaseMeleeDamage);
+			source.OnHit += OnMeleeHit;
+		}
+
+		protected virtual void OnDestroy()
+		{
+			DamageSource source = _meleeAttack.GetComponentInChildren<DamageSource>();
+			source.OnHit -= OnMeleeHit;
+			Destroy(_meleeAttack);
 		}
 
 		protected virtual void Update()
@@ -202,6 +223,11 @@ namespace Dissertation.Character
 
 			if (!Health.IsDead)
 			{
+				if( CanMeleeAttack() && CharacterYoke.GetButtonDown(InputAction.MeleeAttack) )
+				{
+					StartCoroutine(MeleeAttack());
+				}
+
 				float horizontalMovement = CharacterYoke.Movement.x;
 
 				if ((_config.CanDoubleJump || IsGrounded) && !CharacterYoke.Jump)
@@ -248,21 +274,82 @@ namespace Dissertation.Character
 				_velocity.x = 0.0f;
 			}
 
-			_velocity = MoveBy(_velocity, _velocity * Time.deltaTime);
+			if (CanMove)
+			{
+				_velocity = MoveBy(_velocity, _velocity * Time.deltaTime);
+			}
 		}
 
 		private void HandleSpriteFacing()
 		{
 			float horizontalMovement = CharacterYoke.Movement.x;
+			Transform toRotate = _sprite.transform;
+			if (horizontalMovement > 0 && toRotate.localScale.x < 0f)
+			{
+				toRotate.localScale = new Vector3(-toRotate.localScale.x, toRotate.localScale.y, toRotate.localScale.z);
+				FacingDirection = Facing.Right;
+			}
+			else if (horizontalMovement < 0 && toRotate.localScale.x > 0f)
+			{
+				toRotate.localScale = new Vector3(-toRotate.localScale.x, toRotate.localScale.y, toRotate.localScale.z);
+				FacingDirection = Facing.Left;
+			}
+		}
 
-			if (horizontalMovement > 0 && transform.localScale.x < 0f)
+		public bool CanMeleeAttack()
+		{
+			return !IsMeleeAttacking && !Health.IsDead;
+		}
+
+		protected IEnumerator MeleeAttack()
+		{
+			if(!CanMeleeAttack())
 			{
-				transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+				yield break;
 			}
-			else if (horizontalMovement < 0 && transform.localScale.x > 0f)
+
+			IsMeleeAttacking = true;
+			Events.OnMeleeAttackBegin.InvokeSafe();
+
+			_meleeAttack.transform.localScale = Vector3.zero;
+
+			Vector3 position = _boxCollider.bounds.center;
+			float target = 0.0f;
+			if (FacingDirection == Facing.Right)
 			{
-				transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+				target = -1.0f;
+				position.x += _boxCollider.bounds.extents.x;
 			}
+			else
+			{
+				target = 1.0f;
+				position.x -= _boxCollider.bounds.extents.x;
+			}
+
+			_meleeAttack.transform.position = position;
+			_meleeAttack.SetActive(true);
+
+			float duration = 0.0f;
+			float t = 0.0f;
+
+			while( t <= 1.0f )
+			{
+				_meleeAttack.transform.localScale = new Vector3(Mathf.Lerp(0.0f, target, t), 1.0f, 1.0f);
+				duration += Time.deltaTime;
+				t = duration/ Config.AttackSpeed;
+
+				yield return null;
+			}
+
+			_meleeAttack.SetActive(false);
+			IsMeleeAttacking = false;
+
+			Events.OnMeleeAttackEnd.InvokeSafe();
+		}
+
+		private void OnMeleeHit(BaseCharacterController hit)
+		{
+			Events.OnMeleeAttackConnect.InvokeSafe(hit);
 		}
 
 		/// <summary>
@@ -312,10 +399,12 @@ namespace Dissertation.Character
 				velocity.y = 0;
 
 			// send off the collision events if we have a listener
-			if (OnControllerCollidedEvent != null)
+			if (Events.OnControllerCollidedEvent != null)
 			{
-				for (var i = 0; i < _raycastHitsThisFrame.Count; i++)
-					OnControllerCollidedEvent(_raycastHitsThisFrame[i]);
+				for (int i = 0; i < _raycastHitsThisFrame.Count; i++)
+				{
+					Events.OnControllerCollidedEvent(_raycastHitsThisFrame[i]);
+				}
 			}
 
 			IgnoreOneWayPlatformsThisFrame = false;
@@ -602,26 +691,23 @@ namespace Dissertation.Character
 			}
 		}
 
-		public void OnTriggerEnter2D(Collider2D col)
+		private void OnTriggerEnter2D(Collider2D col)
 		{
-			if (OnTriggerEnterEvent != null)
-				OnTriggerEnterEvent(col);
+			Events.OnTriggerEnterEvent.InvokeSafe(col);
 		}
 
-		public void OnTriggerStay2D(Collider2D col)
+		private void OnTriggerStay2D(Collider2D col)
 		{
-			if (OnTriggerStayEvent != null)
-				OnTriggerStayEvent(col);
+			Events.OnTriggerStayEvent.InvokeSafe(col);
 		}
 
-		public void OnTriggerExit2D(Collider2D col)
+		private void OnTriggerExit2D(Collider2D col)
 		{
-			if (OnTriggerExitEvent != null)
-				OnTriggerExitEvent(col);
+			Events.OnTriggerExitEvent.InvokeSafe(col);
 		}
 
 		[System.Diagnostics.Conditional("DEBUG_CC2D_RAYS")]
-		void DrawRay(Vector3 start, Vector3 dir, Color color)
+		private void DrawRay(Vector3 start, Vector3 dir, Color color)
 		{
 			Debug.DrawRay(start, dir, color);
 		}

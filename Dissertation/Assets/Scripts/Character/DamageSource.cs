@@ -1,4 +1,5 @@
 ﻿using Dissertation.Util;
+using System;
 using UnityEngine;
 
 namespace Dissertation.Character
@@ -10,6 +11,8 @@ namespace Dissertation.Character
 
 		[SerializeField] int _damage = 0;
 		public int Damage { get { return _damage; } }
+
+		public Action<BaseCharacterController /*hit*/> OnHit;
 
 		private Collider2D _collider;
 
@@ -30,9 +33,25 @@ namespace Dissertation.Character
 			}
 		}
 
-		public void Setup(BaseCharacterController owner)
+		public void Setup(BaseCharacterController owner, int damage)
 		{
 			Owner = owner;
+			_damage = damage;
+		}
+
+		private void OnTriggerEnter2D(Collider2D collision)
+		{
+			if(collision.gameObject == Owner)
+			{
+				return;
+			}
+
+			BaseCharacterController characterHit = collision.gameObject.GetComponent<BaseCharacterController>();
+			if (characterHit != null)
+			{
+				OnHit.InvokeSafe(characterHit);
+				characterHit.Health.Damage((uint)Damage);
+			}
 		}
 	}
 }

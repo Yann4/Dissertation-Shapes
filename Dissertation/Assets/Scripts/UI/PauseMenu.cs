@@ -44,7 +44,7 @@ namespace Dissertation.UI
 		public void FullyHealPlayer()
 		{
 			PlayerController player = FindObjectOfType<PlayerController>();
-			player.Health.ModifyHealth(player.Config.MaxHealth);
+			player.Health.Heal((uint)player.Config.MaxHealth);
 		}
 
 		protected override void SetVisible(bool visible)

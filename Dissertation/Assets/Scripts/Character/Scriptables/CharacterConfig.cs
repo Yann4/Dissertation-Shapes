@@ -45,10 +45,19 @@ public class CharacterConfig : ScriptableObject
 	[SerializeField] private int _maxHealth = 5;
 	public int MaxHealth { get { return _maxHealth; } }
 
+	[SerializeField] private int _baseMeleeDamage = 2;
+	public int BaseMeleeDamage { get { return _baseMeleeDamage; } }
+
+	[SerializeField, Tooltip("Time to complete one attack")] private float _attackSpeed = 0.3f;
+	public float AttackSpeed { get { return _attackSpeed; } }
+
 	[Header("Character inventory")]
 	[SerializeField] private Inventory.InventoryContents _defaultContents;
 	public Inventory.InventoryContents DefaultContents { get { return _defaultContents; } }
 
 	[SerializeField] private GameObject _dropInventoryPrefab;
 	public GameObject DropInventoryPrefab { get { return _dropInventoryPrefab; } }
+
+	[SerializeField] private GameObject _meleeAttackPrefab;
+	public GameObject MeleeAttackPrefab { get { return _meleeAttackPrefab; } }
 }

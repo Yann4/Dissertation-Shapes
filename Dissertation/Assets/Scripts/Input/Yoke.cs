@@ -44,12 +44,26 @@ namespace Dissertation.Input
 			}
 		}
 
+		private Tuple<bool, int> _meleeAttack;
+		public bool MeleeAttack
+		{
+			get { return _meleeAttack.Item1; }
+			set
+			{
+				if (value != _meleeAttack.Item1)
+				{
+					_meleeAttack = new Tuple<bool, int>(value, Time.frameCount);
+				}
+			}
+		}
+
 		public Yoke()
 		{
 			int frameCount = Time.frameCount;
 			_movement = new Tuple<Vector2, int>(Vector2.zero, frameCount);
 			_jump = new Tuple<bool, int>(false, frameCount);
 			_drop = new Tuple<bool, int>(false, frameCount);
+			_meleeAttack = new Tuple<bool, int>(false, frameCount);
 		}
 
 		public void Reset()
@@ -57,6 +71,7 @@ namespace Dissertation.Input
 			Movement = Vector2.zero;
 			Jump = false;
 			Drop = false;
+			MeleeAttack = false;
 		}
 
 		public bool GetButton(InputAction action)
@@ -71,6 +86,8 @@ namespace Dissertation.Input
 					return Jump;
 				case InputAction.Drop:
 					return Drop;
+				case InputAction.MeleeAttack:
+					return MeleeAttack;
 				default:
 					Debug.AssertFormat(false, "Action {0} needs adding to the yoke", action);
 					return false;
@@ -91,6 +108,8 @@ namespace Dissertation.Input
 					return !Jump && _jump.Item2 == Time.frameCount;
 				case InputAction.Drop:
 					return !Drop && _drop.Item2 == Time.frameCount;
+				case InputAction.MeleeAttack:
+					return !MeleeAttack && _meleeAttack.Item2 == Time.frameCount;
 				default:
 					Debug.AssertFormat(false, "Action {0} needs adding to the yoke", action);
 					return false;
@@ -111,6 +130,8 @@ namespace Dissertation.Input
 					return Jump && _jump.Item2 == Time.frameCount;
 				case InputAction.Drop:
 					return Drop && _drop.Item2 == Time.frameCount;
+				case InputAction.MeleeAttack:
+					return MeleeAttack && _meleeAttack.Item2 == Time.frameCount;
 				default:
 					Debug.AssertFormat(false, "Action {0} needs adding to the yoke", action);
 					return false;
@@ -129,6 +150,8 @@ namespace Dissertation.Input
 					return BoolToFloat(Jump);
 				case InputAction.Drop:
 					return BoolToFloat(Drop);
+				case InputAction.MeleeAttack:
+					return BoolToFloat(MeleeAttack);
 				default:
 					Debug.AssertFormat(false, "Action {0} needs adding to the yoke", action);
 					return 0.0f;

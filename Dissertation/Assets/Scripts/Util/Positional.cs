@@ -2,6 +2,12 @@
 
 namespace Dissertation.Util
 {
+	public enum Facing
+	{
+		Left,
+		Right
+	}
+
 	public static class Positional
 	{
 		public static bool IsAtPosition(Transform transform, Vector3 position, float tolerance = 1.0f)

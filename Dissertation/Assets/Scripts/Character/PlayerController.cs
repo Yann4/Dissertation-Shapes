@@ -25,8 +25,10 @@ namespace Dissertation.Character.Player
 			Health.OnDied += OnDie;
 		}
 
-		private void OnDestroy()
+		protected override void OnDestroy()
 		{
+			base.OnDestroy();
+
 			Health.OnDied -= OnDie;
 		}
 
@@ -35,8 +37,9 @@ namespace Dissertation.Character.Player
 			CharacterYoke.Movement = new Vector2(InputManager.GetAxis(InputAction.MoveHorizontal), InputManager.GetAxis(InputAction.MoveVertical));
 			CharacterYoke.Jump = InputManager.GetButton(InputAction.Jump);
 			CharacterYoke.Drop = InputManager.GetButton(InputAction.Drop);
+			CharacterYoke.MeleeAttack = InputManager.GetButton(InputAction.MeleeAttack);
 
-			if(InputManager.GetButtonDown(InputAction.ShowInventory))
+			if (InputManager.GetButtonDown(InputAction.ShowInventory))
 			{
 				_inventoryUI.Toggle();
 			}

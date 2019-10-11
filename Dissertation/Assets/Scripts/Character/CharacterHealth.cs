@@ -37,7 +37,17 @@ namespace Dissertation.Character
 			CurrentHealth = _character.Config.MaxHealth;
 		}
 
-		public void ModifyHealth(int modifyBy)
+		public void Damage(uint damageAmount)
+		{
+			ModifyHealth(-(int)damageAmount);
+		}
+
+		public void Heal(uint healBy)
+		{
+			ModifyHealth((int)healBy);
+		}
+
+		private void ModifyHealth(int modifyBy)
 		{
 			int healTo = Mathf.Clamp(CurrentHealth + (int)modifyBy, 0, _character.Config.MaxHealth);
 			CurrentHealth = healTo;
@@ -47,25 +57,6 @@ namespace Dissertation.Character
 		{
 			_currentHealth = _character.Config.MaxHealth;
 			OnRespawn.InvokeSafe();
-		}
-
-		private void OnTriggerEnter2D(Collider2D collision)
-		{
-			if(collision.gameObject.layer != Layers.DamageSource)
-			{
-				return;
-			}
-
-			DamageSource source = collision.gameObject.GetComponent<DamageSource>();
-			Debug.Assert(source != null);
-
-			//Can't damage yourself. Eventually this will want to be a more fully fledged check
-			if(source.Owner == _character)
-			{
-				return;
-			}
-
-			ModifyHealth(-source.Damage);
 		}
 	}
 }

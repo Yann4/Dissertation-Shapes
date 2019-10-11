@@ -11,6 +11,7 @@ namespace Dissertation.Input
 		Drop,
 		TogglePause,
 		ShowInventory,
+		MeleeAttack,
 	}
 
 	/*
