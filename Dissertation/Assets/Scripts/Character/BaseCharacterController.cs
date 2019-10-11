@@ -215,20 +215,30 @@ namespace Dissertation.Character
 
 		protected virtual void Update()
 		{
+			HandleAttacking();
+
+			HandleMovement();
+
+			HandleSpriteFacing();
+		}
+
+		private void HandleAttacking()
+		{
+			if (CanMeleeAttack() && CharacterYoke.GetButtonDown(InputAction.MeleeAttack))
+			{
+				StartCoroutine(MeleeAttack());
+			}
+		}
+
+		private void HandleMovement()
+		{
 			if (IsGrounded)
 			{
 				_velocity.y = 0;
 			}
 
-			HandleSpriteFacing();
-
 			if (!Health.IsDead)
 			{
-				if( CanMeleeAttack() && CharacterYoke.GetButtonDown(InputAction.MeleeAttack) )
-				{
-					StartCoroutine(MeleeAttack());
-				}
-
 				float horizontalMovement = CharacterYoke.Movement.x;
 
 				if ((_config.CanDoubleJump || IsGrounded) && !CharacterYoke.Jump)
