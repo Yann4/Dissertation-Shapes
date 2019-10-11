@@ -48,11 +48,23 @@ public class CharacterConfig : ScriptableObject
 	[SerializeField] private int _baseMeleeDamage = 2;
 	public int BaseMeleeDamage { get { return _baseMeleeDamage; } }
 
-	[SerializeField, Tooltip("Time to complete one attack")] private float _attackSpeed = 0.3f;
-	public float AttackSpeed { get { return _attackSpeed; } }
+	[SerializeField, Tooltip("Time to complete one attack")] private float _meleeAttackSpeed = 0.3f;
+	public float MeleeAttackSpeed { get { return _meleeAttackSpeed; } }
 
 	[SerializeField, Tooltip("Delay between attacks")] private float _meleeAttackCooldown = 0.75f;
 	public float MeleeAttackCooldown { get { return _meleeAttackCooldown; } }
+
+	[SerializeField] private int _baseRangedDamage = 11;
+	public int BaseRangedDamage { get { return _baseRangedDamage; } }
+
+	[SerializeField, Tooltip("Speed projectile travels")] private float _projectileSpeed = 13.0f;
+	public float ProjectileSpeed { get { return _projectileSpeed; } }
+
+	[SerializeField, Tooltip("Time to complete one attack")] private float _rangedAttackSpeed = 0.1f;
+	public float RangedAttackSpeed { get { return _rangedAttackSpeed; } }
+
+	[SerializeField, Tooltip("Delay between attacks")] private float _rangedAttackCooldown = 0.75f;
+	public float RangedAttackCooldown { get { return _rangedAttackCooldown; } }
 
 	[Header("Character inventory")]
 	[SerializeField] private Inventory.InventoryContents _defaultContents;
@@ -61,6 +73,10 @@ public class CharacterConfig : ScriptableObject
 	[SerializeField] private GameObject _dropInventoryPrefab;
 	public GameObject DropInventoryPrefab { get { return _dropInventoryPrefab; } }
 
+	[Header("Attack prefabs")]
 	[SerializeField] private GameObject _meleeAttackPrefab;
 	public GameObject MeleeAttackPrefab { get { return _meleeAttackPrefab; } }
+
+	[SerializeField] private GameObject _rangedAttackPrefab;
+	public GameObject RangedAttackPrefab { get { return _rangedAttackPrefab; } }
 }

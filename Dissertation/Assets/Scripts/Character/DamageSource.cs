@@ -33,15 +33,15 @@ namespace Dissertation.Character
 			}
 		}
 
-		public void Setup(BaseCharacterController owner, int damage)
+		public virtual void Setup(BaseCharacterController owner, int damage)
 		{
 			Owner = owner;
 			_damage = damage;
 		}
 
-		private void OnTriggerEnter2D(Collider2D collision)
+		protected virtual void OnTriggerEnter2D(Collider2D collision)
 		{
-			if(collision.gameObject == Owner)
+			if(CollisionIsOwner(collision))
 			{
 				return;
 			}
@@ -52,6 +52,11 @@ namespace Dissertation.Character
 				OnHit.InvokeSafe(characterHit);
 				characterHit.Health.Damage((uint)Damage);
 			}
+		}
+
+		protected bool CollisionIsOwner(Collider2D collision)
+		{
+			return Owner != null && GameObject.ReferenceEquals(collision.gameObject, Owner.gameObject);
 		}
 	}
 }

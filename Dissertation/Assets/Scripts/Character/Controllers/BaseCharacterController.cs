@@ -160,14 +160,19 @@ namespace Dissertation.Character
 		private bool _canJump = false;
 
 		//Attacking state variables
+		protected bool IsAttacking { get { return IsMeleeAttacking || IsRangedAttacking; } }
 		protected bool IsMeleeAttacking { get; private set; }
-		private float _attackEndTime;
+		protected bool IsRangedAttacking { get; private set; }
+
+		private float _meleeAttackEndTime;
+		private float _lastRangedAttackTime;
 
 		public Yoke CharacterYoke { get; private set; }
 
 		protected Spawner _spawnedBy;
 
 		protected GameObject _meleeAttack;
+		protected PrefabPool _rangedAttackPool;
 
 		public virtual void OnSpawn(Spawner spawner)
 		{
@@ -197,6 +202,9 @@ namespace Dissertation.Character
 
 			Inventory.Initialise(this, Config.DefaultContents);
 
+			_meleeAttackEndTime = Time.time;
+			_lastRangedAttackTime = Time.time;
+
 			Debug.Assert(Config.MeleeAttackPrefab != null);
 			_meleeAttack = Instantiate(Config.MeleeAttackPrefab, transform);
 			Debug.Assert(_meleeAttack != null);
@@ -204,6 +212,8 @@ namespace Dissertation.Character
 			DamageSource source = _meleeAttack.GetComponentInChildren<DamageSource>();
 			source.Setup(this, Config.BaseMeleeDamage);
 			source.OnHit += OnMeleeHit;
+
+			_rangedAttackPool = new PrefabPool(Config.RangedAttackPrefab, 5, false, transform);
 		}
 
 		protected virtual void OnDestroy()
@@ -227,6 +237,12 @@ namespace Dissertation.Character
 			if (CanMeleeAttack() && CharacterYoke.GetButtonDown(InputAction.MeleeAttack))
 			{
 				StartCoroutine(MeleeAttack());
+			}
+
+			if(CanRangedAttack() && CharacterYoke.GetButtonDown(InputAction.RangedAttack))
+			{
+				StartCoroutine(RangedAttack());
+				_lastRangedAttackTime = Time.time;
 			}
 		}
 
@@ -265,7 +281,10 @@ namespace Dissertation.Character
 					_velocity.y += _config.Gravity * Time.deltaTime;
 				}
 
-				_canJump = !CharacterYoke.GetButtonUp(InputAction.Jump);
+				if (CharacterYoke.GetButtonUp(InputAction.Jump))
+				{
+					_canJump = false;
+				}
 
 				_velocity.x = horizontalMovement * _config.RunSpeed;
 
@@ -306,17 +325,18 @@ namespace Dissertation.Character
 
 		public bool CanMeleeAttack()
 		{
-			return !IsMeleeAttacking && !Health.IsDead 
-				&& (Time.time - _attackEndTime >= Config.MeleeAttackCooldown);
+			return !IsAttacking && !Health.IsDead 
+				&& (Time.time - _meleeAttackEndTime >= Config.MeleeAttackCooldown);
+		}
+
+		public bool CanRangedAttack()
+		{
+			return !IsAttacking && !Health.IsDead
+				&& (Time.time - _lastRangedAttackTime >= Config.RangedAttackCooldown);
 		}
 
 		protected IEnumerator MeleeAttack()
 		{
-			if(!CanMeleeAttack())
-			{
-				yield break;
-			}
-
 			_meleeAttack.transform.localScale = Vector3.zero;
 
 			Vector3 position = _boxCollider.bounds.center;
@@ -372,16 +392,67 @@ namespace Dissertation.Character
 			{
 				_meleeAttack.transform.localScale = new Vector3(Mathf.Lerp(0.0f, target, t), 1.0f, 1.0f);
 				duration += Time.deltaTime;
-				t = duration/ Config.AttackSpeed;
+				t = duration/ Config.MeleeAttackSpeed;
 
 				yield return null;
 			}
 
 			_meleeAttack.SetActive(false);
 			IsMeleeAttacking = false;
-			_attackEndTime = Time.time;
+			_meleeAttackEndTime = Time.time;
 
 			Events.OnMeleeAttackEnd.InvokeSafe();
+		}
+
+		private IEnumerator RangedAttack()
+		{
+			IsRangedAttacking = true;
+
+			Projectile projectile = _rangedAttackPool.GetInstance<Projectile>(null);
+
+			Vector3 position = _boxCollider.bounds.center;
+			Vector3 direction = Vector3.zero;
+
+			float vertical = CharacterYoke.GetAxis(InputAction.MoveVertical);
+			if (vertical != 0.0f)
+			{
+				if (vertical < 0.0f)
+				{
+					//Trying to hit down
+					//If we're on the ground, we can't slash down
+					if (IsGrounded)
+					{
+						yield break;
+					}
+
+					position.y -= _boxCollider.bounds.extents.y;
+					direction = Vector3.down;
+				}
+				else
+				{
+					position.y += _boxCollider.bounds.extents.y;
+					direction = Vector3.up;
+				}
+			}
+			else
+			{
+				if (FacingDirection == Facing.Right)
+				{
+					direction = Vector3.right;
+					position.x += _boxCollider.bounds.extents.x;
+				}
+				else
+				{
+					direction = Vector3.left;
+					position.x -= _boxCollider.bounds.extents.x;
+				}
+			}
+
+			projectile.transform.position = position;
+			projectile.Setup(this, Config.BaseRangedDamage, direction * Config.ProjectileSpeed, _rangedAttackPool);
+			yield return new WaitForSeconds(Config.RangedAttackSpeed);
+
+			IsRangedAttacking = false;
 		}
 
 		private void OnMeleeHit(BaseCharacterController hit)

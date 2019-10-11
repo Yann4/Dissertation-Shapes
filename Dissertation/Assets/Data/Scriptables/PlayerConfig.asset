@@ -51,9 +51,17 @@ MonoBehaviour:
   _canDoubleJump: 1
   _maxHealth: 5
   _baseMeleeDamage: 2
+  _meleeAttackSpeed: 0.3
+  _meleeAttackCooldown: 0.75
+  _baseRangedDamage: 1
+  _projectileSpeed: 18
+  _rangedAttackSpeed: 0.3
+  _rangedAttackCooldown: 0.75
   _defaultContents:
-    Currency: 10
+    Currency: 640
   _dropInventoryPrefab: {fileID: 2193934937260656237, guid: a64de79fd66ce364dbed821dc4956ce8,
     type: 3}
   _meleeAttackPrefab: {fileID: 2664483916951406324, guid: 0690dbae7f576c841b9521512f146542,
+    type: 3}
+  _rangedAttackPrefab: {fileID: 6078864212887572438, guid: 8073af09f076c51488647ba17b5605a2,
     type: 3}

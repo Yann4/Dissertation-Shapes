@@ -12,6 +12,7 @@ namespace Dissertation.Input
 		TogglePause,
 		ShowInventory,
 		MeleeAttack,
+		RangedAttack,
 	}
 
 	/*

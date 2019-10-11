@@ -57,6 +57,19 @@ namespace Dissertation.Input
 			}
 		}
 
+		private Tuple<bool, int> _rangedAttack;
+		public bool RangedAttack
+		{
+			get { return _rangedAttack.Item1; }
+			set
+			{
+				if (value != _rangedAttack.Item1)
+				{
+					_rangedAttack = new Tuple<bool, int>(value, Time.frameCount);
+				}
+			}
+		}
+
 		public Yoke()
 		{
 			int frameCount = Time.frameCount;
@@ -64,6 +77,7 @@ namespace Dissertation.Input
 			_jump = new Tuple<bool, int>(false, frameCount);
 			_drop = new Tuple<bool, int>(false, frameCount);
 			_meleeAttack = new Tuple<bool, int>(false, frameCount);
+			_rangedAttack = new Tuple<bool, int>(false, frameCount);
 		}
 
 		public void Reset()
@@ -72,6 +86,7 @@ namespace Dissertation.Input
 			Jump = false;
 			Drop = false;
 			MeleeAttack = false;
+			RangedAttack = false;
 		}
 
 		public bool GetButton(InputAction action)
@@ -88,6 +103,8 @@ namespace Dissertation.Input
 					return Drop;
 				case InputAction.MeleeAttack:
 					return MeleeAttack;
+				case InputAction.RangedAttack:
+					return RangedAttack;
 				default:
 					Debug.AssertFormat(false, "Action {0} needs adding to the yoke", action);
 					return false;
@@ -110,6 +127,8 @@ namespace Dissertation.Input
 					return !Drop && _drop.Item2 == Time.frameCount;
 				case InputAction.MeleeAttack:
 					return !MeleeAttack && _meleeAttack.Item2 == Time.frameCount;
+				case InputAction.RangedAttack:
+					return !RangedAttack && _rangedAttack.Item2 == Time.frameCount;
 				default:
 					Debug.AssertFormat(false, "Action {0} needs adding to the yoke", action);
 					return false;
@@ -122,16 +141,18 @@ namespace Dissertation.Input
 			{
 				case InputAction.MoveHorizontal:
 					Debug.LogWarning("It doesn't make very much sense to call GetDown on an axis value");
-					return Movement.y != 0.0f;
+					return Movement.x != 0.0f;
 				case InputAction.MoveVertical:
 					Debug.LogWarning("It doesn't make very much sense to call GetDown on an axis value");
-					return Movement.x != 0.0f;
+					return Movement.y != 0.0f;
 				case InputAction.Jump:
 					return Jump && _jump.Item2 == Time.frameCount;
 				case InputAction.Drop:
 					return Drop && _drop.Item2 == Time.frameCount;
 				case InputAction.MeleeAttack:
 					return MeleeAttack && _meleeAttack.Item2 == Time.frameCount;
+				case InputAction.RangedAttack:
+					return RangedAttack && _rangedAttack.Item2 == Time.frameCount;
 				default:
 					Debug.AssertFormat(false, "Action {0} needs adding to the yoke", action);
 					return false;
@@ -152,6 +173,8 @@ namespace Dissertation.Input
 					return BoolToFloat(Drop);
 				case InputAction.MeleeAttack:
 					return BoolToFloat(MeleeAttack);
+				case InputAction.RangedAttack:
+					return BoolToFloat(RangedAttack);
 				default:
 					Debug.AssertFormat(false, "Action {0} needs adding to the yoke", action);
 					return 0.0f;
