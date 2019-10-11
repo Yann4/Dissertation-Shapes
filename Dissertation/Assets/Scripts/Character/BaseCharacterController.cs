@@ -161,6 +161,7 @@ namespace Dissertation.Character
 
 		//Attacking state variables
 		protected bool IsMeleeAttacking { get; private set; }
+		private float _attackEndTime;
 
 		public Yoke CharacterYoke { get; private set; }
 
@@ -298,7 +299,8 @@ namespace Dissertation.Character
 
 		public bool CanMeleeAttack()
 		{
-			return !IsMeleeAttacking && !Health.IsDead;
+			return !IsMeleeAttacking && !Health.IsDead 
+				&& (Time.time - _attackEndTime >= Config.MeleeAttackCooldown);
 		}
 
 		protected IEnumerator MeleeAttack()
@@ -308,23 +310,50 @@ namespace Dissertation.Character
 				yield break;
 			}
 
-			IsMeleeAttacking = true;
-			Events.OnMeleeAttackBegin.InvokeSafe();
-
 			_meleeAttack.transform.localScale = Vector3.zero;
 
 			Vector3 position = _boxCollider.bounds.center;
-			float target = 0.0f;
-			if (FacingDirection == Facing.Right)
+			float target = 1.0f;
+
+			float vertical = CharacterYoke.GetAxis(InputAction.MoveVertical);
+			if (vertical != 0.0f)
 			{
-				target = -1.0f;
-				position.x += _boxCollider.bounds.extents.x;
+				if(vertical < 0.0f)
+				{
+					//Trying to hit down
+					//If we're on the ground, we can't slash down
+					if(IsGrounded)
+					{
+						yield break;
+					}
+
+					_meleeAttack.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 90.0f);
+					position.y -= _boxCollider.bounds.extents.y;
+				}
+				else
+				{
+					_meleeAttack.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, -90.0f);
+					position.y += _boxCollider.bounds.extents.y;
+				}
 			}
 			else
 			{
-				target = 1.0f;
-				position.x -= _boxCollider.bounds.extents.x;
+				_meleeAttack.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+
+				if (FacingDirection == Facing.Right)
+				{
+					target = -1.0f;
+					position.x += _boxCollider.bounds.extents.x;
+				}
+				else
+				{
+					target = 1.0f;
+					position.x -= _boxCollider.bounds.extents.x;
+				}
 			}
+
+			IsMeleeAttacking = true;
+			Events.OnMeleeAttackBegin.InvokeSafe();
 
 			_meleeAttack.transform.position = position;
 			_meleeAttack.SetActive(true);
@@ -343,6 +372,7 @@ namespace Dissertation.Character
 
 			_meleeAttack.SetActive(false);
 			IsMeleeAttacking = false;
+			_attackEndTime = Time.time;
 
 			Events.OnMeleeAttackEnd.InvokeSafe();
 		}

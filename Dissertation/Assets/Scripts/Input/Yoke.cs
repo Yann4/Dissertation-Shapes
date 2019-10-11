@@ -143,9 +143,9 @@ namespace Dissertation.Input
 			switch (action)
 			{
 				case InputAction.MoveHorizontal:
-					return Movement.y;
-				case InputAction.MoveVertical:
 					return Movement.x;
+				case InputAction.MoveVertical:
+					return Movement.y;
 				case InputAction.Jump:
 					return BoolToFloat(Jump);
 				case InputAction.Drop:

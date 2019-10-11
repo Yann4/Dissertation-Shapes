@@ -51,6 +51,9 @@ public class CharacterConfig : ScriptableObject
 	[SerializeField, Tooltip("Time to complete one attack")] private float _attackSpeed = 0.3f;
 	public float AttackSpeed { get { return _attackSpeed; } }
 
+	[SerializeField, Tooltip("Delay between attacks")] private float _meleeAttackCooldown = 0.75f;
+	public float MeleeAttackCooldown { get { return _meleeAttackCooldown; } }
+
 	[Header("Character inventory")]
 	[SerializeField] private Inventory.InventoryContents _defaultContents;
 	public Inventory.InventoryContents DefaultContents { get { return _defaultContents; } }
