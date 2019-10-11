@@ -265,10 +265,7 @@ namespace Dissertation.Character
 					_velocity.y += _config.Gravity * Time.deltaTime;
 				}
 
-				if (CharacterYoke.GetButtonUp(InputAction.Jump))
-				{
-					_canJump = false;
-				}
+				_canJump = !CharacterYoke.GetButtonUp(InputAction.Jump);
 
 				_velocity.x = horizontalMovement * _config.RunSpeed;
 
