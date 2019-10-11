@@ -38,6 +38,7 @@ namespace Dissertation.Character.Player
 			CharacterYoke.Jump = InputManager.GetButton(InputAction.Jump);
 			CharacterYoke.Drop = InputManager.GetButton(InputAction.Drop);
 			CharacterYoke.MeleeAttack = InputManager.GetButton(InputAction.MeleeAttack);
+			CharacterYoke.RangedAttack = InputManager.GetButton(InputAction.RangedAttack);
 
 			if (InputManager.GetButtonDown(InputAction.ShowInventory))
 			{
