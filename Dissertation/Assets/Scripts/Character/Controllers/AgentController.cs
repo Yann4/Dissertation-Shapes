@@ -33,7 +33,7 @@ namespace Dissertation.Character.AI
 			}
 		}
 
-		private AgentConfig _agentConfig;
+		public AgentConfig _agentConfig { get; private set; }
 
 		private AgentDebugUI _debugUI;
 

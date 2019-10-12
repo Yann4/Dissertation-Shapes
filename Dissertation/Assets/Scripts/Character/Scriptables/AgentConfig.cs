@@ -7,5 +7,8 @@ namespace Dissertation.Character.AI
 	{
 		[SerializeField] private States _defaultState = 0;
 		public States DefaultState { get { return _defaultState; } }
+
+		[SerializeField] private float _visionRange = 20.0f;
+		public float VisionRange { get { return _visionRange; } }
 	}
 }
