@@ -14,5 +14,13 @@ namespace Dissertation.Character
 		public Action OnMeleeAttackBegin;
 		public Action OnMeleeAttackEnd;
 		public Action<BaseCharacterController /*CharacterHit*/> OnMeleeAttackConnect;
+
+		public Action OnRangedAttackBegin;
+		public Action OnRangedAttackEnd;
+		public Action<BaseCharacterController /*CharacterHit*/> OnRangedAttackConnect;
+
+		public Action OnDashAttackBegin;
+		public Action OnDashAttackEnd;
+		public Action<BaseCharacterController /*CharacterHit*/> OnDashAttackConnect;
 	}
 }

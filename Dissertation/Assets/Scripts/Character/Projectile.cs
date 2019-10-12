@@ -1,4 +1,5 @@
 ﻿using Dissertation.Util;
+using System;
 using UnityEngine;
 
 namespace Dissertation.Character
@@ -13,6 +14,8 @@ namespace Dissertation.Character
 		private Vector3 _velocity;
 		private float _destructionTime;
 		private bool _active = false;
+
+		public Action<Projectile> OnReturnToPool;
 
 		public void Setup(BaseCharacterController owner, int damage, Vector3 velocity, PrefabPool owningPool, float lifetime = 5.0f)
 		{
@@ -57,6 +60,7 @@ namespace Dissertation.Character
 			if(_active)
 			{
 				_owningPool.ReturnInstance(gameObject);
+				OnReturnToPool.InvokeSafe(this);
 				_active = false;
 			}
 		}

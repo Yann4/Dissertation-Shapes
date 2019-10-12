@@ -208,6 +208,7 @@ namespace Dissertation.Character
 
 			Inventory.Initialise(this, Config.DefaultContents);
 
+			//Setup melee attack
 			_meleeAttackEndTime = Time.time;
 			_lastRangedAttackTime = Time.time;
 
@@ -215,25 +216,36 @@ namespace Dissertation.Character
 			_meleeAttack = Instantiate(Config.MeleeAttackPrefab, transform);
 			Debug.Assert(_meleeAttack != null);
 			_meleeAttack.SetActive(false);
-			DamageSource source = _meleeAttack.GetComponentInChildren<DamageSource>();
-			source.Setup(this, Config.BaseMeleeDamage);
-			source.OnHit += OnMeleeHit;
+			DamageSource meleeDamageSource = _meleeAttack.GetComponentInChildren<DamageSource>();
+			meleeDamageSource.Setup(this, Config.BaseMeleeDamage);
+			meleeDamageSource.OnHit += OnMeleeHit;
 
+			//Setup ranged attack
 			_rangedAttackPool = new PrefabPool(Config.RangedAttackPrefab, 5, false, transform);
 
+			//Setup dash attack
 			_dashAttackHighlightSprite = _dashAttack.GetComponent<SpriteRenderer>();
 			_dashAttackHighlightSprite.sprite = _characterSprite.sprite;
+
 			_dashAttackCollider = _dashAttack.GetComponent<Collider2D>();
 			_dashAttackCollider.enabled = false;
-			_dashAttack.GetComponent<DamageSource>().Setup(this, Config.DashAttackBaseDamage);
+
+			DamageSource dashDamageSource = _dashAttack.GetComponent<DamageSource>();
+			dashDamageSource.Setup(this, Config.DashAttackBaseDamage);
+			dashDamageSource.OnHit += OnDashHit;
+
 			_dashAttack.SetActive(false);
 		}
 
 		protected virtual void OnDestroy()
 		{
-			DamageSource source = _meleeAttack.GetComponentInChildren<DamageSource>();
-			source.OnHit -= OnMeleeHit;
+			DamageSource melee = _meleeAttack.GetComponentInChildren<DamageSource>();
+			melee.OnHit -= OnMeleeHit;
+
 			Destroy(_meleeAttack);
+
+			DamageSource dash = _dashAttack.GetComponent<DamageSource>();
+			dash.OnHit -= OnDashHit;
 		}
 
 		protected virtual void Update()
@@ -428,6 +440,7 @@ namespace Dissertation.Character
 		private IEnumerator RangedAttack()
 		{
 			IsRangedAttacking = true;
+			Events.OnRangedAttackBegin.InvokeSafe();
 
 			Projectile projectile = _rangedAttackPool.GetInstance<Projectile>(null);
 
@@ -471,14 +484,18 @@ namespace Dissertation.Character
 
 			projectile.transform.position = position;
 			projectile.Setup(this, Config.BaseRangedDamage, direction * Config.ProjectileSpeed, _rangedAttackPool);
+			projectile.OnHit += OnRangedHit;
+			projectile.OnReturnToPool += OnProjectileReturnToPool;
 			yield return new WaitForSeconds(Config.RangedAttackSpeed);
 
 			IsRangedAttacking = false;
+			Events.OnRangedAttackEnd.InvokeSafe();
 		}
 
 		private IEnumerator DashAttack()
 		{
 			IsDashAttacking = true;
+			Events.OnDashAttackBegin.InvokeSafe();
 
 			_dashAttackHighlightSprite.color = Config.DashCooldownHighlight;
 			_dashAttack.SetActive(true);
@@ -509,6 +526,7 @@ namespace Dissertation.Character
 
 			_dashAttackCollider.enabled = false;
 			IsDashAttacking = false;
+			Events.OnDashAttackEnd.InvokeSafe();
 		}
 
 		private IEnumerator DashCooldownHighlight()
@@ -528,11 +546,6 @@ namespace Dissertation.Character
 
 			_dashAttackHighlightSprite.color = Color.white;
 			_dashAttack.SetActive(false);
-		}
-
-		private void OnMeleeHit(BaseCharacterController hit)
-		{
-			Events.OnMeleeAttackConnect.InvokeSafe(hit);
 		}
 
 		/// <summary>
@@ -887,6 +900,27 @@ namespace Dissertation.Character
 		private void OnTriggerExit2D(Collider2D col)
 		{
 			Events.OnTriggerExitEvent.InvokeSafe(col);
+		}
+
+		private void OnMeleeHit(BaseCharacterController hit)
+		{
+			Events.OnMeleeAttackConnect.InvokeSafe(hit);
+		}
+
+		private void OnRangedHit(BaseCharacterController hit)
+		{
+			Events.OnRangedAttackConnect.InvokeSafe(hit);
+		}
+
+		private void OnProjectileReturnToPool(Projectile projectile)
+		{
+			projectile.OnHit -= OnRangedHit;
+			projectile.OnReturnToPool -= OnProjectileReturnToPool;
+		}
+
+		private void OnDashHit(BaseCharacterController obj)
+		{
+			Events.OnDashAttackConnect.InvokeSafe(obj);
 		}
 
 		[System.Diagnostics.Conditional("DEBUG_CC2D_RAYS")]
