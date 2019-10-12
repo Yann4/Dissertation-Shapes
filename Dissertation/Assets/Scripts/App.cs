@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Dissertation.Character.AI;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Dissertation
@@ -12,8 +13,12 @@ namespace Dissertation
 		private static int _pause = 0;
 		private static float _timeScale;
 
+		public static Blackboard AIBlackboard { get; private set; }
+
 		private void Start()
 		{
+			AIBlackboard = new Blackboard();
+
 			LoadScene(_HUDSceneName);
 			LoadScene(_whiteboxScene);
 

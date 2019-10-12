@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a8be2e93b104c124f985ffb812cb10be, type: 3}
-  m_Name: AgentConfig
+  m_Name: SquareConfig
   m_EditorClassIdentifier: 
   _platformMask:
     serializedVersion: 2
@@ -31,6 +31,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   _canDoubleJump: 0
+  _faction: 1
   _maxHealth: 5
   _baseMeleeDamage: 2
   _meleeAttackSpeed: 0.3
@@ -39,6 +40,11 @@ MonoBehaviour:
   _projectileSpeed: 13
   _rangedAttackSpeed: 0.1
   _rangedAttackCooldown: 0.75
+  _dashAttackDistance: 10
+  _dashAttackDuration: 1
+  _dashAttackCooldown: 1
+  _dashAttackBaseDamage: 3
+  _dashCooldownHighlight: {r: 0, g: 0, b: 0, a: 1}
   _defaultContents:
     Currency: 0
   _dropInventoryPrefab: {fileID: 2193934937260656237, guid: e2f2ecf3cfd66b84a934ace6555d9644,

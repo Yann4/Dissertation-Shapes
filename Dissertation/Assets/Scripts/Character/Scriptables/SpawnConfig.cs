@@ -9,12 +9,12 @@ namespace Dissertation.Character
 		public struct SpawnPair
 		{
 			public GameObject Prefab;
-			public CharacterType Type;
+			public CharacterFaction Type;
 		}
 
 		[SerializeField] private SpawnPair[] _toSpawn;
 
-		public GameObject GetPrefab(CharacterType type)
+		public GameObject GetPrefab(CharacterFaction type)
 		{
 			foreach(SpawnPair pair in _toSpawn)
 			{

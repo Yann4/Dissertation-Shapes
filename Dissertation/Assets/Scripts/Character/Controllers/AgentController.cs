@@ -50,6 +50,8 @@ namespace Dissertation.Character.AI
 
 			_debugUI = HUD.Instance.CreateMenu<AgentDebugUI>();
 			_debugUI.Setup(this);
+
+			Health.OnDamaged += OnTakeDamage;
 		}
 
 		protected override void Update()
@@ -143,6 +145,20 @@ namespace Dissertation.Character.AI
 			{
 				state.Destroy();
 				Current.OnEnable();
+			}
+		}
+
+		private void OnTakeDamage(DamageSource source)
+		{
+			if(source.Owner == null)
+			{
+				//means it's debug stuff and can be ignored
+				return;
+			}
+
+			if (source.Owner.Config.Faction == CharacterFaction.Player)
+			{
+				App.AIBlackboard.MarkAsHostileToPlayer(this);
 			}
 		}
 

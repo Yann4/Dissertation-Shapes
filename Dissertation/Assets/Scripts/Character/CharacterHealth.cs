@@ -30,6 +30,7 @@ namespace Dissertation.Character
 		public Action<int> OnHealthChanged;
 		public Action OnDied;
 		public Action OnRespawn;
+		public Action<DamageSource> OnDamaged;
 
 		private void Start()
 		{
@@ -37,9 +38,10 @@ namespace Dissertation.Character
 			CurrentHealth = _character.Config.MaxHealth;
 		}
 
-		public void Damage(uint damageAmount)
+		public void Damage(DamageSource damage)
 		{
-			ModifyHealth(-(int)damageAmount);
+			ModifyHealth(-(int)damage.Damage);
+			OnDamaged.InvokeSafe(damage);
 		}
 
 		public void Heal(uint healBy)

@@ -7,7 +7,7 @@ namespace Dissertation.Character
 	[RequireComponent(typeof(Collider2D))]
 	public class DamageSource : MonoBehaviour
 	{
-		public BaseCharacterController Owner;
+		public BaseCharacterController Owner { get; private set; }
 
 		[SerializeField] int _damage = 0;
 		public int Damage { get { return _damage; } }
@@ -45,7 +45,7 @@ namespace Dissertation.Character
 			if (characterHit != null)
 			{
 				OnHit.InvokeSafe(characterHit);
-				characterHit.Health.Damage((uint)Damage);
+				characterHit.Health.Damage(this);
 			}
 		}
 

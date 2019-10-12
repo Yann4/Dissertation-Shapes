@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Dissertation.Character
 {
-	public class BaseCharacterController : MonoBehaviour
+	public abstract class BaseCharacterController : MonoBehaviour
 	{
 		/*
 		 * This code has been adapted from https://github.com/prime31/CharacterController2D
