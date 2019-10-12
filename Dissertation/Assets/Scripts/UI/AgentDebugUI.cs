@@ -13,10 +13,14 @@ namespace Dissertation.UI
 
 		[SerializeField] private Text _hostility;
 
+		[SerializeField] private Text _health;
+
 		private AgentController _owner;
 
 		private const string _hostileText = "<color=red>Hostile to player</color>";
 		private const string _friendlyText = "<color=green>Friendly to player</color>";
+		private const string _healthText = "<color=green>Current health {0}/{1}</color>";
+		private const string _deadText = "<color=red>Dead</color>";
 
 		public void Setup(AgentController owner)
 		{
@@ -44,6 +48,8 @@ namespace Dissertation.UI
 			_immediate.text = ConstructString("Immediate", _owner.GetImmediateStack_Debug());
 
 			_hostility.text = App.AIBlackboard.IsHostileToPlayer(_owner) ? _hostileText : _friendlyText;
+
+			_health.text = _owner.Health.IsDead ? _deadText : string.Format(_healthText, _owner.Health.CurrentHealth, _owner.Config.MaxHealth);
 		}
 
 		private string ConstructString(string title, State[] states)
