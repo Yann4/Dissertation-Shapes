@@ -39,6 +39,7 @@ namespace Dissertation.Character.Player
 			CharacterYoke.Drop = InputManager.GetButton(InputAction.Drop);
 			CharacterYoke.MeleeAttack = InputManager.GetButton(InputAction.MeleeAttack);
 			CharacterYoke.RangedAttack = InputManager.GetButton(InputAction.RangedAttack);
+			CharacterYoke.DashAttack = InputManager.GetButton(InputAction.DashAttack);
 
 			if (InputManager.GetButtonDown(InputAction.ShowInventory))
 			{
@@ -57,12 +58,12 @@ namespace Dissertation.Character.Player
 		{
 			HUD.Instance.CreateMenu<PlayerDeathScreen>();
 
-			_sprite.enabled = false;
+			_characterSprite.enabled = false;
 
 			yield return new WaitForSeconds(1.0f);
 
 			transform.position = _spawnedBy.transform.position;
-			_sprite.enabled = true;
+			_characterSprite.enabled = true;
 
 			Health.Respawn();
 		}

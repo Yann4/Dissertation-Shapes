@@ -66,6 +66,21 @@ public class CharacterConfig : ScriptableObject
 	[SerializeField, Tooltip("Delay between attacks")] private float _rangedAttackCooldown = 0.75f;
 	public float RangedAttackCooldown { get { return _rangedAttackCooldown; } }
 
+	[SerializeField] private float _dashAttackDistance = 10.0f;
+	public float DashAttackDistance { get { return _dashAttackDistance; } }
+
+	[SerializeField] private float _dashAttackDuration = 1.0f;
+	public float DashAttackDuration { get { return _dashAttackDuration; } }
+
+	[SerializeField] private float _dashAttackCooldown = 1.0f;
+	public float DashAttackCooldown { get { return _dashAttackCooldown; } }
+
+	[SerializeField] private int _dashAttackBaseDamage = 3;
+	public int DashAttackBaseDamage { get { return _dashAttackBaseDamage; } }
+
+	[SerializeField] private Color _dashCooldownHighlight = Color.black;
+	public Color DashCooldownHighlight { get { return _dashCooldownHighlight; } }
+
 	[Header("Character inventory")]
 	[SerializeField] private Inventory.InventoryContents _defaultContents;
 	public Inventory.InventoryContents DefaultContents { get { return _defaultContents; } }

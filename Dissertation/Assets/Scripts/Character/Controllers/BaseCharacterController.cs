@@ -101,7 +101,11 @@ namespace Dissertation.Character
 		[SerializeField] private CharacterHealth _health;
 		public CharacterHealth Health { get { return _health; } }
 
-		[SerializeField] protected SpriteRenderer _sprite;
+		[SerializeField] protected SpriteRenderer _characterSprite;
+
+		[SerializeField] protected GameObject _dashAttack;
+		private SpriteRenderer _dashAttackHighlightSprite;
+		private Collider2D _dashAttackCollider;
 
 		[SerializeField] private Inventory _inventory;
 		public Inventory Inventory { get { return _inventory; } private set { _inventory = value; } }
@@ -109,7 +113,7 @@ namespace Dissertation.Character
 		public CharacterEvents Events { get; private set; } = new CharacterEvents();
 
 		public bool IsGrounded { get { return _collisionState.Below; } }
-		protected bool CanMove { get { return !Health.IsDead && !IsMeleeAttacking; } }
+		protected bool CanMove { get { return !Health.IsDead && !IsMeleeAttacking && !IsDashAttacking; } }
 
 		/// <summary>
 		/// when true, one way platforms will be ignored when moving vertically for a single frame
@@ -160,12 +164,14 @@ namespace Dissertation.Character
 		private bool _canJump = false;
 
 		//Attacking state variables
-		protected bool IsAttacking { get { return IsMeleeAttacking || IsRangedAttacking; } }
+		protected bool IsAttacking { get { return IsMeleeAttacking || IsRangedAttacking || IsDashAttacking; } }
 		protected bool IsMeleeAttacking { get; private set; }
 		protected bool IsRangedAttacking { get; private set; }
+		protected bool IsDashAttacking { get; private set; }
 
 		private float _meleeAttackEndTime;
 		private float _lastRangedAttackTime;
+		private float _dashAttackEndTime;
 
 		public Yoke CharacterYoke { get; private set; }
 
@@ -214,6 +220,13 @@ namespace Dissertation.Character
 			source.OnHit += OnMeleeHit;
 
 			_rangedAttackPool = new PrefabPool(Config.RangedAttackPrefab, 5, false, transform);
+
+			_dashAttackHighlightSprite = _dashAttack.GetComponent<SpriteRenderer>();
+			_dashAttackHighlightSprite.sprite = _characterSprite.sprite;
+			_dashAttackCollider = _dashAttack.GetComponent<Collider2D>();
+			_dashAttackCollider.enabled = false;
+			_dashAttack.GetComponent<DamageSource>().Setup(this, Config.DashAttackBaseDamage);
+			_dashAttack.SetActive(false);
 		}
 
 		protected virtual void OnDestroy()
@@ -244,6 +257,11 @@ namespace Dissertation.Character
 				StartCoroutine(RangedAttack());
 				_lastRangedAttackTime = Time.time;
 			}
+
+			if(CanDashAttack() && CharacterYoke.GetButtonDown(InputAction.DashAttack))
+			{
+				StartCoroutine(DashAttack());
+			}
 		}
 
 		private void HandleMovement()
@@ -253,7 +271,7 @@ namespace Dissertation.Character
 				_velocity.y = 0;
 			}
 
-			if (!Health.IsDead)
+			if (CanMove)
 			{
 				float horizontalMovement = CharacterYoke.Movement.x;
 
@@ -301,16 +319,13 @@ namespace Dissertation.Character
 				_velocity.x = 0.0f;
 			}
 
-			if (CanMove)
-			{
-				_velocity = MoveBy(_velocity, _velocity * Time.deltaTime);
-			}
+			_velocity = MoveBy(_velocity, _velocity * Time.deltaTime);
 		}
 
 		private void HandleSpriteFacing()
 		{
 			float horizontalMovement = CharacterYoke.Movement.x;
-			Transform toRotate = _sprite.transform;
+			Transform toRotate = _characterSprite.transform;
 			if (horizontalMovement > 0 && toRotate.localScale.x < 0f)
 			{
 				toRotate.localScale = new Vector3(-toRotate.localScale.x, toRotate.localScale.y, toRotate.localScale.z);
@@ -333,6 +348,12 @@ namespace Dissertation.Character
 		{
 			return !IsAttacking && !Health.IsDead
 				&& (Time.time - _lastRangedAttackTime >= Config.RangedAttackCooldown);
+		}
+
+		public bool CanDashAttack()
+		{
+			return !IsAttacking && !Health.IsDead
+				&& (Time.time - _dashAttackEndTime >= Config.DashAttackCooldown);
 		}
 
 		protected IEnumerator MeleeAttack()
@@ -453,6 +474,60 @@ namespace Dissertation.Character
 			yield return new WaitForSeconds(Config.RangedAttackSpeed);
 
 			IsRangedAttacking = false;
+		}
+
+		private IEnumerator DashAttack()
+		{
+			IsDashAttacking = true;
+
+			_dashAttackHighlightSprite.color = Config.DashCooldownHighlight;
+			_dashAttack.SetActive(true);
+			_dashAttackCollider.enabled = true;
+
+			Vector3 velocity = Vector3.zero;
+			if (FacingDirection == Facing.Right)
+			{
+				velocity = Vector3.right;
+			}
+			else
+			{
+				velocity = Vector3.left;
+			}
+
+			float speed = Config.DashAttackDistance / Config.DashAttackDuration;
+			velocity *= speed;
+			float startTime = Time.time;
+
+			while (Time.time - startTime <= Config.DashAttackDuration)
+			{
+				_velocity = MoveBy(_velocity, velocity * Time.deltaTime);
+				yield return null;
+			}
+
+			_dashAttackEndTime = Time.time;
+			StartCoroutine(DashCooldownHighlight());
+
+			_dashAttackCollider.enabled = false;
+			IsDashAttacking = false;
+		}
+
+		private IEnumerator DashCooldownHighlight()
+		{
+			Color targetColour = Color.white;
+			_dashAttackHighlightSprite.color = Config.DashCooldownHighlight;
+
+			float t = 0.0f;
+			float perc = 0.0f;
+			while (perc < 1.0f)
+			{
+				_dashAttackHighlightSprite.color = Color.Lerp(Config.DashCooldownHighlight, targetColour, perc);
+				t += Time.deltaTime;
+				perc = t / Config.DashAttackCooldown;
+				yield return null;
+			}
+
+			_dashAttackHighlightSprite.color = Color.white;
+			_dashAttack.SetActive(false);
 		}
 
 		private void OnMeleeHit(BaseCharacterController hit)

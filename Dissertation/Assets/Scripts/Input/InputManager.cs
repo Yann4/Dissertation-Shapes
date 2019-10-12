@@ -13,6 +13,7 @@ namespace Dissertation.Input
 		ShowInventory,
 		MeleeAttack,
 		RangedAttack,
+		DashAttack,
 	}
 
 	/*

@@ -57,6 +57,11 @@ MonoBehaviour:
   _projectileSpeed: 18
   _rangedAttackSpeed: 0.3
   _rangedAttackCooldown: 0.75
+  _dashAttackDistance: 10
+  _dashAttackDuration: 0.1
+  _dashAttackCooldown: 1
+  _dashAttackBaseDamage: 3
+  _dashCooldownHighlight: {r: 0, g: 0, b: 0, a: 0.69803923}
   _defaultContents:
     Currency: 640
   _dropInventoryPrefab: {fileID: 2193934937260656237, guid: a64de79fd66ce364dbed821dc4956ce8,

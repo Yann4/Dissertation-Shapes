@@ -70,6 +70,19 @@ namespace Dissertation.Input
 			}
 		}
 
+		private Tuple<bool, int> _dashAttack;
+		public bool DashAttack
+		{
+			get { return _dashAttack.Item1; }
+			set
+			{
+				if (value != _dashAttack.Item1)
+				{
+					_dashAttack = new Tuple<bool, int>(value, Time.frameCount);
+				}
+			}
+		}
+
 		public Yoke()
 		{
 			int frameCount = Time.frameCount;
@@ -78,6 +91,7 @@ namespace Dissertation.Input
 			_drop = new Tuple<bool, int>(false, frameCount);
 			_meleeAttack = new Tuple<bool, int>(false, frameCount);
 			_rangedAttack = new Tuple<bool, int>(false, frameCount);
+			_dashAttack = new Tuple<bool, int>(false, frameCount);
 		}
 
 		public void Reset()
@@ -87,6 +101,7 @@ namespace Dissertation.Input
 			Drop = false;
 			MeleeAttack = false;
 			RangedAttack = false;
+			DashAttack = false;
 		}
 
 		public bool GetButton(InputAction action)
@@ -105,6 +120,8 @@ namespace Dissertation.Input
 					return MeleeAttack;
 				case InputAction.RangedAttack:
 					return RangedAttack;
+				case InputAction.DashAttack:
+					return DashAttack;
 				default:
 					Debug.AssertFormat(false, "Action {0} needs adding to the yoke", action);
 					return false;
@@ -129,6 +146,8 @@ namespace Dissertation.Input
 					return !MeleeAttack && _meleeAttack.Item2 == Time.frameCount;
 				case InputAction.RangedAttack:
 					return !RangedAttack && _rangedAttack.Item2 == Time.frameCount;
+				case InputAction.DashAttack:
+					return !DashAttack && _dashAttack.Item2 == Time.frameCount;
 				default:
 					Debug.AssertFormat(false, "Action {0} needs adding to the yoke", action);
 					return false;
@@ -153,6 +172,8 @@ namespace Dissertation.Input
 					return MeleeAttack && _meleeAttack.Item2 == Time.frameCount;
 				case InputAction.RangedAttack:
 					return RangedAttack && _rangedAttack.Item2 == Time.frameCount;
+				case InputAction.DashAttack:
+					return DashAttack && _dashAttack.Item2 == Time.frameCount;
 				default:
 					Debug.AssertFormat(false, "Action {0} needs adding to the yoke", action);
 					return false;
@@ -175,6 +196,8 @@ namespace Dissertation.Input
 					return BoolToFloat(MeleeAttack);
 				case InputAction.RangedAttack:
 					return BoolToFloat(RangedAttack);
+				case InputAction.DashAttack:
+					return BoolToFloat(DashAttack);
 				default:
 					Debug.AssertFormat(false, "Action {0} needs adding to the yoke", action);
 					return 0.0f;

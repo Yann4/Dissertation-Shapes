@@ -26,11 +26,6 @@ namespace Dissertation.Character
 
 			_collider = GetComponent<Collider2D>();
 			_collider.isTrigger = true;
-
-			if(!_collider.enabled)
-			{
-				Debug.LogWarning("Collider is disabled on object " + gameObject.name, gameObject);
-			}
 		}
 
 		public virtual void Setup(BaseCharacterController owner, int damage)
