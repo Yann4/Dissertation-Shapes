@@ -146,6 +146,5 @@ namespace Dissertation.Character.AI
 				return 0;
 			}
 		}
-
 	}
 }
