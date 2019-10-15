@@ -97,7 +97,7 @@ namespace Dissertation.Character.AI
 					float distance = Vector3.Distance(other.transform.position, agent.transform.position);
 					if (!GameObject.ReferenceEquals(other, agent) && distance <= agent._agentConfig.VisionRange)
 					{
-						if (!Physics2D.Raycast(agent.transform.position, other.transform.position, distance, Layers.GroundMask))
+						if (!Physics2D.Raycast(agent.transform.position, agent.transform.position - other.transform.position, distance, Layers.GroundMask | Layers.DefaultMask))
 						{
 							visible.Add(other);
 						}
@@ -110,7 +110,7 @@ namespace Dissertation.Character.AI
 				float distance = Vector3.Distance(_player.transform.position, agent.transform.position);
 				if ( distance <= agent._agentConfig.VisionRange )
 				{
-					if (!Physics2D.Raycast(agent.transform.position, _player.transform.position, distance, Layers.GroundMask))
+					if (!Physics2D.Raycast(agent.transform.position, agent.transform.position - _player.transform.position, distance, Layers.GroundMask | Layers.DefaultMask))
 					{
 						visible.Add(_player);
 					}
