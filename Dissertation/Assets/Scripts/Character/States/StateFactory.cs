@@ -27,6 +27,26 @@ namespace Dissertation.Character.AI
 					Debug.Assert(config is PathToState.PathToConfig);
 					state = new PathToState(config as PathToState.PathToConfig);
 					break;
+				case States.Attack:
+					{
+						Debug.Assert(config is AttackState.AttackConfig);
+						switch (config.Owner.Config.Faction)
+						{
+							case CharacterFaction.Circle:
+								state = new DashAttackState(config as AttackState.AttackConfig);
+								break;
+							case CharacterFaction.Square:
+								state = new MeleeAttackState(config as AttackState.AttackConfig);
+								break;
+							case CharacterFaction.Triangle:
+								state = new RangedAttackState(config as AttackState.AttackConfig);
+								break;
+							default:
+								Debug.Assert(false, "Shouldn't have got here");
+								break;
+						}
+						break;
+					}
 				case States.INVALID:
 				default:
 					Debug.LogError("Factory not set up for state type " + config.StateType);

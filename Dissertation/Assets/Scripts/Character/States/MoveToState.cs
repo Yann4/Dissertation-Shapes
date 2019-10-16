@@ -10,7 +10,7 @@ namespace Dissertation.Character.AI
 			public Vector2 Target { get; private set; }
 			public float Tolerance { get; private set; }
 
-			public MoveToConfig(Vector2 target, AgentController owner, float tolerance = 1.0f) 
+			public MoveToConfig(Vector2 target, AgentController owner, float tolerance = 2.0f) 
 				: base(States.MoveTo, StatePriority.Immediate, owner)
 			{
 				Target = target;

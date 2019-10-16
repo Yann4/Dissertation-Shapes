@@ -156,7 +156,7 @@ namespace Dissertation.Character
 
 		private RaycastHit2D _lastControllerColliderHit;
 		private Vector3 _velocity;
-		protected Facing FacingDirection { get; private set; } = Facing.Right;
+		public Facing FacingDirection { get; private set; } = Facing.Right;
 
 		//Jumping state variables
 		private float _jumpStartTime;

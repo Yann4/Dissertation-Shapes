@@ -1,5 +1,6 @@
 ﻿using Dissertation.Pathfinding;
 using Dissertation.Util;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,11 +11,21 @@ namespace Dissertation.Character.AI
 		public class PathToConfig : StateConfig
 		{
 			public Vector3 Target;
+			public Func<bool> IsTargetValid;
 
-			public PathToConfig(AgentController owner, Vector3 target)
+			public PathToConfig(AgentController owner, Vector3 target, Func<bool> isTargetValid = null)
 				: base(States.PathTo, StatePriority.Normal, owner)
 			{
 				Target = target;
+
+				if (isTargetValid == null)
+				{
+					IsTargetValid = () => true;
+				}
+				else
+				{
+					IsTargetValid = isTargetValid;
+				}
 			}
 		}
 
@@ -46,11 +57,11 @@ namespace Dissertation.Character.AI
 
 				if (_path[_currentPathIndex].Platform == Positional.GetCurrentPlatform(Config.Owner.transform))
 				{
-					Config.Owner.PushState(new MoveToState.MoveToConfig(_path[_currentPathIndex].Position, Config.Owner, 2.0f));
+					Config.Owner.PushState(new MoveToState.MoveToConfig(_path[_currentPathIndex].Position, Config.Owner));
 				}
 				else
 				{
-					Config.Owner.PushState(new TraverseState.TraverseStateConfig(Config.Owner, _path[_currentPathIndex].Platform, 2.0f));
+					Config.Owner.PushState(new TraverseState.TraverseStateConfig(Config.Owner, _path[_currentPathIndex].Platform));
 				}
 
 				_currentPathIndex++;
@@ -59,7 +70,7 @@ namespace Dissertation.Character.AI
 
 		protected override bool IsValid()
 		{
-			return _currentPathIndex < _path.Count;
+			return _currentPathIndex < _path.Count && _config.IsTargetValid();
 		}
 	}
 }

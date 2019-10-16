@@ -1,4 +1,5 @@
 ﻿using Dissertation.UI;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -159,6 +160,42 @@ namespace Dissertation.Character.AI
 			if (source.Owner.Config.Faction == CharacterFaction.Player)
 			{
 				App.AIBlackboard.MarkAsHostileToPlayer(this);
+			}
+
+			if(!IsInState<AttackState>(false)) //We're not already attacking something
+			{
+				PushState(new AttackState.AttackConfig(this, source.Owner));
+			}
+		}
+
+		public bool IsInState<T>(bool activeOnly) where T : State
+		{
+			Type type = typeof(T);
+
+			if (activeOnly)
+			{
+				return Current.GetType() == type;
+			}
+			else
+			{
+				Func<State, bool> stateIsType = state => state != null && type.IsAssignableFrom(state.GetType());
+
+				if( _immediate.Count != 0 && stateIsType(_immediate.Peek()))
+				{
+					return true;
+				}
+
+				if (_normal.Count != 0 && stateIsType(_normal.Peek()))
+				{
+					return true;
+				}
+				
+				if(_longTerm.Count != 0 && stateIsType(_longTerm.Peek()))
+				{
+					return true;
+				}
+
+				return false;
 			}
 		}
 

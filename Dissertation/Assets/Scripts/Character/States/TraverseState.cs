@@ -10,7 +10,7 @@ namespace Dissertation.Character.AI
 			public Transform Target { get; private set; }
 			public Bounds TargetBounds { get; private set; }
 			public float JumpThreshold { get; private set; }
-			public TraverseStateConfig(AgentController owner, Transform targetPlatform, float jumpThreshold = 1.0f) :
+			public TraverseStateConfig(AgentController owner, Transform targetPlatform, float jumpThreshold = 2.0f) :
 				base(States.Traverse, StatePriority.Immediate, owner)
 			{
 				Target = targetPlatform;
@@ -29,7 +29,7 @@ namespace Dissertation.Character.AI
 		public TraverseState(TraverseStateConfig config) : base(config)
 		{
 			_config = config;
-			_currentPlatform = Positional.GetCurrentPlatform(Config.Owner.transform);
+			_currentPlatform = Positional.GetCurrentPlatform(Config.Owner.transform, 50.0f);
 			Debug.Assert(_currentPlatform != null);
 			BoxCollider2D currentPlatformCollider = _currentPlatform.GetComponent<BoxCollider2D>();
 			Bounds currentPlatformBounds = currentPlatformCollider.bounds;
@@ -67,10 +67,6 @@ namespace Dissertation.Character.AI
 				{
 					_launchPoint = currentPlatformBounds.max;
 				}
-			}
-			else
-			{
-				Debug.LogError("Shouldn't ever get here");
 			}
 		}
 

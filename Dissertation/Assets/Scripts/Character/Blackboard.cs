@@ -94,27 +94,16 @@ namespace Dissertation.Character.AI
 
 				foreach (AgentController other in pair.Value)
 				{
-					float distance = Vector3.Distance(other.transform.position, agent.transform.position);
-					if (!GameObject.ReferenceEquals(other, agent) && distance <= agent._agentConfig.VisionRange)
+					if (!GameObject.ReferenceEquals(other, agent) && CanSeeCharacter(agent, other))
 					{
-						if (!Physics2D.Raycast(agent.transform.position, agent.transform.position - other.transform.position, distance, Layers.GroundMask | Layers.DefaultMask))
-						{
-							visible.Add(other);
-						}
+						visible.Add(other);
 					}
 				}
 			}
 
-			if(!hostileOnly || IsHostileToPlayer(agent))
+			if((!hostileOnly || IsHostileToPlayer(agent)) && CanSeeCharacter(agent, _player))
 			{
-				float distance = Vector3.Distance(_player.transform.position, agent.transform.position);
-				if ( distance <= agent._agentConfig.VisionRange )
-				{
-					if (!Physics2D.Raycast(agent.transform.position, agent.transform.position - _player.transform.position, distance, Layers.GroundMask | Layers.DefaultMask))
-					{
-						visible.Add(_player);
-					}
-				}
+				visible.Add(_player);
 			}
 
 			if (sort)
@@ -123,6 +112,15 @@ namespace Dissertation.Character.AI
 			}
 
 			return visible;
+		}
+
+		public bool CanSeeCharacter(AgentController agent, BaseCharacterController other)
+		{
+			float distance = Vector3.Distance(other.transform.position, agent.transform.position);
+
+			return distance <= agent._agentConfig.VisionRange &&
+				!Physics2D.Raycast(agent.transform.position, agent.transform.position - other.transform.position, 
+									distance, Layers.GroundMask | Layers.DefaultMask);
 		}
 
 		private class DistanceCharacterComparer : IComparer<BaseCharacterController>

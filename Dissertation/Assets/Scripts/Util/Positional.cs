@@ -4,8 +4,8 @@ namespace Dissertation.Util
 {
 	public enum Facing
 	{
-		Left,
-		Right
+		Left = -1,
+		Right = 1
 	}
 
 	public static class Positional
