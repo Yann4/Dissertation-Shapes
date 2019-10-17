@@ -5,6 +5,23 @@ namespace Dissertation.Character.AI
 {
 	public abstract class AttackState : State
 	{
+		public class HasTargetMoved : PathToState.ValidCheck
+		{
+			private Transform _target;
+			private Vector3 _initialPosition;
+			private const float _moveToleranceSqr = 5.0f * 5.0f;
+
+			public HasTargetMoved(Transform target, Vector3 initialPos)
+			{
+				_target = target;
+				_initialPosition = initialPos;
+			}
+
+			public override bool IsValid()
+			{
+				return Vector3.SqrMagnitude(_target.position - _initialPosition) <= _moveToleranceSqr;
+			}
+		}
 		public class AttackConfig : StateConfig
 		{
 			public BaseCharacterController Target;
@@ -20,9 +37,6 @@ namespace Dissertation.Character.AI
 		protected float _maxAttackRange = 1.0f;
 		protected float _minAttackRange = 0.5f;
 
-		private Vector3 _currentRepositionTarget;
-		private const float _targetMoveThresholdSqr = 10.0f * 10.0f;
-
 		private Facing _targetDirection;
 
 		public AttackState(AttackConfig config, float maxRange, float preferredRange) : base(config)
@@ -36,7 +50,6 @@ namespace Dissertation.Character.AI
 		{
 			base.OnEnable();
 
-			_currentRepositionTarget = _attackConfig.Target.transform.position;
 		}
 
 		public override bool Update()
@@ -50,8 +63,8 @@ namespace Dissertation.Character.AI
 
 			if (ShouldReposition(out Vector3 targetPosition))
 			{
-				_currentRepositionTarget = _attackConfig.Target.transform.position;
-				Config.Owner.PushState(new PathToState.PathToConfig(Config.Owner, targetPosition, () => HasTargetMoved()));
+				Config.Owner.PushState(new PathToState.PathToConfig(Config.Owner, targetPosition, 
+					new HasTargetMoved(_attackConfig.Target.transform, _attackConfig.Target.transform.position)));
 				return true;
 			}
 
@@ -69,11 +82,6 @@ namespace Dissertation.Character.AI
 			return true;
 		}
 
-		protected bool HasTargetMoved()
-		{
-			return Vector3.SqrMagnitude(_attackConfig.Target.transform.position - _currentRepositionTarget) > _targetMoveThresholdSqr;
-		}
-
 		protected virtual bool ShouldReposition(out Vector3 repositionTarget)
 		{
 			Vector3 targetPosition = _attackConfig.Target.transform.position;
@@ -82,13 +90,8 @@ namespace Dissertation.Character.AI
 
 			//TODO: Handle platform edges
 			//If we're at an uncomfortable range, reposition
-			if (targetDistance > _maxAttackRange || targetDistance < _minAttackRange)
-			{
-				repositionTarget = GetRepositionTarget();
-				return true;
-			}
-
-			if(!App.AIBlackboard.CanSeeCharacter(Config.Owner, _attackConfig.Target))
+			if (targetDistance > _maxAttackRange || targetDistance < _minAttackRange 
+				|| !App.AIBlackboard.CanSeeCharacter(Config.Owner, _attackConfig.Target))
 			{
 				repositionTarget = GetRepositionTarget();
 				return true;
@@ -109,29 +112,35 @@ namespace Dissertation.Character.AI
 			//TODO: Handle platform edges
 			//TODO: Handle obstacles
 			//TODO: Handle repositioning player
-
 			Vector3 repositionTarget;
-
+			float idealDistance = (_maxAttackRange - _minAttackRange) / 2.0f;
 			//If we're on the left, stay on the left
 			if (_targetDirection == Facing.Right)
 			{
 				repositionTarget = targetPosition;
-				repositionTarget.x -= (_maxAttackRange - _minAttackRange) / 2.0f;
+				repositionTarget.x -= idealDistance;
 			}
 			else
 			{
 				repositionTarget = targetPosition;
-				repositionTarget.x += (_maxAttackRange - _minAttackRange) / 2.0f;
+				repositionTarget.x += idealDistance;
 			}
 
-			Transform platform = Util.Positional.GetPlatform(repositionTarget);
+			Transform platform = Util.Positional.GetPlatform(repositionTarget, 50.0f);
 			if(platform == null)
 			{
-				Transform targetPlatform = Util.Positional.GetCurrentPlatform(_attackConfig.Target.transform, 25.0f);
-				//It's possible that the target isn't over a platform right now. In that case, stay where we are til they land
+				Transform targetPlatform = Util.Positional.GetPlatform(targetPosition, 50.0f);
+				//It's possible that the target isn't over a platform right now. In that case, move as close as we can
 				if(targetPlatform == null)
 				{
-					return ownerPosition;
+					if (_targetDirection == Facing.Right)
+					{
+						return new Vector3(targetPosition.x - _minAttackRange, targetPosition.y);
+					}
+					else
+					{
+						return new Vector3(targetPosition.x + _minAttackRange, targetPosition.y);
+					}
 				}
 
 				Bounds platformBounds = targetPlatform.GetComponent<Collider2D>().bounds;

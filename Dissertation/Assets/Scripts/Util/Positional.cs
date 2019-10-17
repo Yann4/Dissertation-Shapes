@@ -15,7 +15,7 @@ namespace Dissertation.Util
 			return Vector3.SqrMagnitude(transform.position - position) < (tolerance * tolerance);
 		}
 
-		public static Transform GetCurrentPlatform(Transform character, float distanceToCheck = 3.0f)
+		public static Transform GetPlatform(Transform character, float distanceToCheck = 3.0f)
 		{
 			return GetPlatform(character.position, distanceToCheck);
 		}

@@ -31,7 +31,7 @@ namespace Dissertation.Character.AI
 		{
 			base.OnEnable();
 
-			_currentPlatform = Positional.GetCurrentPlatform(Config.Owner.transform, 50.0f);
+			_currentPlatform = Positional.GetPlatform(Config.Owner.transform, 50.0f);
 			Debug.Assert(_currentPlatform != null);
 			_currentTarget = Rand.GetRandomPointOnPlatform(_currentPlatform);
 			Debug.DrawLine(Config.Owner.transform.position, _currentTarget, Color.red, 500.0f, false);

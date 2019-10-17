@@ -29,7 +29,7 @@ namespace Dissertation.Character.AI
 		public TraverseState(TraverseStateConfig config) : base(config)
 		{
 			_config = config;
-			_currentPlatform = Positional.GetCurrentPlatform(Config.Owner.transform, 50.0f);
+			_currentPlatform = Positional.GetPlatform(Config.Owner.transform, 50.0f);
 			Debug.Assert(_currentPlatform != null);
 			BoxCollider2D currentPlatformCollider = _currentPlatform.GetComponent<BoxCollider2D>();
 			Bounds currentPlatformBounds = currentPlatformCollider.bounds;
@@ -80,14 +80,14 @@ namespace Dissertation.Character.AI
 			Config.Owner.CharacterYoke.Movement = _moveLeft ? Vector2.left : Vector2.right;
 			Config.Owner.CharacterYoke.Jump = _jump 
 				&& (_moveLeft ? Config.Owner.transform.position.x - _config.JumpThreshold <= _launchPoint.x : Config.Owner.transform.position.x + _config.JumpThreshold >= _launchPoint.x) 
-				&& Positional.GetCurrentPlatform(Config.Owner.transform) != _config.Target;
+				&& Positional.GetPlatform(Config.Owner.transform) != _config.Target;
 
 			return true;
 		}
 
 		protected override bool IsValid()
 		{
-			return Positional.GetCurrentPlatform(Config.Owner.transform) != _config.Target; //Distance being small means that we're also implicitly checking that we're grounded
+			return Positional.GetPlatform(Config.Owner.transform) != _config.Target; //Distance being small means that we're also implicitly checking that we're grounded
 		}
 	}
 }
