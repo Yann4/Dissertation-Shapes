@@ -12,6 +12,11 @@ namespace Dissertation.Util
 	{
 		public static bool IsAtPosition(Transform transform, Vector3 position, float tolerance = 1.0f)
 		{
+			if(transform.position.z != position.z)
+			{
+				position.z = transform.position.z;
+			}
+
 			return Vector3.SqrMagnitude(transform.position - position) < (tolerance * tolerance);
 		}
 

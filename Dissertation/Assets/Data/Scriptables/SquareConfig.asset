@@ -64,7 +64,7 @@ MonoBehaviour:
   _dashAttackBaseDamage: 3
   _dashCooldownHighlight: {r: 0, g: 0, b: 0, a: 1}
   _defaultContents:
-    Currency: 2560
+    Currency: 100
   _dropInventoryPrefab: {fileID: 2193934937260656237, guid: e2f2ecf3cfd66b84a934ace6555d9644,
     type: 3}
   _meleeAttackPrefab: {fileID: 2664483916951406324, guid: 0690dbae7f576c841b9521512f146542,
@@ -72,4 +72,4 @@ MonoBehaviour:
   _rangedAttackPrefab: {fileID: 6078864212887572438, guid: 8073af09f076c51488647ba17b5605a2,
     type: 3}
   _defaultState: 2
-  _visionRange: 20
+  _visionRange: 70

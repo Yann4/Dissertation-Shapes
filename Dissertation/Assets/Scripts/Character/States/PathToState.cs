@@ -35,6 +35,8 @@ namespace Dissertation.Character.AI
 		private List<Node> _path;
 		private int _currentPathIndex = 0;
 		private Node _targetNode = null;
+		private float _stateEnterTime = 0f;
+		private const float _maxStateDuration = 4.0f; //Only to prevent thrashing in the update
 
 		public PathToState(PathToConfig config) : base(config)
 		{
@@ -70,6 +72,8 @@ namespace Dissertation.Character.AI
 
 				_currentPathIndex++;
 			}
+
+			_stateEnterTime = Time.time;
 		}
 
 		public override bool Update()
@@ -79,10 +83,16 @@ namespace Dissertation.Character.AI
 				return false;
 			}
 
+			Transform platform = Positional.GetPlatform( _config.Target, 5.0f );
+			if( platform != Positional.GetPlatform(Config.Owner.transform) )
+			{
+				PushMoveState(_config.Target, platform);
+				return true;
+			}
+
 			//This is for when the last node in the path isn't actually the target
 			//but we still want to move towards it
 			MoveToState.MoveTowards(Config.Owner, _config.Target);
-
 			return true;
 		}
 
@@ -110,7 +120,8 @@ namespace Dissertation.Character.AI
 				return false;
 			}
 
-			return !Positional.IsAtPosition(Config.Owner.transform, _config.Target, 2.0f);
+			return Time.time - _stateEnterTime < _maxStateDuration
+				&& !Positional.IsAtPosition(Config.Owner.transform, _config.Target, 2.0f);
 		}
 	}
 }

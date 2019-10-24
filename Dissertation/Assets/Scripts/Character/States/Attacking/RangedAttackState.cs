@@ -40,5 +40,26 @@ namespace Dissertation.Character.AI
 
 			return Config.Owner.CanRangedAttack();
 		}
+
+		protected override bool ShouldReposition(out Vector3 repositionTarget)
+		{
+			if(Config.Owner.transform.position.y != _attackConfig.Target.transform.position.y)
+			{
+				Transform targetPlatform = Util.Positional.GetPlatform(_attackConfig.Target.transform, 50.0f);
+				if(targetPlatform != null)
+				{
+					repositionTarget = _attackConfig.Target.transform.position;
+					repositionTarget.y = targetPlatform.GetComponent<Collider2D>().bounds.max.y;
+				}
+				else
+				{
+					repositionTarget = GetRepositionTarget();
+				}
+
+				return true;
+			}
+
+			return base.ShouldReposition(out repositionTarget);
+		}
 	}
 }

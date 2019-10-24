@@ -119,7 +119,7 @@ namespace Dissertation.Character.AI
 			float distance = Vector3.Distance(other.transform.position, agent.transform.position);
 
 			return distance <= agent._agentConfig.VisionRange &&
-				!Physics2D.Raycast(agent.transform.position, agent.transform.position - other.transform.position, 
+				!Physics2D.Raycast(agent.transform.position, (other.transform.position - agent.transform.position).normalized, 
 									distance, Layers.GroundMask | Layers.DefaultMask);
 		}
 

@@ -30,42 +30,44 @@ namespace Dissertation.Character.AI
 		{
 			_config = config;
 			_currentPlatform = Positional.GetPlatform(Config.Owner.transform, 50.0f);
-			Debug.Assert(_currentPlatform != null);
-			BoxCollider2D currentPlatformCollider = _currentPlatform.GetComponent<BoxCollider2D>();
-			Bounds currentPlatformBounds = currentPlatformCollider.bounds;
-
-			//Jump if the target is higher, or there's a gap between the platforms
-			_jump = currentPlatformBounds.max.y <= _config.TargetBounds.max.y ||
-				currentPlatformBounds.max.x + 1.0f <= _config.TargetBounds.min.x ||
-				currentPlatformBounds.min.x - 1.0f >= _config.TargetBounds.max.x;
-
-			//If the target is on the left
-			if (_config.TargetBounds.max.x <= currentPlatformBounds.center.x)
+			if (_currentPlatform != null)
 			{
-				_moveLeft = true;
+				BoxCollider2D currentPlatformCollider = _currentPlatform.GetComponent<BoxCollider2D>();
+				Bounds currentPlatformBounds = currentPlatformCollider.bounds;
 
-				//If the targets rhs overlaps
-				if(_config.TargetBounds.max.x >= currentPlatformBounds.min.x && _config.TargetBounds.max.y > currentPlatformBounds.max.y)
-				{
-					_launchPoint = _config.TargetBounds.max;
-				}
-				else
-				{
-					_launchPoint = currentPlatformBounds.min;
-				}
-			}
-			else if (_config.TargetBounds.min.x >= currentPlatformBounds.center.x)
-			{
-				_moveLeft = false;
+				//Jump if the target is higher, or there's a gap between the platforms
+				_jump = currentPlatformBounds.max.y <= _config.TargetBounds.max.y ||
+					currentPlatformBounds.max.x + 1.0f <= _config.TargetBounds.min.x ||
+					currentPlatformBounds.min.x - 1.0f >= _config.TargetBounds.max.x;
 
-				//if the targets lhs overlaps
-				if(_config.TargetBounds.min.x <= currentPlatformBounds.max.x && _config.TargetBounds.max.y > currentPlatformBounds.max.y)
+				//If the target is on the left
+				if (_config.TargetBounds.max.x <= currentPlatformBounds.center.x)
 				{
-					_launchPoint = _config.TargetBounds.min;
+					_moveLeft = true;
+
+					//If the targets rhs overlaps
+					if (_config.TargetBounds.max.x >= currentPlatformBounds.min.x && _config.TargetBounds.max.y > currentPlatformBounds.max.y)
+					{
+						_launchPoint = _config.TargetBounds.max;
+					}
+					else
+					{
+						_launchPoint = currentPlatformBounds.min;
+					}
 				}
-				else
+				else if (_config.TargetBounds.min.x >= currentPlatformBounds.center.x)
 				{
-					_launchPoint = currentPlatformBounds.max;
+					_moveLeft = false;
+
+					//if the targets lhs overlaps
+					if (_config.TargetBounds.min.x <= currentPlatformBounds.max.x && _config.TargetBounds.max.y > currentPlatformBounds.max.y)
+					{
+						_launchPoint = _config.TargetBounds.min;
+					}
+					else
+					{
+						_launchPoint = currentPlatformBounds.max;
+					}
 				}
 			}
 		}
@@ -87,7 +89,7 @@ namespace Dissertation.Character.AI
 
 		protected override bool IsValid()
 		{
-			return Positional.GetPlatform(Config.Owner.transform) != _config.Target; //Distance being small means that we're also implicitly checking that we're grounded
+			return _currentPlatform != null && Positional.GetPlatform(Config.Owner.transform) != _config.Target; //Distance being small means that we're also implicitly checking that we're grounded
 		}
 	}
 }

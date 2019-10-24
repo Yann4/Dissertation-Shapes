@@ -39,17 +39,11 @@ namespace Dissertation.Character.AI
 
 		private Facing _targetDirection;
 
-		public AttackState(AttackConfig config, float maxRange, float preferredRange) : base(config)
+		public AttackState(AttackConfig config, float maxRange, float minAttackRange) : base(config)
 		{
 			_attackConfig = config;
 			_maxAttackRange = maxRange;
-			_minAttackRange = preferredRange;
-		}
-
-		public override void OnEnable()
-		{
-			base.OnEnable();
-
+			_minAttackRange = minAttackRange;
 		}
 
 		public override bool Update()
@@ -84,9 +78,7 @@ namespace Dissertation.Character.AI
 
 		protected virtual bool ShouldReposition(out Vector3 repositionTarget)
 		{
-			Vector3 targetPosition = _attackConfig.Target.transform.position;
-			Vector3 ownerPosition = Config.Owner.transform.position;
-			float targetDistance = (ownerPosition - targetPosition).magnitude;
+			float targetDistance = (Config.Owner.transform.position - _attackConfig.Target.transform.position).magnitude;
 
 			//TODO: Handle platform edges
 			//If we're at an uncomfortable range, reposition
@@ -127,7 +119,15 @@ namespace Dissertation.Character.AI
 			}
 
 			Transform platform = Util.Positional.GetPlatform(repositionTarget, 50.0f);
-			if(platform == null)
+
+			bool validPoint = platform != null;
+			if (validPoint)
+			{
+				Collider2D collider = platform.GetComponent<Collider2D>();
+				validPoint &= collider.bounds.max.y <= repositionTarget.y;
+			}
+
+			if(!validPoint)
 			{
 				Transform targetPlatform = Util.Positional.GetPlatform(targetPosition, 50.0f);
 				//It's possible that the target isn't over a platform right now. In that case, move as close as we can
