@@ -48,6 +48,7 @@ public class CharacterConfig : ScriptableObject
 	[SerializeField] private int _maxHealth = 5;
 	public int MaxHealth { get { return _maxHealth; } }
 
+	[Header("Melee Attack")]
 	[SerializeField] private int _baseMeleeDamage = 2;
 	public int BaseMeleeDamage { get { return _baseMeleeDamage; } }
 
@@ -57,6 +58,7 @@ public class CharacterConfig : ScriptableObject
 	[SerializeField, Tooltip("Delay between attacks")] private float _meleeAttackCooldown = 0.75f;
 	public float MeleeAttackCooldown { get { return _meleeAttackCooldown; } }
 
+	[Header("Ranged Attack")]
 	[SerializeField] private int _baseRangedDamage = 11;
 	public int BaseRangedDamage { get { return _baseRangedDamage; } }
 
@@ -69,6 +71,7 @@ public class CharacterConfig : ScriptableObject
 	[SerializeField, Tooltip("Delay between attacks")] private float _rangedAttackCooldown = 0.75f;
 	public float RangedAttackCooldown { get { return _rangedAttackCooldown; } }
 
+	[Header("Dash Attack")]
 	[SerializeField] private float _dashAttackDistance = 10.0f;
 	public float DashAttackDistance { get { return _dashAttackDistance; } }
 
