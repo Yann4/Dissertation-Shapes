@@ -11,6 +11,11 @@ namespace Dissertation.Character
 		{
 			public uint Currency = 0;
 
+			public InventoryContents(InventoryContents other)
+			{
+				Currency = other.Currency;
+			}
+
 			public void Add(InventoryContents additionalContents)
 			{
 				if(additionalContents != null)
@@ -22,6 +27,11 @@ namespace Dissertation.Character
 			public bool IsEmpty()
 			{
 				return Currency == 0;
+			}
+
+			public InventoryContents Copy()
+			{
+				return new InventoryContents(this);
 			}
 		}
 

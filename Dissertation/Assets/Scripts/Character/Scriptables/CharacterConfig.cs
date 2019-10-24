@@ -86,7 +86,7 @@ public class CharacterConfig : ScriptableObject
 
 	[Header("Character inventory")]
 	[SerializeField] private Inventory.InventoryContents _defaultContents;
-	public Inventory.InventoryContents DefaultContents { get { return _defaultContents; } }
+	public Inventory.InventoryContents DefaultContents { get { return _defaultContents.Copy(); } }
 
 	[SerializeField] private GameObject _dropInventoryPrefab;
 	public GameObject DropInventoryPrefab { get { return _dropInventoryPrefab; } }
