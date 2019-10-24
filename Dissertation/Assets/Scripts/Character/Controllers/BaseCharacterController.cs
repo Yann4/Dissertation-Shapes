@@ -135,6 +135,11 @@ namespace Dissertation.Character
 		/// </summary>
 		private CharacterRaycastOrigins _raycastOrigins;
 
+		private LayerMask _enemyMask;
+		protected LayerMask EnemyMask { get { return _collideWithEnemies ? _enemyMask : (LayerMask)0; } }
+
+		private bool _collideWithEnemies = false;
+
 		/// <summary>
 		/// stores our raycast hit during movement
 		/// </summary>
@@ -188,22 +193,16 @@ namespace Dissertation.Character
 
 		protected virtual void Start()
 		{
-			Debug.Assert(_config != null);
+			Debug.Assert(Config != null);
 			Debug.Assert(_boxCollider != null);
 			Debug.Assert(_rigidBody2D != null);
 
 			// here, we trigger our properties that have setters with bodies
 			SkinWidth = _skinWidth;
 
-			// we want to set our CC2D to ignore all collision layers except what is in our triggerMask
-			for (var i = 0; i < 32; i++)
-			{
-				// see if our triggerMask contains this layer and if not ignore it
-				if ((_config.TriggerMask.value & 1 << i) == 0)
-				{
-					Physics2D.IgnoreLayerCollision(gameObject.layer, i);
-				}
-			}
+			_enemyMask = Config.EnemyMask;
+
+			UpdateLayerCollision();
 
 			CharacterYoke = new Yoke();
 
@@ -367,7 +366,7 @@ namespace Dissertation.Character
 
 		public bool CanDashAttack()
 		{
-			return !IsAttacking && !Health.IsDead
+			return !IsAttacking && !Health.IsDead && !_dashAttack.activeSelf
 				&& (Time.time - _dashAttackEndTime >= Config.DashAttackCooldown);
 		}
 
@@ -499,6 +498,7 @@ namespace Dissertation.Character
 		{
 			IsDashAttacking = true;
 			Events.OnDashAttackBegin.InvokeSafe();
+			_collideWithEnemies = false;
 
 			_dashAttackHighlightSprite.color = Config.DashCooldownHighlight;
 			_dashAttack.SetActive(true);
@@ -527,6 +527,7 @@ namespace Dissertation.Character
 			_dashAttackEndTime = Time.time;
 			StartCoroutine(DashCooldownHighlight());
 
+			_collideWithEnemies = true;
 			_dashAttackCollider.enabled = false;
 			IsDashAttacking = false;
 			Events.OnDashAttackEnd.InvokeSafe();
@@ -678,11 +679,11 @@ namespace Dissertation.Character
 				// walk up sloped oneWayPlatforms
 				if (i == 0 && _collisionState.WasGroundedLastFrame)
 				{
-					_raycastHit = Physics2D.Raycast(ray, rayDirection, rayDistance, _config.PlatformMaskAndOneWay);
+					_raycastHit = Physics2D.Raycast(ray, rayDirection, rayDistance, _config.PlatformMaskAndOneWay | EnemyMask);
 				}
 				else
 				{
-					_raycastHit = Physics2D.Raycast(ray, rayDirection, rayDistance, _config.PlatformMask);
+					_raycastHit = Physics2D.Raycast(ray, rayDirection, rayDistance, _config.PlatformMask | EnemyMask);
 				}
 
 				if (_raycastHit)
@@ -761,9 +762,9 @@ namespace Dissertation.Character
 					var ray = isGoingRight ? _raycastOrigins.BottomRight : _raycastOrigins.BottomLeft;
 					RaycastHit2D raycastHit;
 					if (_collisionState.WasGroundedLastFrame)
-						raycastHit = Physics2D.Raycast(ray, deltaMovement.normalized, deltaMovement.magnitude, _config.PlatformMaskAndOneWay);
+						raycastHit = Physics2D.Raycast(ray, deltaMovement.normalized, deltaMovement.magnitude, _config.PlatformMaskAndOneWay | EnemyMask);
 					else
-						raycastHit = Physics2D.Raycast(ray, deltaMovement.normalized, deltaMovement.magnitude, _config.PlatformMask);
+						raycastHit = Physics2D.Raycast(ray, deltaMovement.normalized, deltaMovement.magnitude, _config.PlatformMask | EnemyMask);
 
 					if (raycastHit)
 					{
@@ -802,11 +803,11 @@ namespace Dissertation.Character
 			LayerMask mask = 0;
 			if ((isGoingUp && !_collisionState.WasGroundedLastFrame) || IgnoreOneWayPlatformsThisFrame)
 			{
-				mask = _config.PlatformMask;
+				mask = _config.PlatformMask | EnemyMask;
 			}
 			else
 			{
-				mask = _config.PlatformMaskAndOneWay;
+				mask = _config.PlatformMaskAndOneWay | EnemyMask;
 			}
 
 			for (var i = 0; i < _totalVerticalRays; i++)
@@ -886,6 +887,67 @@ namespace Dissertation.Character
 									(Quaternion.AngleAxis(-angle, Vector3.forward) * new Vector3(deltaMovement.x * slopeModifier, 0, 0));
 					_collisionState.MovingDownSlope = true;
 					_collisionState.SlopeAngle = angle;
+				}
+			}
+		}
+
+		public void AddEnemy(CharacterFaction faction)
+		{
+			if(faction == Config.Faction)
+			{
+				return;
+			}
+
+			switch (faction)
+			{
+				case CharacterFaction.Player:
+					_enemyMask |= Layers.PlayerMask;
+					break;
+				case CharacterFaction.Square:
+					_enemyMask |= Layers.SquareMask;
+					break;
+				case CharacterFaction.Triangle:
+					_enemyMask |= Layers.TriangleMask;
+					break;
+				case CharacterFaction.Circle:
+					_enemyMask |= Layers.CircleMask;
+					break;
+			}
+		}
+
+		public void RemoveEnemy(CharacterFaction faction)
+		{
+			if (faction == Config.Faction)
+			{
+				return;
+			}
+
+			switch (faction)
+			{
+				case CharacterFaction.Player:
+					_enemyMask &= ~Layers.PlayerMask;
+					break;
+				case CharacterFaction.Square:
+					_enemyMask &= ~Layers.SquareMask;
+					break;
+				case CharacterFaction.Triangle:
+					_enemyMask &= ~Layers.TriangleMask;
+					break;
+				case CharacterFaction.Circle:
+					_enemyMask &= ~Layers.CircleMask;
+					break;
+			}
+		}
+
+		private void UpdateLayerCollision()
+		{
+			// we want to set our CC2D to ignore all collision layers except what is in our triggerMask
+			for (int i = 0; i < 32; i++)
+			{
+				// see if our triggerMask contains this layer and if not ignore it
+				if ((Config.TriggerMask.value & 1 << i) == 0)
+				{
+					Physics2D.IgnoreLayerCollision(gameObject.layer, i);
 				}
 			}
 		}

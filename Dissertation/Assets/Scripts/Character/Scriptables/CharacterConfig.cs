@@ -19,6 +19,10 @@ public class CharacterConfig : ScriptableObject
 	public LayerMask OneWayPlatformMask { get { return _oneWayPlatformMask; } }
 	public LayerMask PlatformMaskAndOneWay { get { return _platformMask | OneWayPlatformMask; } }
 
+	[SerializeField]
+	private LayerMask _enemyMask = 0;
+	public LayerMask EnemyMask { get { return _enemyMask; } }
+
 	/// <summary>
 	/// mask with all layers that trigger events should fire when intersected
 	/// </summary>
