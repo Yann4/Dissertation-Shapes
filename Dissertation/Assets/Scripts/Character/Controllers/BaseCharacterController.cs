@@ -162,6 +162,7 @@ namespace Dissertation.Character
 		private float _jumpStartTime;
 		private float _jumpAvailable; //The amount of "jump power" that you have left for this jump. To allow tapping the button and holding it to jump to different heights
 		private bool _canJump = false;
+		private int _numJumps = 0;
 
 		//Attacking state variables
 		protected bool IsAttacking { get { return IsMeleeAttacking || IsRangedAttacking || IsDashAttacking; } }
@@ -281,13 +282,14 @@ namespace Dissertation.Character
 			if (IsGrounded)
 			{
 				_velocity.y = 0;
+				_numJumps = 0;
 			}
 
 			if (CanMove)
 			{
 				float horizontalMovement = CharacterYoke.Movement.x;
 
-				if ((_config.CanDoubleJump || IsGrounded) && !CharacterYoke.Jump)
+				if ((_numJumps < _config.MaxJumps || IsGrounded) && !CharacterYoke.Jump)
 				{
 					_jumpAvailable = _config.JumpHeight;
 					_canJump = true;
@@ -299,6 +301,7 @@ namespace Dissertation.Character
 					if (CharacterYoke.GetButtonDown(InputAction.Jump))
 					{
 						_jumpStartTime = Time.time;
+						_numJumps++;
 					}
 
 					float jumpThisFrame = _config.GetJumpSpeed(Time.time - _jumpStartTime) * Time.deltaTime;

@@ -48,7 +48,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _canDoubleJump: 0
+  _maxJumps: 1
   _faction: 1
   _maxHealth: 5
   _baseMeleeDamage: 2

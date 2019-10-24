@@ -38,8 +38,8 @@ public class CharacterConfig : ScriptableObject
 	[SerializeField] private AnimationCurve _jumpSpeed;
 	public float GetJumpSpeed(float t) { return _jumpSpeed.Evaluate(t); }
 
-	[SerializeField] private bool _canDoubleJump;
-	public bool CanDoubleJump { get { return _canDoubleJump; } }
+	[SerializeField] private int _maxJumps;
+	public int MaxJumps { get { return _maxJumps; } }
 
 	[Header("Character attributes")]
 	[SerializeField] private CharacterFaction _faction;

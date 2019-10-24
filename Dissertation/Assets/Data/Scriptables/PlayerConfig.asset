@@ -48,7 +48,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _canDoubleJump: 1
+  _maxJumps: 2
+  _faction: 0
   _maxHealth: 5
   _baseMeleeDamage: 2
   _meleeAttackSpeed: 0.3
@@ -63,7 +64,7 @@ MonoBehaviour:
   _dashAttackBaseDamage: 3
   _dashCooldownHighlight: {r: 0, g: 0, b: 0, a: 0.69803923}
   _defaultContents:
-    Currency: 640
+    Currency: 0
   _dropInventoryPrefab: {fileID: 2193934937260656237, guid: a64de79fd66ce364dbed821dc4956ce8,
     type: 3}
   _meleeAttackPrefab: {fileID: 2664483916951406324, guid: 0690dbae7f576c841b9521512f146542,
