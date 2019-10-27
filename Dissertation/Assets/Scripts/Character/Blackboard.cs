@@ -72,12 +72,14 @@ namespace Dissertation.Character.AI
 		public void MarkAsHostileToPlayer(AgentController agent)
 		{
 			agent.AddEnemy(CharacterFaction.Player);
+			_player.AddEnemy(agent.Config.Faction);
 			_hostileToPlayer[agent] = true;
 		}
 
 		public void EndHostilityToPlayer(AgentController agent)
 		{
 			agent.RemoveEnemy(CharacterFaction.Player);
+			_player.RemoveEnemy(agent.Config.Faction);
 			_hostileToPlayer[agent] = false;
 		}
 

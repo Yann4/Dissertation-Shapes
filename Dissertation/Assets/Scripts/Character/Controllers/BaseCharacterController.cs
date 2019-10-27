@@ -138,7 +138,7 @@ namespace Dissertation.Character
 		private LayerMask _enemyMask;
 		protected LayerMask EnemyMask { get { return _collideWithEnemies ? _enemyMask : (LayerMask)0; } }
 
-		private bool _collideWithEnemies = false;
+		private bool _collideWithEnemies = true;
 
 		/// <summary>
 		/// stores our raycast hit during movement
