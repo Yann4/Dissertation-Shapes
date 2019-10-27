@@ -1,5 +1,7 @@
 ﻿using Dissertation.Character;
 using Dissertation.Character.AI;
+using Dissertation.Util;
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,6 +19,7 @@ namespace Dissertation.UI
 		[SerializeField] private Text _health;
 
 		private AgentController _owner;
+		private LineDrawer _drawer;
 
 		private const string _hostileText = "<color=red>Hostile to player</color>";
 		private const string _friendlyText = "<color=green>Friendly to player</color>";
@@ -33,6 +36,8 @@ namespace Dissertation.UI
 			TrackObject(_owner.transform);
 
 			RefreshText();
+
+			_drawer = Camera.main.GetComponent<LineDrawer>();
 		}
 
 		protected override void Update()
@@ -41,10 +46,15 @@ namespace Dissertation.UI
 
 			RefreshText();
 
-			foreach(BaseCharacterController character in App.AIBlackboard.GetVisibleCharacters(_owner))
+			List<BaseCharacterController> visibleCharacters = App.AIBlackboard.GetVisibleCharacters(_owner);
+			GameObject[] visible = new GameObject[visibleCharacters.Count];
+			for(int idx = 0; idx < visibleCharacters.Count; idx++)
 			{
-				Debug.DrawLine(_owner.transform.position, character.transform.position, App.AIBlackboard.CharactersAreHostile(_owner, character) ? Color.red : Color.green, Time.deltaTime);
+				visible[idx] = visibleCharacters[idx].gameObject;
 			}
+
+			LineDrawer.Graph graph = new LineDrawer.Graph() { CentrePoint = _owner.gameObject, Points = visible };
+			_drawer.AddGraph(graph);
 		}
 
 		private void RefreshText()
@@ -56,6 +66,16 @@ namespace Dissertation.UI
 			_hostility.text = App.AIBlackboard.IsHostileToPlayer(_owner) ? _hostileText : _friendlyText;
 
 			_health.text = _owner.Health.IsDead ? _deadText : string.Format(_healthText, _owner.Health.CurrentHealth, _owner.Config.MaxHealth);
+		}
+
+		protected override void SetVisible(bool visible)
+		{
+			base.SetVisible(visible);
+
+			if(!visible)
+			{
+				_drawer.RemoveGraph(_owner.gameObject);
+			}
 		}
 
 		private string ConstructString(string title, State[] states)

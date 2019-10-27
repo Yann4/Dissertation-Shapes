@@ -120,7 +120,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde2202e45b9d254e8aa34fdb7a48bb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Owner: {fileID: 0}
   _damage: 0
 --- !u!1 &4347199480702757699
 GameObject:
@@ -132,7 +131,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4347199480702757698}
   - component: {fileID: 4347199480702757756}
-  m_Layer: 10
+  m_Layer: 13
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -216,7 +215,7 @@ GameObject:
   - component: {fileID: 6200073366568380317}
   - component: {fileID: 4227875582850008151}
   - component: {fileID: 7977672186489269425}
-  m_Layer: 10
+  m_Layer: 13
   m_Name: Agent
   m_TagString: Untagged
   m_Icon: {fileID: 0}

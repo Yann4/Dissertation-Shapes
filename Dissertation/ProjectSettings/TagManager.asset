@@ -15,12 +15,12 @@ TagManager:
   - 
   - Ground
   - Player
-  - Agent
+  - 
   - Damage Source
   - Interactable
-  - 
-  - 
-  - 
+  - Square
+  - Triangle
+  - Circle
   - 
   - 
   - 

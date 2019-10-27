@@ -85,7 +85,7 @@ namespace Dissertation.Util
 
 		private void SetActive(GameObject obj, bool active)
 		{
-			if(obj.activeInHierarchy != active)
+			if(obj.activeSelf != active)
 			{
 				obj.SetActive(active);
 			}

@@ -4,18 +4,23 @@ namespace Dissertation.Util
 {
 	public enum Facing
 	{
-		Left,
-		Right
+		Left = -1,
+		Right = 1
 	}
 
 	public static class Positional
 	{
 		public static bool IsAtPosition(Transform transform, Vector3 position, float tolerance = 1.0f)
 		{
+			if(transform.position.z != position.z)
+			{
+				position.z = transform.position.z;
+			}
+
 			return Vector3.SqrMagnitude(transform.position - position) < (tolerance * tolerance);
 		}
 
-		public static Transform GetCurrentPlatform(Transform character, float distanceToCheck = 3.0f)
+		public static Transform GetPlatform(Transform character, float distanceToCheck = 3.0f)
 		{
 			return GetPlatform(character.position, distanceToCheck);
 		}

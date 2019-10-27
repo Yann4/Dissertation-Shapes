@@ -11,7 +11,7 @@ namespace Dissertation.UI
 		private Vector2 _canvasOffset;
 		private RectTransform _canvasTransform;
 
-		private void Start()
+		protected virtual void Start()
 		{
 			_canvasTransform = _canvas.transform as RectTransform;
 			_canvasOffset = new Vector2(_canvasTransform.sizeDelta.x / 2f, _canvasTransform.sizeDelta.y / 2f);
@@ -23,17 +23,17 @@ namespace Dissertation.UI
 
 			if(_trackedObject != null)
 			{
-				UpdatePosition(_trackedObject.position);
+				_rectTransform.localPosition = TransformPosition(_trackedObject.position);
 			}
 		}
 
-		private void UpdatePosition(Vector3 position)
+		protected Vector3 TransformPosition(Vector3 position)
 		{
 			Vector2 viewportPosition = Camera.main.WorldToViewportPoint(position);
 
 			Vector2 proportionalPosition = new Vector2(viewportPosition.x * _canvasTransform.sizeDelta.x, viewportPosition.y * _canvasTransform.sizeDelta.y);
 
-			_rectTransform.localPosition = proportionalPosition - _canvasOffset + _offset;
+			return proportionalPosition - _canvasOffset + _offset;
 		}
 
 		protected void TrackObject(Transform toTrack)
@@ -45,7 +45,7 @@ namespace Dissertation.UI
 		protected void SetPosition(Vector3 worldPosition)
 		{
 			_trackedObject = null;
-			UpdatePosition(worldPosition);
+			TransformPosition(worldPosition);
 		}
 	}
 }

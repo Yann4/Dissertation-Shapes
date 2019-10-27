@@ -292,6 +292,8 @@ MonoBehaviour:
   _immediate: {fileID: 6439184071261290273}
   _hostility: {fileID: 1860026278963064976}
   _health: {fileID: 242212732476590248}
+  _linePrefab: {fileID: 7005694607434629537, guid: 2062cd043f54cfd4aa7038002b4ec29b,
+    type: 3}
 --- !u!1 &6121411103082437077
 GameObject:
   m_ObjectHideFlags: 0

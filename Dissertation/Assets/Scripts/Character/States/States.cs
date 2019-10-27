@@ -6,6 +6,7 @@
 		MoveTo,
 		Idle,
 		Traverse,
-		PathTo
+		PathTo,
+		Attack,
 	}
 }

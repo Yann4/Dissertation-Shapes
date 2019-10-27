@@ -10,7 +10,7 @@ namespace Dissertation.Character.AI
 			public Vector2 Target { get; private set; }
 			public float Tolerance { get; private set; }
 
-			public MoveToConfig(Vector2 target, AgentController owner, float tolerance = 1.0f) 
+			public MoveToConfig(Vector2 target, AgentController owner, float tolerance = 2.0f) 
 				: base(States.MoveTo, StatePriority.Immediate, owner)
 			{
 				Target = target;
@@ -32,10 +32,17 @@ namespace Dissertation.Character.AI
 				return false;
 			}
 
-			float horizontalMovement = 0.0f;
-			Vector3 position = Config.Owner.transform.position;
+			MoveTowards(Config.Owner, _config.Target);
 
-			if (position.x < _config.Target.x)
+			return true;
+		}
+
+		public static void MoveTowards(BaseCharacterController owner, Vector3 target)
+		{
+			float horizontalMovement = 0.0f;
+			Vector3 position = owner.transform.position;
+
+			if (position.x < target.x)
 			{
 				horizontalMovement = 1.0f;
 			}
@@ -44,9 +51,7 @@ namespace Dissertation.Character.AI
 				horizontalMovement = -1.0f;
 			}
 
-			Config.Owner.CharacterYoke.Movement = new Vector2(horizontalMovement, 0.0f);
-
-			return true;
+			owner.CharacterYoke.Movement = new Vector2(horizontalMovement, 0.0f);
 		}
 
 		protected override bool IsValid()

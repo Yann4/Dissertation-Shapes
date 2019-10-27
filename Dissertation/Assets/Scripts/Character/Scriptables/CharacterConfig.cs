@@ -19,6 +19,10 @@ public class CharacterConfig : ScriptableObject
 	public LayerMask OneWayPlatformMask { get { return _oneWayPlatformMask; } }
 	public LayerMask PlatformMaskAndOneWay { get { return _platformMask | OneWayPlatformMask; } }
 
+	[SerializeField]
+	private LayerMask _enemyMask = 0;
+	public LayerMask EnemyMask { get { return _enemyMask; } }
+
 	/// <summary>
 	/// mask with all layers that trigger events should fire when intersected
 	/// </summary>
@@ -38,8 +42,8 @@ public class CharacterConfig : ScriptableObject
 	[SerializeField] private AnimationCurve _jumpSpeed;
 	public float GetJumpSpeed(float t) { return _jumpSpeed.Evaluate(t); }
 
-	[SerializeField] private bool _canDoubleJump;
-	public bool CanDoubleJump { get { return _canDoubleJump; } }
+	[SerializeField] private int _maxJumps;
+	public int MaxJumps { get { return _maxJumps; } }
 
 	[Header("Character attributes")]
 	[SerializeField] private CharacterFaction _faction;
@@ -48,6 +52,7 @@ public class CharacterConfig : ScriptableObject
 	[SerializeField] private int _maxHealth = 5;
 	public int MaxHealth { get { return _maxHealth; } }
 
+	[Header("Melee Attack")]
 	[SerializeField] private int _baseMeleeDamage = 2;
 	public int BaseMeleeDamage { get { return _baseMeleeDamage; } }
 
@@ -57,6 +62,7 @@ public class CharacterConfig : ScriptableObject
 	[SerializeField, Tooltip("Delay between attacks")] private float _meleeAttackCooldown = 0.75f;
 	public float MeleeAttackCooldown { get { return _meleeAttackCooldown; } }
 
+	[Header("Ranged Attack")]
 	[SerializeField] private int _baseRangedDamage = 11;
 	public int BaseRangedDamage { get { return _baseRangedDamage; } }
 
@@ -69,6 +75,7 @@ public class CharacterConfig : ScriptableObject
 	[SerializeField, Tooltip("Delay between attacks")] private float _rangedAttackCooldown = 0.75f;
 	public float RangedAttackCooldown { get { return _rangedAttackCooldown; } }
 
+	[Header("Dash Attack")]
 	[SerializeField] private float _dashAttackDistance = 10.0f;
 	public float DashAttackDistance { get { return _dashAttackDistance; } }
 
@@ -86,7 +93,7 @@ public class CharacterConfig : ScriptableObject
 
 	[Header("Character inventory")]
 	[SerializeField] private Inventory.InventoryContents _defaultContents;
-	public Inventory.InventoryContents DefaultContents { get { return _defaultContents; } }
+	public Inventory.InventoryContents DefaultContents { get { return _defaultContents.Copy(); } }
 
 	[SerializeField] private GameObject _dropInventoryPrefab;
 	public GameObject DropInventoryPrefab { get { return _dropInventoryPrefab; } }
