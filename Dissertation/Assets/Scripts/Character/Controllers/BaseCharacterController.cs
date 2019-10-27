@@ -95,7 +95,7 @@ namespace Dissertation.Character
 		[SerializeField] protected CharacterConfig _config;
 		public CharacterConfig Config { get { return _config; } }
 
-		[SerializeField] private BoxCollider2D _boxCollider;
+		[SerializeField] private Collider2D _collider;
 		[SerializeField] private Rigidbody2D _rigidBody2D;
 
 		[SerializeField] private CharacterHealth _health;
@@ -194,7 +194,7 @@ namespace Dissertation.Character
 		protected virtual void Start()
 		{
 			Debug.Assert(Config != null);
-			Debug.Assert(_boxCollider != null);
+			Debug.Assert(_collider != null);
 			Debug.Assert(_rigidBody2D != null);
 
 			// here, we trigger our properties that have setters with bodies
@@ -374,7 +374,7 @@ namespace Dissertation.Character
 		{
 			_meleeAttack.transform.localScale = Vector3.zero;
 
-			Vector3 position = _boxCollider.bounds.center;
+			Vector3 position = _collider.bounds.center;
 			float target = 1.0f;
 
 			float vertical = CharacterYoke.GetAxis(InputAction.MoveVertical);
@@ -390,12 +390,12 @@ namespace Dissertation.Character
 					}
 
 					_meleeAttack.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 90.0f);
-					position.y -= _boxCollider.bounds.extents.y;
+					position.y -= _collider.bounds.extents.y;
 				}
 				else
 				{
 					_meleeAttack.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, -90.0f);
-					position.y += _boxCollider.bounds.extents.y;
+					position.y += _collider.bounds.extents.y;
 				}
 			}
 			else
@@ -405,12 +405,12 @@ namespace Dissertation.Character
 				if (FacingDirection == Facing.Right)
 				{
 					target = -1.0f;
-					position.x += _boxCollider.bounds.extents.x;
+					position.x += _collider.bounds.extents.x;
 				}
 				else
 				{
 					target = 1.0f;
-					position.x -= _boxCollider.bounds.extents.x;
+					position.x -= _collider.bounds.extents.x;
 				}
 			}
 
@@ -446,7 +446,7 @@ namespace Dissertation.Character
 
 			Projectile projectile = _rangedAttackPool.GetInstance<Projectile>(null);
 
-			Vector3 position = _boxCollider.bounds.center;
+			Vector3 position = _collider.bounds.center;
 			Vector3 direction = Vector3.zero;
 
 			float vertical = CharacterYoke.GetAxis(InputAction.MoveVertical);
@@ -461,12 +461,12 @@ namespace Dissertation.Character
 						yield break;
 					}
 
-					position.y -= _boxCollider.bounds.extents.y;
+					position.y -= _collider.bounds.extents.y;
 					direction = Vector3.down;
 				}
 				else
 				{
-					position.y += _boxCollider.bounds.extents.y;
+					position.y += _collider.bounds.extents.y;
 					direction = Vector3.up;
 				}
 			}
@@ -475,12 +475,12 @@ namespace Dissertation.Character
 				if (FacingDirection == Facing.Right)
 				{
 					direction = Vector3.right;
-					position.x += _boxCollider.bounds.extents.x;
+					position.x += _collider.bounds.extents.x;
 				}
 				else
 				{
 					direction = Vector3.left;
-					position.x -= _boxCollider.bounds.extents.x;
+					position.x -= _collider.bounds.extents.x;
 				}
 			}
 
@@ -631,11 +631,11 @@ namespace Dissertation.Character
 		{
 			// figure out the distance between our rays in both directions
 			// horizontal
-			float colliderUseableHeight = (_boxCollider.size.y * Mathf.Abs(transform.localScale.y)) - (2f * SkinWidth);
+			float colliderUseableHeight = (_collider.bounds.size.y * Mathf.Abs(transform.localScale.y)) - (2f * SkinWidth);
 			_verticalDistanceBetweenRays = colliderUseableHeight / (_totalHorizontalRays - 1);
 
 			// vertical
-			float colliderUseableWidth = (_boxCollider.size.x * Mathf.Abs(transform.localScale.x)) - (2f * SkinWidth);
+			float colliderUseableWidth = (_collider.bounds.size.x * Mathf.Abs(transform.localScale.x)) - (2f * SkinWidth);
 			_horizontalDistanceBetweenRays = colliderUseableWidth / (_totalVerticalRays - 1);
 		}
 
@@ -648,7 +648,7 @@ namespace Dissertation.Character
 		private void PrimeRaycastOrigins()
 		{
 			// our raycasts need to be fired from the bounds inset by the skinWidth
-			Bounds modifiedBounds = _boxCollider.bounds;
+			Bounds modifiedBounds = _collider.bounds;
 			modifiedBounds.Expand(-2f * SkinWidth);
 
 			_raycastOrigins.TopLeft = new Vector2(modifiedBounds.min.x, modifiedBounds.max.y);

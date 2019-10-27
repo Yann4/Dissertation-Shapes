@@ -20,7 +20,7 @@ namespace Dissertation.Character
 				return;
 			}
 
-			BaseCharacterController spawned = Instantiate(_config.GetPrefab(_spawnerType)).GetComponent<BaseCharacterController>();
+			BaseCharacterController spawned = Instantiate(_config.GetPrefab(_spawnerType), transform.position, Quaternion.identity).GetComponent<BaseCharacterController>();
 			spawned.OnSpawn(this);
 
 			OnSpawn.InvokeSafe(spawned);
