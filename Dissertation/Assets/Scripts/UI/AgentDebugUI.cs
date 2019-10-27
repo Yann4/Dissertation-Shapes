@@ -1,4 +1,5 @@
-﻿using Dissertation.Character.AI;
+﻿using Dissertation.Character;
+using Dissertation.Character.AI;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
@@ -39,6 +40,11 @@ namespace Dissertation.UI
 			base.Update();
 
 			RefreshText();
+
+			foreach(BaseCharacterController character in App.AIBlackboard.GetVisibleCharacters(_owner))
+			{
+				Debug.DrawLine(_owner.transform.position, character.transform.position, App.AIBlackboard.CharactersAreHostile(_owner, character) ? Color.red : Color.green, Time.deltaTime);
+			}
 		}
 
 		private void RefreshText()
