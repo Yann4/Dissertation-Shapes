@@ -52,7 +52,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   _maxJumps: 1
-  _faction: 2
+  _faction: 3
   _maxHealth: 5
   _baseMeleeDamage: 2
   _meleeAttackSpeed: 0.3
