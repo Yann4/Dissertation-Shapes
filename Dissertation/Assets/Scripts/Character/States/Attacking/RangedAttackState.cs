@@ -43,9 +43,11 @@ namespace Dissertation.Character.AI
 
 		protected override bool ShouldReposition(out Vector3 repositionTarget)
 		{
-			if(Config.Owner.transform.position.y != _attackConfig.Target.transform.position.y)
+			Transform ownerPlatform = Util.Positional.GetPlatform( Config.Owner.transform );
+			Transform targetPlatform = Util.Positional.GetPlatform( _attackConfig.Target.transform, 50.0f );
+
+			if(ownerPlatform != targetPlatform)
 			{
-				Transform targetPlatform = Util.Positional.GetPlatform(_attackConfig.Target.transform, 50.0f);
 				if(targetPlatform != null)
 				{
 					repositionTarget = _attackConfig.Target.transform.position;
