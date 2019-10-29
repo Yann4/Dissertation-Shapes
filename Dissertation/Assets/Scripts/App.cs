@@ -1,6 +1,7 @@
 ﻿using Dissertation.Character.AI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Dissertation.Util.Localisation;
 
 namespace Dissertation
 {
@@ -8,6 +9,8 @@ namespace Dissertation
 	{
 		[SerializeField] private string _HUDSceneName = "HUD";
 		[SerializeField] private string _whiteboxScene = "Whitebox";
+
+		[SerializeField] private LocalisationScriptable _localisation;
 
 		public static bool Paused { get { return _pause > 0; } }
 		private static int _pause = 0;
@@ -17,6 +20,8 @@ namespace Dissertation
 
 		private void Start()
 		{
+			new LocManager(_localisation); //Need to create the instance, but don't need to worry about holding a reference
+
 			AIBlackboard = new Blackboard();
 
 			LoadScene(_HUDSceneName);
@@ -59,6 +64,15 @@ namespace Dissertation
 
 			_pause--;
 			Debug.Assert(_pause >= 0);
+		}
+
+		public static void Quit()
+		{
+#if UNITY_EDITOR
+			UnityEditor.EditorApplication.isPlaying = false;
+#else
+			Application.Quit();
+#endif
 		}
 	}
 }

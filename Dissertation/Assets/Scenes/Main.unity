@@ -153,6 +153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _HUDSceneName: HUD
   _whiteboxScene: Whitebox
+  _localisation: {fileID: 11400000, guid: 3e26ae4c7e0303d40ae00ec14f033bb8, type: 2}
 --- !u!4 &1736227846
 Transform:
   m_ObjectHideFlags: 0
