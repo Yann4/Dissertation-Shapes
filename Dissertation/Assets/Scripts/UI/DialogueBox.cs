@@ -22,7 +22,6 @@ namespace Dissertation.UI
 		private Action _confirmAction = null;
 		private Action _cancelAction = null;
 
-
 		public void Show(string title, string body, string yes, string no, Action yesAction, Action noAction = null)
 		{
 			_title.text = title;
