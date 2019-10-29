@@ -1,5 +1,7 @@
 ﻿using Dissertation.Character.Player;
 using Dissertation.Input;
+using Dissertation.Util.Localisation;
+using UnityEngine;
 
 namespace Dissertation.UI
 {
@@ -45,6 +47,13 @@ namespace Dissertation.UI
 		{
 			PlayerController player = FindObjectOfType<PlayerController>();
 			player.Health.Heal((uint)player.Config.MaxHealth);
+		}
+
+		public void TryQuit()
+		{
+			DialogueBox dialogue = HUD.Instance.FindMenu<DialogueBox>();
+			dialogue.Show(LocManager.Instance.GetTranslation("/Menu/Quit_Header"), LocManager.Instance.GetTranslation("/Menu/Quit_Body"), LocManager.Instance.GetTranslation("/Menu/Ok"), LocManager.Instance.GetTranslation("/Menu/Cancel"),
+				() => App.Quit());
 		}
 
 		protected override void SetVisible(bool visible)

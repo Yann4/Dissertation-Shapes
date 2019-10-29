@@ -65,7 +65,7 @@ namespace Dissertation.UI
 
 		//Returns first menu of type. Don't use if you're expecting there to be
 		//multiple menus of the same type
-		public T FindMenu<T>() where T : MenuBase
+		public T FindMenu<T>(bool allowCreation = true) where T : MenuBase
 		{
 			Type type = typeof(T);
 			foreach (MenuBase menu in _instantiatedMenus)
@@ -74,6 +74,11 @@ namespace Dissertation.UI
 				{
 					return menu as T;
 				}
+			}
+
+			if(allowCreation)
+			{
+				return CreateMenu<T>();
 			}
 
 			return null;
