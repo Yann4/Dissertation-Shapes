@@ -52,7 +52,7 @@ namespace Dissertation.UI
 		public void TryQuit()
 		{
 			DialogueBox dialogue = HUD.Instance.FindMenu<DialogueBox>();
-			dialogue.Show(LocManager.Instance.GetTranslation("/Menu/Quit_Header"), LocManager.Instance.GetTranslation("/Menu/Quit_Body"), LocManager.Instance.GetTranslation("/Menu/Ok"), LocManager.Instance.GetTranslation("/Menu/Cancel"),
+			dialogue.Show(LocManager.GetTranslation("/Menu/Quit_Header"), LocManager.GetTranslation("/Menu/Quit_Body"), LocManager.GetTranslation("/Menu/Ok"), LocManager.GetTranslation("/Menu/Cancel"),
 				() => App.Quit());
 		}
 

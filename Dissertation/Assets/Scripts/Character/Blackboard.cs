@@ -7,7 +7,7 @@ namespace Dissertation.Character.AI
 {
 	public class Blackboard
 	{
-		private PlayerController _player;
+		public PlayerController Player { get; private set; }
 		private Dictionary<CharacterFaction, List<AgentController>> _agentsByFaction = new Dictionary<CharacterFaction, List<AgentController>>();
 		private Dictionary<AgentController, bool> _hostileToPlayer = new Dictionary<AgentController, bool>();
 
@@ -41,11 +41,11 @@ namespace Dissertation.Character.AI
 					_hostileToPlayer[agent] = false;
 				}
 			}
-			else if (_player == null)
+			else if (Player == null)
 			{
 				//Must be a player
-				_player = character as PlayerController;
-				Debug.Assert(_player != null);
+				Player = character as PlayerController;
+				Debug.Assert(Player != null);
 			}
 		}
 
@@ -72,14 +72,14 @@ namespace Dissertation.Character.AI
 		public void MarkAsHostileToPlayer(AgentController agent)
 		{
 			agent.AddEnemy(CharacterFaction.Player);
-			_player.AddEnemy(agent.Config.Faction);
+			Player.AddEnemy(agent.Config.Faction);
 			_hostileToPlayer[agent] = true;
 		}
 
 		public void EndHostilityToPlayer(AgentController agent)
 		{
 			agent.RemoveEnemy(CharacterFaction.Player);
-			_player.RemoveEnemy(agent.Config.Faction);
+			Player.RemoveEnemy(agent.Config.Faction);
 			_hostileToPlayer[agent] = false;
 		}
 
@@ -110,9 +110,9 @@ namespace Dissertation.Character.AI
 				}
 			}
 
-			if((!hostileOnly || IsHostileToPlayer(agent)) && CanSeeCharacter(agent, _player))
+			if((!hostileOnly || IsHostileToPlayer(agent)) && CanSeeCharacter(agent, Player))
 			{
-				visible.Add(_player);
+				visible.Add(Player);
 			}
 
 			if (sort)

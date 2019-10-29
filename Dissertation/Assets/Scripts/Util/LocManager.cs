@@ -4,7 +4,7 @@ namespace Dissertation.Util.Localisation
 {
 	public class LocManager
 	{
-		public static LocManager Instance { get; private set; } = null;
+		private static LocManager Instance = null;
 
 		private LocalisationScriptable _data;
 		public LocManager(LocalisationScriptable data)
@@ -16,7 +16,7 @@ namespace Dissertation.Util.Localisation
 			Instance = this;
 		}
 
-		public string GetTranslation(string key)
+		private string GetTranslation_Internal(string key)
 		{
 			string translation = _data.GetTranslation(key);
 			if(translation == null)
@@ -26,6 +26,11 @@ namespace Dissertation.Util.Localisation
 			}
 
 			return translation;
+		}
+
+		public static string GetTranslation(string key)
+		{
+			return Instance.GetTranslation_Internal(key);
 		}
 	}
 }

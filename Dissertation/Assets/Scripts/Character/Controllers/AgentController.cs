@@ -1,4 +1,5 @@
 ﻿using Dissertation.UI;
+using Dissertation.Util.Localisation;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -158,6 +159,7 @@ namespace Dissertation.Character.AI
 			if (source.Owner.Config.Faction == CharacterFaction.Player)
 			{
 				App.AIBlackboard.MarkAsHostileToPlayer(this);
+				HUD.Instance.CreateMenu<SpeechBubble>().Show(transform, LocManager.GetTranslation("/Dialogue/Agent/Hostile/Attack"), () => App.AIBlackboard.Player.Health.IsDead);
 			}
 
 			if(!IsInState<AttackState>(false)) //We're not already attacking something
