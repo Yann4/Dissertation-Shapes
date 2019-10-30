@@ -23,8 +23,8 @@ namespace Dissertation.Editor
 		public void Draw()
 		{
 			Handles.DrawBezier(InPoint.Rect.center, OutPoint.Rect.center,
-				InPoint.Rect.center + Vector2.left * 50.0f,
-				OutPoint.Rect.center - Vector2.left * 50.0f,
+				InPoint.Rect.center + (Vector2.left * 50.0f),
+				OutPoint.Rect.center - (Vector2.left * 50.0f),
 				Color.white, null, 2.0f);
 #pragma warning disable 0618 //This is obsolete
 			if(Handles.Button((InPoint.Rect.center + OutPoint.Rect.center) * 0.5f, Quaternion.identity, 4.0f, 8.0f, Handles.RectangleCap))

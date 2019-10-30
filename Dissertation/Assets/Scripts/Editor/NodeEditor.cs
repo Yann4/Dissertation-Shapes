@@ -94,8 +94,8 @@ namespace Dissertation.Editor
 			if(_selectedInPoint != null && _selectedOutPoint == null)
 			{
 				Handles.DrawBezier(_selectedInPoint.Rect.center, e.mousePosition,
-					_selectedInPoint.Rect.center + Vector2.left * 50.0f,
-					e.mousePosition - Vector2.left * 50.0f,
+					_selectedInPoint.Rect.center + (Vector2.left * 50.0f),
+					e.mousePosition - (Vector2.left * 50.0f),
 					Color.gray, null, 2.0f);
 
 				GUI.changed = true;
@@ -104,8 +104,8 @@ namespace Dissertation.Editor
 			if (_selectedOutPoint != null && _selectedInPoint == null)
 			{
 				Handles.DrawBezier(_selectedOutPoint.Rect.center, e.mousePosition,
-					_selectedOutPoint.Rect.center - Vector2.left * 50.0f,
-					e.mousePosition - Vector2.left * 50.0f,
+					_selectedOutPoint.Rect.center - (Vector2.left * 50.0f),
+					e.mousePosition - (Vector2.left * 50.0f),
 					Color.gray, null, 2.0f);
 
 				GUI.changed = true;
