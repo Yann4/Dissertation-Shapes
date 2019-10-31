@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
+using System.IO;
+using UnityEngine;
 using UnityEditor;
 using Dissertation.Util;
-using System.IO;
 
 namespace Dissertation.Editor
 {
@@ -43,6 +43,21 @@ namespace Dissertation.Editor
 			{
 				Guid = guid.Value;
 			}
+		}
+
+		public Node(BinaryReader reader, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onRemoveNode)
+		{
+			GUID.TryParse(reader.ReadString(), out Guid);
+			NodeRect = new Rect(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+			Title = reader.ReadString();
+
+			_style = nodeStyle;
+			_defaultNodeStyle = nodeStyle;
+			_selectedNodeStyle = selectedStyle;
+
+			InPoint = new ConnectionPoint(this, ConnectionPointType.In, inPointStyle, onClickInPoint);
+			OutPoint = new ConnectionPoint(this, ConnectionPointType.Out, outPointStyle, onClickOutPoint);
+			_onRemoveNode = onRemoveNode;
 		}
 
 		public void Drag(Vector2 delta)
@@ -95,6 +110,12 @@ namespace Dissertation.Editor
 						return true;
 					}
 					break;
+				case EventType.KeyDown:
+					if(e.keyCode == KeyCode.Delete && _isSelected)
+					{
+						_onRemoveNode.InvokeSafe(this);
+					}
+					break;
 			}
 			return false;
 		}
@@ -106,23 +127,16 @@ namespace Dissertation.Editor
 			menu.ShowAsContext();
 		}
 
-		public void Serialize(BinaryWriter writer)
+		public virtual void Serialize(BinaryWriter writer)
 		{
 			writer.Write(Guid.ToString());
+
 			writer.Write(NodeRect.x);
 			writer.Write(NodeRect.y);
 			writer.Write(NodeRect.width);
 			writer.Write(NodeRect.height);
-			writer.Write(Title);
-		}
 
-		public static Node Deserialize(BinaryReader reader, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onRemoveNode)
-		{
-			GUID id;
-			GUID.TryParse(reader.ReadString(), out id);
-			Rect nodeRect = new Rect(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-			string title = reader.ReadString();
-			return new Node(nodeRect.position, nodeRect.size, nodeStyle, selectedStyle, inPointStyle, outPointStyle, onClickInPoint, onClickOutPoint, onRemoveNode, id);
+			writer.Write(Title);
 		}
 	}
 }

@@ -1,9 +1,9 @@
-﻿using Dissertation.Util;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using Dissertation.Util;
 
 namespace Dissertation.Editor
 {
@@ -18,6 +18,22 @@ namespace Dissertation.Editor
 			InPoint = inPoint;
 			OutPoint = outPoint;
 			_onClick = onClick;
+		}
+
+		public Connection(BinaryReader reader, List<Node> nodes, Action<Connection> onClickRemoveConnection)
+		{
+			GUID nodeGuid;
+			string guidString = reader.ReadString();
+			GUID.TryParse(guidString, out nodeGuid);
+			Node inNode = nodes.Find(node => node.Guid == nodeGuid);
+			InPoint = inNode.InPoint;
+
+			guidString = reader.ReadString();
+			GUID.TryParse(guidString, out nodeGuid);
+			Node outNode = nodes.Find(node => node.Guid == nodeGuid);
+			OutPoint = outNode.OutPoint;
+
+			_onClick = onClickRemoveConnection;
 		}
 
 		public void Draw()
@@ -38,18 +54,6 @@ namespace Dissertation.Editor
 		{
 			writer.Write(InPoint.Node.Guid.ToString());
 			writer.Write(OutPoint.Node.Guid.ToString());
-		}
-
-		public static Connection Deserialize(BinaryReader reader, List<Node> nodes, Action<Connection> onClickRemoveConnection)
-		{
-			GUID nodeGuid;
-			GUID.TryParse(reader.ReadString(), out nodeGuid);
-			Node inNode = nodes.Find(node => node.Guid == nodeGuid);
-
-			GUID.TryParse(reader.ReadString(), out nodeGuid);
-			Node outNode = nodes.Find(node => node.Guid == nodeGuid);
-
-			return new Connection(inNode.InPoint, outNode.OutPoint, onClickRemoveConnection);
 		}
 	}
 }

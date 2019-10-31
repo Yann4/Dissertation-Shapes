@@ -14,16 +14,19 @@ namespace Dissertation.Editor
 		private GUIStyle _outStyle;
 		private Vector2 _defaultNodeSize = new Vector2(200.0f, 50.0f);
 
-		private List<Node> _nodes = new List<Node>();
-		private List<Connection> _connections = new List<Connection>();
+		private static List<Node> _nodes = new List<Node>();
+		private static List<Connection> _connections = new List<Connection>();
 
 		private ConnectionPoint _selectedInPoint = null;
 		private ConnectionPoint _selectedOutPoint = null;
 
 		private Vector2 _drag;
+		private Vector2 _boxDragStartPosition;
+		private bool _dragged;
 		private Vector2 _offset;
 
 		private string _path;
+		private string _tempPath;
 
 		[MenuItem("Window/Node Editor")]
 		private static void OpenWindow()
@@ -34,12 +37,16 @@ namespace Dissertation.Editor
 
 		private void OnEnable()
 		{
+			_tempPath = Path.Combine(Application.temporaryCachePath, "nodeEditorTemp.nodegraph");
+
 			_nodeStyle = new GUIStyle();
 			_nodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
+			_nodeStyle.alignment = TextAnchor.MiddleCenter;
 			_nodeStyle.border = new RectOffset(12, 12, 12, 12);
 
 			_selectedNodeStyle = new GUIStyle();
 			_selectedNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1 on.png") as Texture2D;
+			_selectedNodeStyle.alignment = TextAnchor.MiddleCenter;
 			_selectedNodeStyle.border = new RectOffset(12, 12, 12, 12);
 
 			_inStyle = new GUIStyle();
@@ -51,6 +58,15 @@ namespace Dissertation.Editor
 			_outStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left.png") as Texture2D;
 			_outStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left on.png") as Texture2D;
 			_outStyle.border = new RectOffset(4, 4, 12, 12);
+
+			AssemblyReloadEvents.beforeAssemblyReload += BeforeCompile;
+			AssemblyReloadEvents.afterAssemblyReload += AfterCompile;
+		}
+
+		private void OnDisable()
+		{
+			AssemblyReloadEvents.beforeAssemblyReload -= BeforeCompile;
+			AssemblyReloadEvents.afterAssemblyReload -= AfterCompile;
 		}
 
 		private void OnGUI()
@@ -143,12 +159,21 @@ namespace Dissertation.Editor
 			GUILayout.BeginHorizontal(EditorStyles.toolbar);
 			if(GUILayout.Button(new GUIContent("Save"), EditorStyles.toolbarButton))
 			{
-				SaveGraph();
+				_path = EditorUtility.SaveFilePanel("Save to", Application.dataPath, "graph", "nodegraph");
+				if (string.IsNullOrEmpty(_path))
+				{
+					return;
+				}
+				SaveGraph(_path);
 			}
 
 			if (GUILayout.Button(new GUIContent("Load"), EditorStyles.toolbarButton))
 			{
-				LoadGraph();
+				_path = EditorUtility.OpenFilePanel("Load from", Application.dataPath, "nodegraph");
+				if (File.Exists(_path))
+				{
+					LoadGraph(_path);
+				}
 			}
 
 			GUILayout.EndHorizontal();
@@ -162,14 +187,34 @@ namespace Dissertation.Editor
 			{
 				case EventType.MouseDown:
 				{
-					if(e.button == 1)
+					if(e.button == 0)
+					{
+						if ((_selectedInPoint != null || _selectedOutPoint != null))
+						{
+							ClearConnectionSelection();
+						}
+
+						if (e.clickCount == 2)
+						{
+							OnClickAddNode(e.mousePosition);
+						}
+
+						_boxDragStartPosition = e.mousePosition;
+					}
+					else if(e.button == 1)
+					{
+						_dragged = false;
+					}
+						break;
+				}
+				case EventType.MouseUp:
+					else if (e.button == 1 && !_dragged)
 					{
 						ProcessContextMenu(e.mousePosition);
 					}
 					break;
-				}
 				case EventType.MouseDrag:
-					if(e.button == 0)
+					if(e.button == 1)
 					{
 						OnDrag(e.delta);
 					}
@@ -197,15 +242,9 @@ namespace Dissertation.Editor
 			menu.ShowAsContext();
 		}
 
-		private void SaveGraph()
+		private void SaveGraph(string path)
 		{
-			_path = EditorUtility.SaveFilePanel("Save to", Application.dataPath, "graph", "nodegraph");
-			if (string.IsNullOrEmpty(_path))
-			{
-				return;
-			}
-
-			BinaryWriter writer = new BinaryWriter(new FileStream(_path, FileMode.OpenOrCreate), System.Text.Encoding.UTF32);
+			BinaryWriter writer = new BinaryWriter(new FileStream(_path, FileMode.OpenOrCreate), System.Text.Encoding.UTF8);
 			writer.Write(_nodes.Count);
 			foreach(Node node in _nodes)
 			{
@@ -221,33 +260,37 @@ namespace Dissertation.Editor
 			writer.Close();
 		}
 
-		private void LoadGraph()
+		private void LoadGraph(string path)
 		{
 			_nodes.Clear();
 			_connections.Clear();
 
-			_path = EditorUtility.OpenFilePanel("Load from", Application.dataPath, "nodegraph");
-			if(!File.Exists(_path))
-			{
-				return;
-			}
-
-			BinaryReader reader = new BinaryReader(new FileStream(_path, FileMode.Open), System.Text.Encoding.UTF32);
-			int numNodes = reader.Read();
+			BinaryReader reader = new BinaryReader(new FileStream(_path, FileMode.Open), System.Text.Encoding.UTF8);
+			int numNodes = reader.ReadInt32();
 			for(int idx = 0; idx < numNodes; idx++)
 			{
-				_nodes.Add(Node.Deserialize(reader, _nodeStyle, _selectedNodeStyle, _inStyle, _outStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode));
+				_nodes.Add(new Node(reader, _nodeStyle, _selectedNodeStyle, _inStyle, _outStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode));
 			}
 
-			numNodes = reader.Read();
+			numNodes = reader.ReadInt32();
 			for (int idx = 0; idx < numNodes; idx++)
 			{
-				_connections.Add(Connection.Deserialize(reader, _nodes, OnClickRemoveConnection));
+				_connections.Add(new Connection(reader, _nodes, OnClickRemoveConnection));
 			}
 
 			reader.Close();
 
 			GUI.changed = true;
+		}
+
+		private void BeforeCompile()
+		{
+			SaveGraph(_tempPath);
+		}
+
+		private void AfterCompile()
+		{
+			LoadGraph(_tempPath);
 		}
 
 		private void OnClickAddNode(Vector2 mousePosition)
@@ -306,6 +349,7 @@ namespace Dissertation.Editor
 		private void OnDrag(Vector2 delta)
 		{
 			_drag = delta;
+			_dragged |= delta.sqrMagnitude > 0.0f;
 
 			foreach(Node node in _nodes)
 			{
