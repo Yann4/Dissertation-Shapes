@@ -9,7 +9,7 @@ namespace Dissertation.Editor
 	public class Node
 	{
 		public Rect NodeRect;
-		private string Title = "Hello";
+		protected string Title = "Hello";
 		public GUID Guid;
 
 		private GUIStyle _style;
@@ -17,7 +17,7 @@ namespace Dissertation.Editor
 		private GUIStyle _selectedNodeStyle;
 
 		private bool _isHeld = false;
-		private bool _isSelected = false;
+		protected bool _isSelected = false;
 
 		public ConnectionPoint InPoint { get; private set; }
 		public ConnectionPoint OutPoint { get; private set; }
@@ -51,6 +51,8 @@ namespace Dissertation.Editor
 			NodeRect = new Rect(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
 			Title = reader.ReadString();
 
+			_isSelected = reader.ReadBoolean();
+
 			_style = nodeStyle;
 			_defaultNodeStyle = nodeStyle;
 			_selectedNodeStyle = selectedStyle;
@@ -65,7 +67,7 @@ namespace Dissertation.Editor
 			NodeRect.position += delta;
 		}
 
-		public void Draw()
+		public virtual void Draw()
 		{
 			InPoint.Draw();
 			OutPoint.Draw();
@@ -137,6 +139,8 @@ namespace Dissertation.Editor
 			writer.Write(NodeRect.height);
 
 			writer.Write(Title);
+
+			writer.Write(_isSelected);
 		}
 	}
 }

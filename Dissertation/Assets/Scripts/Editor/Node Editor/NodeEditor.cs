@@ -7,15 +7,15 @@ namespace Dissertation.Editor
 {
 	public class NodeEditor : EditorWindow
 	{
-		protected string Title = "Node Editor";
-		private GUIStyle _nodeStyle;
-		private GUIStyle _selectedNodeStyle;
-		private GUIStyle _inStyle;
-		private GUIStyle _outStyle;
-		private Vector2 _defaultNodeSize = new Vector2(200.0f, 50.0f);
+		protected const string Title = "Node Editor";
+		protected GUIStyle _nodeStyle;
+		protected GUIStyle _selectedNodeStyle;
+		protected GUIStyle _inStyle;
+		protected GUIStyle _outStyle;
+		protected Vector2 _defaultNodeSize = new Vector2(200.0f, 50.0f);
 
-		private static List<Node> _nodes = new List<Node>();
-		private static List<Connection> _connections = new List<Connection>();
+		protected List<Node> _nodes = new List<Node>();
+		protected List<Connection> _connections = new List<Connection>();
 
 		private ConnectionPoint _selectedInPoint = null;
 		private ConnectionPoint _selectedOutPoint = null;
@@ -27,14 +27,13 @@ namespace Dissertation.Editor
 		private string _path;
 		private string _tempPath;
 
-		[MenuItem("Window/Node Editor")]
-		private static void OpenWindow()
+		protected static void OpenWindow<T>() where T : NodeEditor
 		{
-			NodeEditor window = GetWindow < NodeEditor >();
-			window.titleContent = new GUIContent(window.Title);
+			T window = GetWindow < T >();
+			window.titleContent = new GUIContent(Title);
 		}
 
-		private void OnEnable()
+		protected virtual void OnEnable()
 		{
 			_tempPath = Path.Combine(Application.temporaryCachePath, "nodeEditorTemp.nodegraph");
 
@@ -272,7 +271,7 @@ namespace Dissertation.Editor
 			int numNodes = reader.ReadInt32();
 			for(int idx = 0; idx < numNodes; idx++)
 			{
-				_nodes.Add(new Node(reader, _nodeStyle, _selectedNodeStyle, _inStyle, _outStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode));
+				_nodes.Add(CreateNode(reader));
 			}
 
 			numNodes = reader.ReadInt32();
@@ -298,10 +297,20 @@ namespace Dissertation.Editor
 
 		private void OnClickAddNode(Vector2 mousePosition)
 		{
-			_nodes.Add(new Node(mousePosition, _defaultNodeSize, _nodeStyle, _selectedNodeStyle, _inStyle, _outStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode));
+			_nodes.Add(CreateNode(mousePosition));
 		}
 
-		private void OnClickInPoint(ConnectionPoint point)
+		protected virtual Node CreateNode(Vector2 mousePosition)
+		{
+			return new Node(mousePosition, _defaultNodeSize, _nodeStyle, _selectedNodeStyle, _inStyle, _outStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode);
+		}
+
+		protected virtual Node CreateNode(BinaryReader reader)
+		{
+			return new Node(reader, _nodeStyle, _selectedNodeStyle, _inStyle, _outStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode);
+		}
+
+		protected void OnClickInPoint(ConnectionPoint point)
 		{
 			_selectedInPoint = point;
 
@@ -316,7 +325,7 @@ namespace Dissertation.Editor
 			}
 		}
 
-		private void OnClickOutPoint(ConnectionPoint point)
+		protected void OnClickOutPoint(ConnectionPoint point)
 		{
 			_selectedOutPoint = point;
 
@@ -336,7 +345,7 @@ namespace Dissertation.Editor
 			_connections.Remove(connection);
 		}
 
-		private void OnClickRemoveNode(Node node)
+		protected void OnClickRemoveNode(Node node)
 		{
 			for(int idx = _connections.Count - 1; idx >= 0; idx--)
 			{
