@@ -21,7 +21,6 @@ namespace Dissertation.Editor
 		private ConnectionPoint _selectedOutPoint = null;
 
 		private Vector2 _drag;
-		private Vector2 _boxDragStartPosition;
 		private bool _dragged;
 		private Vector2 _offset;
 
@@ -198,8 +197,6 @@ namespace Dissertation.Editor
 						{
 							OnClickAddNode(e.mousePosition);
 						}
-
-						_boxDragStartPosition = e.mousePosition;
 					}
 					else if(e.button == 1)
 					{
@@ -210,6 +207,7 @@ namespace Dissertation.Editor
 				case EventType.MouseUp:
 					if (e.button == 1 && !_dragged)
 					{
+
 						ProcessContextMenu(e.mousePosition);
 					}
 					break;
@@ -244,7 +242,7 @@ namespace Dissertation.Editor
 
 		private void SaveGraph(string path)
 		{
-			BinaryWriter writer = new BinaryWriter(new FileStream(_path, FileMode.OpenOrCreate), System.Text.Encoding.UTF8);
+			BinaryWriter writer = new BinaryWriter(new FileStream(path, FileMode.OpenOrCreate), System.Text.Encoding.UTF8);
 			writer.Write(_nodes.Count);
 			foreach(Node node in _nodes)
 			{
@@ -262,10 +260,15 @@ namespace Dissertation.Editor
 
 		private void LoadGraph(string path)
 		{
+			if(!File.Exists(path))
+			{
+				return;
+			}
+
 			_nodes.Clear();
 			_connections.Clear();
 
-			BinaryReader reader = new BinaryReader(new FileStream(_path, FileMode.Open), System.Text.Encoding.UTF8);
+			BinaryReader reader = new BinaryReader(new FileStream(path, FileMode.Open), System.Text.Encoding.UTF8);
 			int numNodes = reader.ReadInt32();
 			for(int idx = 0; idx < numNodes; idx++)
 			{
