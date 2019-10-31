@@ -79,27 +79,7 @@ namespace Dissertation.Editor
 			switch(e.type)
 			{
 				case EventType.MouseDown:
-					if(e.button == 0)
-					{
-						if(NodeRect.Contains(e.mousePosition))
-						{
-							_isHeld = true;
-							_isSelected = true;
-							_style = _selectedNodeStyle;
-						}
-						else
-						{
-							_isSelected = false;
-							_style = _defaultNodeStyle;
-						}
-
-						GUI.changed = true;
-					}
-					else if(e.button == 1 && _isSelected && NodeRect.Contains(e.mousePosition))
-					{
-						ProcessContextMenu();
-						e.Use();
-					}
+					HandleMouseDown(e);
 					break;
 				case EventType.MouseUp:
 					_isHeld = false;
@@ -119,7 +99,33 @@ namespace Dissertation.Editor
 					}
 					break;
 			}
+
 			return false;
+		}
+
+		private void HandleMouseDown(Event e)
+		{
+			if (e.button == 0)
+			{
+				if (NodeRect.Contains(e.mousePosition))
+				{
+					_isHeld = true;
+					_isSelected = true;
+					_style = _selectedNodeStyle;
+				}
+				else
+				{
+					_isSelected = false;
+					_style = _defaultNodeStyle;
+				}
+
+				GUI.changed = true;
+			}
+			else if (e.button == 1 && _isSelected && NodeRect.Contains(e.mousePosition))
+			{
+				ProcessContextMenu();
+				e.Use();
+			}
 		}
 
 		private void ProcessContextMenu()
