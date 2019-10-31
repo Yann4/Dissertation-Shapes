@@ -208,7 +208,7 @@ namespace Dissertation.Editor
 						break;
 				}
 				case EventType.MouseUp:
-					else if (e.button == 1 && !_dragged)
+					if (e.button == 1 && !_dragged)
 					{
 						ProcessContextMenu(e.mousePosition);
 					}
