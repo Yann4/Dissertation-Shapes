@@ -3,33 +3,45 @@ using System.IO;
 using UnityEngine;
 using UnityEditor;
 using Dissertation.Util;
+using System.Collections.Generic;
 
-namespace Dissertation.Editor
+namespace Dissertation.NodeGraph
 {
 	public class Node
 	{
 		public Rect NodeRect;
 		protected string Title = "Hello";
-		public GUID Guid;
+#if UNITY_EDITOR
+		private GUID Guid;
+#endif //UNITY_EDITOR
+		public int UID { get; private set; }
 
 		private GUIStyle _style;
 		private GUIStyle _defaultNodeStyle;
 		private GUIStyle _selectedNodeStyle;
 
+#if UNITY_EDITOR
 		private bool _isHeld = false;
 		protected bool _isSelected = false;
+#endif //UNITY_EDITOR
 
 		public ConnectionPoint InPoint { get; private set; }
 		public ConnectionPoint OutPoint { get; private set; }
 
 		private Action<Node> _onRemoveNode;
 
+		public Node[] ConnectedTo;
+		public int PreviousOption;
+		private string _previousOptionField = "-1";
+
+#if UNITY_EDITOR
 		public Node(Vector2 position, Vector2 size, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onRemoveNode, GUID? guid = null)
 		{
 			NodeRect = new Rect(position.x, position.y, size.x, size.y);
 			_style = nodeStyle;
 			_defaultNodeStyle = nodeStyle;
 			_selectedNodeStyle = selectedStyle;
+			PreviousOption = -1;
 
 			InPoint = new ConnectionPoint(this, ConnectionPointType.In, inPointStyle, onClickInPoint);
 			OutPoint = new ConnectionPoint(this, ConnectionPointType.Out, outPointStyle, onClickOutPoint);
@@ -43,15 +55,14 @@ namespace Dissertation.Editor
 			{
 				Guid = guid.Value;
 			}
+
+			UID = Guid.GetHashCode();
 		}
+#endif //UNITY_EDITOR
 
 		public Node(BinaryReader reader, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onRemoveNode)
 		{
-			GUID.TryParse(reader.ReadString(), out Guid);
-			NodeRect = new Rect(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-			Title = reader.ReadString();
-
-			_isSelected = reader.ReadBoolean();
+			Deserialise(reader);
 
 			_style = nodeStyle;
 			_defaultNodeStyle = nodeStyle;
@@ -62,16 +73,86 @@ namespace Dissertation.Editor
 			_onRemoveNode = onRemoveNode;
 		}
 
+		public Node(BinaryReader reader)
+		{
+			Deserialise(reader);
+
+			InPoint = new ConnectionPoint(this, ConnectionPointType.In);
+			OutPoint = new ConnectionPoint(this, ConnectionPointType.Out);
+		}
+
+		//Pass in the nodes that are connected to the out point only
+		public virtual void Connect(List<Node> connectsTo)
+		{
+			ConnectedTo = new Node[connectsTo.Count];
+
+			foreach (Node node in connectsTo)
+			{
+				ConnectedTo[node.PreviousOption] = node;
+			}
+		}
+
+		public virtual void Serialize(BinaryWriter writer)
+		{
+			writer.Write(UID);
+
+			writer.Write(NodeRect.x);
+			writer.Write(NodeRect.y);
+			writer.Write(NodeRect.width);
+			writer.Write(NodeRect.height);
+
+			writer.Write(Title);
+
+			if (!int.TryParse(_previousOptionField, out int val))
+			{
+				Debug.LogErrorFormat("Couldn't parse input on previous option index - index found is '{1}'", _previousOptionField);
+			}
+
+			writer.Write(PreviousOption);
+		}
+
+		protected virtual void Deserialise(BinaryReader reader)
+		{
+			UID = reader.ReadInt32();
+
+			NodeRect = new Rect(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+			Title = reader.ReadString();
+			PreviousOption = reader.ReadInt32();
+			_previousOptionField = PreviousOption.ToString();
+		}
+
+#if UNITY_EDITOR
 		public void Drag(Vector2 delta)
 		{
 			NodeRect.position += delta;
 		}
 
-		public virtual void Draw()
+		public void Draw()
 		{
 			InPoint.Draw();
 			OutPoint.Draw();
 			GUI.Box(NodeRect, Title, _style);
+
+			EditorGUILayout.BeginVertical();
+
+			Rect currentContentRect = new Rect(NodeRect.x + 10, NodeRect.y + 30, NodeRect.width - 20, 20);
+			DrawContent(ref currentContentRect);
+
+			EditorGUILayout.EndVertical();
+		}
+
+		protected virtual void DrawContent(ref Rect currentContentRect)
+		{
+			GUI.Label(currentContentRect, new GUIContent("Previous option index"));
+			currentContentRect.y += currentContentRect.height + 5;
+
+			int value = PreviousOption;
+			_previousOptionField = GUI.TextField(currentContentRect, _previousOptionField);
+			currentContentRect.y += currentContentRect.height + 5;
+			if (int.TryParse(_previousOptionField, out value))
+			{
+				PreviousOption = value;
+			}
 		}
 
 		public bool ProcessEvents(Event e)
@@ -134,19 +215,6 @@ namespace Dissertation.Editor
 			menu.AddItem(new GUIContent("Remove node"), false, () => _onRemoveNode.InvokeSafe(this));
 			menu.ShowAsContext();
 		}
-
-		public virtual void Serialize(BinaryWriter writer)
-		{
-			writer.Write(Guid.ToString());
-
-			writer.Write(NodeRect.x);
-			writer.Write(NodeRect.y);
-			writer.Write(NodeRect.width);
-			writer.Write(NodeRect.height);
-
-			writer.Write(Title);
-
-			writer.Write(_isSelected);
-		}
+#endif //UNITY_EDITOR
 	}
 }

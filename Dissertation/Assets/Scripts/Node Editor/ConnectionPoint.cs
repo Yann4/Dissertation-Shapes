@@ -2,7 +2,7 @@
 using System;
 using Dissertation.Util;
 
-namespace Dissertation.Editor
+namespace Dissertation.NodeGraph
 {
 	public enum ConnectionPointType
 	{
@@ -27,6 +27,12 @@ namespace Dissertation.Editor
 			_style = style;
 			_onClickConnectionPoint = onClick;
 			Rect = new Rect(0, 0, 10, 20);
+		}
+
+		public ConnectionPoint(Node node, ConnectionPointType type)
+		{
+			Node = node;
+			_type = type;
 		}
 
 		public void Draw()

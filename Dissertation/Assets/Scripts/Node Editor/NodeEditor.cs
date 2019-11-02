@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
 
-namespace Dissertation.Editor
+namespace Dissertation.NodeGraph.Editor
 {
 	public class NodeEditor : EditorWindow
 	{
 		protected const string Title = "Node Editor";
+		protected string DataFolder;
+		
 		protected GUIStyle _nodeStyle;
 		protected GUIStyle _selectedNodeStyle;
 		protected GUIStyle _inStyle;
@@ -36,6 +39,7 @@ namespace Dissertation.Editor
 		protected virtual void OnEnable()
 		{
 			_tempPath = Path.Combine(Application.temporaryCachePath, "nodeEditorTemp.nodegraph");
+			DataFolder = Path.Combine(Application.dataPath, "Data", Title);
 
 			_nodeStyle = new GUIStyle();
 			_nodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
@@ -157,17 +161,18 @@ namespace Dissertation.Editor
 			GUILayout.BeginHorizontal(EditorStyles.toolbar);
 			if(GUILayout.Button(new GUIContent("Save"), EditorStyles.toolbarButton))
 			{
-				_path = EditorUtility.SaveFilePanel("Save to", Application.dataPath, "graph", "nodegraph");
+				_path = EditorUtility.SaveFilePanel("Save to", DataFolder, "graph", NodeUtils.Extension);
 				if (string.IsNullOrEmpty(_path))
 				{
 					return;
 				}
-				SaveGraph(_path);
+
+				NodeUtils.SaveGraph(_path, _nodes, _connections);
 			}
 
 			if (GUILayout.Button(new GUIContent("Load"), EditorStyles.toolbarButton))
 			{
-				_path = EditorUtility.OpenFilePanel("Load from", Application.dataPath, "nodegraph");
+				_path = EditorUtility.OpenFilePanel("Load from", DataFolder, NodeUtils.Extension);
 				if (File.Exists(_path))
 				{
 					LoadGraph(_path);
@@ -238,55 +243,16 @@ namespace Dissertation.Editor
 			menu.ShowAsContext();
 		}
 
-		private void SaveGraph(string path)
-		{
-			BinaryWriter writer = new BinaryWriter(new FileStream(path, FileMode.OpenOrCreate), System.Text.Encoding.UTF8);
-			writer.Write(_nodes.Count);
-			foreach(Node node in _nodes)
-			{
-				node.Serialize(writer);
-			}
-
-			writer.Write(_connections.Count);
-			foreach(Connection connection in _connections)
-			{
-				connection.Serialise(writer);
-			}
-
-			writer.Close();
-		}
-
 		private void LoadGraph(string path)
 		{
-			if(!File.Exists(path))
-			{
-				return;
-			}
-
-			_nodes.Clear();
-			_connections.Clear();
-
-			BinaryReader reader = new BinaryReader(new FileStream(path, FileMode.Open), System.Text.Encoding.UTF8);
-			int numNodes = reader.ReadInt32();
-			for(int idx = 0; idx < numNodes; idx++)
-			{
-				_nodes.Add(CreateNode(reader));
-			}
-
-			numNodes = reader.ReadInt32();
-			for (int idx = 0; idx < numNodes; idx++)
-			{
-				_connections.Add(new Connection(reader, _nodes, OnClickRemoveConnection));
-			}
-
-			reader.Close();
+			NodeUtils.LoadGraph(path, CreateNode, _nodes, _connections, OnClickRemoveConnection);
 
 			GUI.changed = true;
 		}
 
 		private void BeforeCompile()
 		{
-			SaveGraph(_tempPath);
+			NodeUtils.SaveGraph(_tempPath, _nodes, _connections);
 		}
 
 		private void AfterCompile()
@@ -382,3 +348,4 @@ namespace Dissertation.Editor
 		}
 	}
 }
+#endif //UNITY_EDITOR

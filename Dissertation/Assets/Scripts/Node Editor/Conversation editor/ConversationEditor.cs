@@ -1,8 +1,9 @@
-﻿using System.IO;
+﻿#if UNITY_EDITOR
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace Dissertation.Editor
+namespace Dissertation.NodeGraph.Editor
 {
 	public class ConversationEditor : NodeEditor
 	{
@@ -17,6 +18,8 @@ namespace Dissertation.Editor
 		protected override void OnEnable()
 		{
 			base.OnEnable();
+
+			DataFolder = Path.Combine(Application.dataPath, "Data", "Conversation data");
 
 			_nodeStyle.alignment = TextAnchor.UpperCenter;
 			_selectedNodeStyle.alignment = TextAnchor.UpperCenter;
@@ -37,3 +40,4 @@ namespace Dissertation.Editor
 		}
 	}
 }
+#endif //UNITY_EDITOR

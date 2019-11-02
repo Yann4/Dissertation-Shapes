@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using Dissertation.Util;
 
-namespace Dissertation.Editor
+namespace Dissertation.NodeGraph
 {
 	public class Connection
 	{
@@ -20,22 +20,19 @@ namespace Dissertation.Editor
 			_onClick = onClick;
 		}
 
-		public Connection(BinaryReader reader, List<Node> nodes, Action<Connection> onClickRemoveConnection)
+		public Connection(BinaryReader reader, List<Node> allNodes, Action<Connection> onClickRemoveConnection)
 		{
-			GUID nodeGuid;
-			string guidString = reader.ReadString();
-			GUID.TryParse(guidString, out nodeGuid);
-			Node inNode = nodes.Find(node => node.Guid == nodeGuid);
-			InPoint = inNode.InPoint;
-
-			guidString = reader.ReadString();
-			GUID.TryParse(guidString, out nodeGuid);
-			Node outNode = nodes.Find(node => node.Guid == nodeGuid);
-			OutPoint = outNode.OutPoint;
+			Deserialise(reader, allNodes);
 
 			_onClick = onClickRemoveConnection;
 		}
 
+		public Connection(BinaryReader reader, List<Node> allNodes)
+		{
+			Deserialise(reader, allNodes);
+		}
+
+#if UNITY_EDITOR
 		public void Draw()
 		{
 			Handles.DrawBezier(InPoint.Rect.center, OutPoint.Rect.center,
@@ -49,11 +46,24 @@ namespace Dissertation.Editor
 			}
 #pragma warning restore
 		}
+#endif //UNITY_EDITOR
 
 		public void Serialise(BinaryWriter writer)
 		{
-			writer.Write(InPoint.Node.Guid.ToString());
-			writer.Write(OutPoint.Node.Guid.ToString());
+			writer.Write(InPoint.Node.UID);
+			writer.Write(OutPoint.Node.UID);
+		}
+
+		protected virtual void Deserialise(BinaryReader reader, List<Node> allNodes)
+		{
+			int guid = reader.ReadInt32();
+			Node inNode = allNodes.Find(node => node.UID == guid);
+			InPoint = inNode.InPoint;
+
+			guid = reader.ReadInt32();
+
+			Node outNode = allNodes.Find(node => node.UID == guid);
+			OutPoint = outNode.OutPoint;
 		}
 	}
 }
