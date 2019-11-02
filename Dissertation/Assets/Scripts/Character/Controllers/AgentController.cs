@@ -1,4 +1,5 @@
-﻿using Dissertation.UI;
+﻿using Dissertation.Character.Player;
+using Dissertation.UI;
 using Dissertation.Util.Localisation;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,7 @@ namespace Dissertation.Character.AI
 		public AgentConfig _agentConfig { get; private set; }
 
 		private AgentDebugUI _debugUI;
+		private Conversation _conversation;
 
 		protected override void Start()
 		{
@@ -50,6 +52,8 @@ namespace Dissertation.Character.AI
 
 			_debugUI = HUD.Instance.CreateMenu<AgentDebugUI>();
 			_debugUI.Setup(this);
+
+			_conversation = GetComponent<Conversation>();
 
 			Health.OnDamaged += OnTakeDamage;
 		}

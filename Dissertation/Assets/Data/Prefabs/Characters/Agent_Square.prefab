@@ -215,6 +215,7 @@ GameObject:
   - component: {fileID: 6200073366568380317}
   - component: {fileID: 4227875582850008151}
   - component: {fileID: 7977672186489269425}
+  - component: {fileID: 5824597873027131271}
   m_Layer: 13
   m_Name: Agent_Square
   m_TagString: Untagged
@@ -369,3 +370,17 @@ MonoBehaviour:
   _prompt: {fileID: 0}
   _progressbar: {fileID: 0}
   _pickDuration: 4
+--- !u!114 &5824597873027131271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4347199480775218562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4e89083b6d43b344851eb87c785d872, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _conversation: {fileID: 4900000, guid: 47730f083d973ed4695cd392a534d450, type: 3}
+  _owner: {fileID: 4347199480775218561}

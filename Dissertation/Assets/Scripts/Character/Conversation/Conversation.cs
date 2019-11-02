@@ -1,32 +1,44 @@
 ﻿using System.Collections;
 using UnityEngine;
-using Dissertation.NodeGraph;
 using Dissertation.Character.AI;
 using Dissertation.UI;
 using Dissertation.Util.Localisation;
+using System;
+using Dissertation.Util;
 
 namespace Dissertation.Character
 {
 	public class Conversation : MonoBehaviour
 	{
-		[SerializeField] private TextAsset _conversation;
-		[SerializeField] private AgentController _owner;
+		public bool IsInConversation { get; private set; } = false;
+
+		private AgentController _owner;
 
 		private ConversationFragment _currentFragment;
 
 		private bool _dialogueClosed = false;
 		private int _optionSelected = 0;
 
+		public static Action<ConversationFragment, AgentController> ConversationStarted;
+		public static Action<AgentController> ConversationEnded;
+
 		private void Start()
 		{
-			ConversationNode startNode = NodeUtils.LoadGraph(_conversation.bytes, NodeUtils.CreateNode<ConversationNode>) as ConversationNode;
-			_currentFragment = startNode.Sentence;
+			_owner = GetComponent<AgentController>();
+		}
+
+		public void StartConversation(string conversationReference)
+		{
+			_currentFragment = App.AIBlackboard.GetConversation(conversationReference);
 
 			StartCoroutine(RunConversation());
 		}
 
 		private IEnumerator RunConversation()
 		{
+			IsInConversation = true;
+			ConversationStarted.InvokeSafe(_currentFragment, _owner);
+
 			while(_currentFragment != null)
 			{
 				if(_currentFragment.IsPlayer)
@@ -38,6 +50,9 @@ namespace Dissertation.Character
 					yield return ShowSpeech(_currentFragment.ToSay[0], false);
 				}
 			}
+
+			IsInConversation = false;
+			ConversationEnded.InvokeSafe(_owner);
 		}
 
 		private IEnumerator ShowSpeech(string locstring, bool isPlayer)

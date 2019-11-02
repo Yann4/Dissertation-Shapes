@@ -11,18 +11,30 @@ namespace Dissertation.Character.AI
 		private Dictionary<CharacterFaction, List<AgentController>> _agentsByFaction = new Dictionary<CharacterFaction, List<AgentController>>();
 		private Dictionary<AgentController, bool> _hostileToPlayer = new Dictionary<AgentController, bool>();
 
-		public Blackboard()
+		private ConversationData _conversations;
+
+		public bool PlayerIsInConversation { get { return _inConversationWithPlayer != null; } }
+		private AgentController _inConversationWithPlayer = null;
+
+		public Blackboard(ConversationData conversations)
 		{
 			Spawner.OnSpawn += OnCharacterSpawned;
+			Conversation.ConversationStarted += OnConverationStarted;
+			Conversation.ConversationEnded += OnConversationEnded;
 
 			_agentsByFaction[CharacterFaction.Triangle] = new List<AgentController>();
 			_agentsByFaction[CharacterFaction.Circle] = new List<AgentController>();
 			_agentsByFaction[CharacterFaction.Square] = new List<AgentController>();
+
+			_conversations = conversations;
+			_conversations.Setup();
 		}
 
 		~Blackboard()
 		{
 			Spawner.OnSpawn -= OnCharacterSpawned;
+			Conversation.ConversationStarted -= OnConverationStarted;
+			Conversation.ConversationEnded -= OnConversationEnded;
 		}
 
 		private void OnCharacterSpawned(BaseCharacterController character)
@@ -151,6 +163,27 @@ namespace Dissertation.Character.AI
 				}
 
 				return 0;
+			}
+		}
+
+		public ConversationFragment GetConversation(string conversationReference)
+		{
+			return _conversations.GetConversation(conversationReference);
+		}
+
+		private void OnConverationStarted(ConversationFragment conversation, AgentController owner)
+		{
+			if(_conversations.IsPlayerConversation(conversation))
+			{
+				_inConversationWithPlayer = owner;
+			}
+		}
+
+		private void OnConversationEnded(AgentController owner)
+		{
+			if(owner == _inConversationWithPlayer)
+			{
+				_inConversationWithPlayer = null;
 			}
 		}
 	}

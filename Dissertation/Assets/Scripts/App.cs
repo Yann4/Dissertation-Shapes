@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Dissertation.Util.Localisation;
+using Dissertation.Character;
 
 namespace Dissertation
 {
@@ -11,6 +12,7 @@ namespace Dissertation
 		[SerializeField] private string _whiteboxScene = "Whitebox";
 
 		[SerializeField] private LocalisationScriptable _localisation;
+		[SerializeField] private ConversationData _conversations;
 
 		public static bool Paused { get { return _pause > 0; } }
 		private static int _pause = 0;
@@ -22,7 +24,7 @@ namespace Dissertation
 		{
 			new LocManager(_localisation); //Need to create the instance, but don't need to worry about holding a reference
 
-			AIBlackboard = new Blackboard();
+			AIBlackboard = new Blackboard( _conversations );
 
 			LoadScene(_HUDSceneName);
 			LoadScene(_whiteboxScene);

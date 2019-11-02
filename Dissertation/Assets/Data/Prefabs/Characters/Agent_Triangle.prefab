@@ -215,6 +215,7 @@ GameObject:
   - component: {fileID: 4227875582850008151}
   - component: {fileID: 7977672186489269425}
   - component: {fileID: 1205529268119064101}
+  - component: {fileID: 5629701580921443017}
   m_Layer: 14
   m_Name: Agent_Triangle
   m_TagString: Untagged
@@ -371,3 +372,15 @@ PolygonCollider2D:
     - - {x: 0.009932518, y: 1.7441609}
       - {x: -1.2361231, y: -0.70421016}
       - {x: 1.2756367, y: -0.6754155}
+--- !u!114 &5629701580921443017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4347199480775218562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4e89083b6d43b344851eb87c785d872, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

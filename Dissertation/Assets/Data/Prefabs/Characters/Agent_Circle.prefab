@@ -205,6 +205,7 @@ GameObject:
   - component: {fileID: 4227875582850008151}
   - component: {fileID: 7977672186489269425}
   - component: {fileID: 8363686263669165288}
+  - component: {fileID: 565550609489746447}
   m_Layer: 15
   m_Name: Agent_Circle
   m_TagString: Untagged
@@ -349,3 +350,15 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0.5736892}
   serializedVersion: 2
   m_Radius: 1.3
+--- !u!114 &565550609489746447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4347199480775218562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4e89083b6d43b344851eb87c785d872, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
