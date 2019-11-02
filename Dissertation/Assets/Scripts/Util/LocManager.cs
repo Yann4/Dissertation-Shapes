@@ -22,7 +22,7 @@ namespace Dissertation.Util.Localisation
 			if(translation == null)
 			{
 				Debug.LogErrorFormat("Couldn't find translation matching key '{0}'", key);
-				return string.Empty;
+				return key;
 			}
 
 			return translation;

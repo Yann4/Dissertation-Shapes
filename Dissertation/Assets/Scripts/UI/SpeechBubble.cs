@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dissertation.Util;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,10 +24,11 @@ namespace Dissertation.UI
 		private Coroutine _present = null;
 		private bool _isFadingOut = false;
 
+		public Action OnClose;
+
 		public void Show( Transform actor, string text, Func<bool> shouldCloseEarly = null )
 		{
 			float showDuration = _wordsPerSecond * WordCount(text);
-			Debug.LogFormat("Duration {0} for word count {1}", showDuration, WordCount(text));
 			Show(actor, text, showDuration, shouldCloseEarly);
 		}
 
@@ -84,6 +86,13 @@ namespace Dissertation.UI
 				StopCoroutine(_present);
 				StartCoroutine(FadeOut());
 			}
+		}
+
+		public override void CloseMenu()
+		{
+			base.CloseMenu();
+
+			OnClose.InvokeSafe();
 		}
 
 		private int WordCount(string text)
