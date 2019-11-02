@@ -24,7 +24,6 @@ namespace Dissertation.Character
 		{
 			IsPlayer = reader.ReadBoolean();
 
-
 			int count = reader.ReadInt32();
 			ToSay = new string[count];
 
