@@ -76,3 +76,6 @@ MonoBehaviour:
     type: 3}
   _defaultState: 2
   _visionRange: 70
+  AvailableConversations:
+  - Greeting
+  - Greeting

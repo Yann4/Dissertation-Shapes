@@ -40,6 +40,7 @@ namespace Dissertation.Character.Player
 			CharacterYoke.MeleeAttack = InputManager.GetButton(InputAction.MeleeAttack);
 			CharacterYoke.RangedAttack = InputManager.GetButton(InputAction.RangedAttack);
 			CharacterYoke.DashAttack = InputManager.GetButton(InputAction.DashAttack);
+			CharacterYoke.Talk = InputManager.GetButton(InputAction.Talk);
 
 			if (InputManager.GetButtonDown(InputAction.ShowInventory))
 			{

@@ -96,7 +96,7 @@ namespace Dissertation.UI
 			CloseMenu();
 		}
 
-		protected override void SetVisible(bool visible)
+		public override void SetVisible(bool visible)
 		{
 			_canvas.enabled = visible;
 		}

@@ -10,5 +10,8 @@ namespace Dissertation.Character.AI
 
 		[SerializeField] private float _visionRange = 20.0f;
 		public float VisionRange { get { return _visionRange; } }
+
+		[Header("Dialogue")]
+		[SerializeField] public string[] AvailableConversations = new string[0];
 	}
 }

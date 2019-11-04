@@ -62,7 +62,7 @@ namespace Dissertation.UI
 			SetVisible(false);
 		}
 
-		protected virtual void SetVisible(bool visible)
+		public virtual void SetVisible(bool visible)
 		{
 			if(gameObject.activeSelf != visible)
 			{

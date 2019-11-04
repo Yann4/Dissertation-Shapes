@@ -68,7 +68,7 @@ namespace Dissertation.UI
 			_health.text = _owner.Health.IsDead ? _deadText : string.Format(_healthText, _owner.Health.CurrentHealth, _owner.Config.MaxHealth);
 		}
 
-		protected override void SetVisible(bool visible)
+		public override void SetVisible(bool visible)
 		{
 			base.SetVisible(visible);
 

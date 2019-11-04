@@ -5,28 +5,81 @@ using Dissertation.UI;
 using Dissertation.Util.Localisation;
 using System;
 using Dissertation.Util;
+using System.Collections.Generic;
+using Dissertation.Character.Player;
+using Dissertation.Input;
 
 namespace Dissertation.Character
 {
 	public class Conversation : MonoBehaviour
 	{
+		[SerializeField] private AgentController _owner;
+		[SerializeField] private BoxCollider2D _conversationTrigger;
+
 		public bool IsInConversation { get; private set; } = false;
 
-		private AgentController _owner;
+		private ConversationPrompt _prompt;
 
 		private ConversationFragment _currentFragment;
+		private Stack<string> _availableConversations = new Stack<string>();
 
 		private bool _dialogueClosed = false;
 		private int _optionSelected = 0;
+
+		private List<BaseCharacterController> _potentialParticipants = new List<BaseCharacterController>();
 
 		public static Action<ConversationFragment, AgentController> ConversationStarted;
 		public static Action<AgentController> ConversationEnded;
 
 		private void Start()
 		{
-			_owner = GetComponent<AgentController>();
+			SetupConversations(_owner._agentConfig.AvailableConversations);
+
+			_prompt = HUD.Instance.CreateMenu<ConversationPrompt>();
+			_prompt.Setup(_owner);
+			_prompt.SetVisible(false);
 		}
 
+		private void OnDestroy()
+		{
+			if(_prompt != null)
+			{
+				HUD.Instance.DestroyMenu(_prompt);
+			}
+		}
+
+		private void Update()
+		{
+			if (_availableConversations.Count > 0)
+			{
+				foreach (BaseCharacterController character in _potentialParticipants)
+				{
+					if (character.CharacterYoke.GetButtonDown(InputAction.Talk))
+					{
+						TryStartConversation(character);
+					}
+				}
+			}
+		}
+
+		//Sets up stack of conversations
+		private void SetupConversations( string[] conversationReferences )
+		{
+			foreach(string reference in conversationReferences)
+			{
+				ConversationFragment conversation = App.AIBlackboard.GetConversation(reference);
+				if (conversation != null)
+				{
+					_availableConversations.Push(reference);
+				}
+				else
+				{
+					Debug.LogError("Couldn't find conversation with reference " + reference);
+				}
+			}
+		}
+
+		//Starts specific conversation
 		public void StartConversation(string conversationReference)
 		{
 			_currentFragment = App.AIBlackboard.GetConversation(conversationReference);
@@ -34,8 +87,20 @@ namespace Dissertation.Character
 			StartCoroutine(RunConversation());
 		}
 
+		//Starts next conversation off stack
+		public void TryStartConversation(BaseCharacterController other)
+		{
+			if ( IsInConversation || _availableConversations.Count == 0 || !_conversationTrigger.bounds.Contains(other.transform.position) )
+			{
+				return;
+			}
+
+			StartConversation(_availableConversations.Pop());
+		}
+
 		private IEnumerator RunConversation()
 		{
+			SetPromptVisible( false );
 			IsInConversation = true;
 			ConversationStarted.InvokeSafe(_currentFragment, _owner);
 
@@ -53,6 +118,11 @@ namespace Dissertation.Character
 
 			IsInConversation = false;
 			ConversationEnded.InvokeSafe(_owner);
+
+			if (_conversationTrigger.bounds.Contains(App.AIBlackboard.Player.transform.position))
+			{
+				SetPromptVisible(true);
+			}
 		}
 
 		private IEnumerator ShowSpeech(string locstring, bool isPlayer)
@@ -118,6 +188,47 @@ namespace Dissertation.Character
 		private bool PlayerPressedSkip()
 		{
 			return false;
+		}
+
+		private void OnTriggerEnter2D(Collider2D collision)
+		{
+			if (_availableConversations.Count > 0)
+			{
+				BaseCharacterController character = collision.gameObject.GetComponent<BaseCharacterController>();
+
+				if (character != null)
+				{
+					if (character.GetType() == typeof(PlayerController))
+					{
+						SetPromptVisible(true);
+					}
+
+					_potentialParticipants.Add(character);
+				}
+			}
+		}
+
+		private void OnTriggerExit2D(Collider2D collision)
+		{
+			if (_availableConversations.Count > 0)
+			{
+				BaseCharacterController character = collision.gameObject.GetComponent<BaseCharacterController>();
+
+				if (character != null)
+				{
+					if (character.GetType() == typeof(PlayerController))
+					{
+						SetPromptVisible(false);
+					}
+
+					_potentialParticipants.Remove(character);
+				}
+			}
+		}
+
+		private void SetPromptVisible(bool visible)
+		{
+			_prompt.SetVisible( visible && _availableConversations.Count > 0 );
 		}
 	}
 }
