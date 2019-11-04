@@ -2,10 +2,21 @@
 
 namespace Dissertation.Character
 {
+	public enum ConversationOutput : short
+	{
+		None
+	}
+
 	public class ConversationFragment
 	{
 		public bool IsPlayer;
 		public string[] ToSay;
+
+		public ConversationOutput Output = ConversationOutput.None;
+		public string sVal;
+		public int iVal;
+		public bool bVal;
+		public float fVal;
 
 		public ConversationFragment[] NextFragments;
 
@@ -18,6 +29,8 @@ namespace Dissertation.Character
 			{
 				ToSay[idx] = string.Empty;
 			}
+
+			sVal = string.Empty;
 		}
 
 		public ConversationFragment(BinaryReader reader)
@@ -31,6 +44,12 @@ namespace Dissertation.Character
 			{
 				ToSay[idx] = reader.ReadString();
 			}
+
+			Output = (ConversationOutput)reader.ReadInt16();
+			sVal = reader.ReadString();
+			iVal = reader.ReadInt32();
+			bVal = reader.ReadBoolean();
+			fVal = reader.ReadSingle();
 		}
 
 		public void Serialise(BinaryWriter writer)
@@ -42,6 +61,12 @@ namespace Dissertation.Character
 			{
 				writer.Write(text);
 			}
+
+			writer.Write((short)Output);
+			writer.Write(sVal);
+			writer.Write(iVal);
+			writer.Write(bVal);
+			writer.Write(fVal);
 		}
 	}
 }

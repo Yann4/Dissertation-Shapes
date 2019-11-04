@@ -1,7 +1,9 @@
 ﻿using Dissertation.Character.Player;
 using Dissertation.Util;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Dissertation.Character.AI
 {
@@ -16,7 +18,7 @@ namespace Dissertation.Character.AI
 		public bool PlayerIsInConversation { get { return _inConversationWithPlayer != null; } }
 		private AgentController _inConversationWithPlayer = null;
 
-		public Blackboard(ConversationData conversations)
+		public Blackboard( ConversationData conversations )
 		{
 			Spawner.OnSpawn += OnCharacterSpawned;
 			Conversation.ConversationStarted += OnConverationStarted;
@@ -185,6 +187,11 @@ namespace Dissertation.Character.AI
 			{
 				_inConversationWithPlayer = null;
 			}
+		}
+
+		public void RunConversationFunction(string key, params string[] parameters )
+		{
+
 		}
 	}
 }

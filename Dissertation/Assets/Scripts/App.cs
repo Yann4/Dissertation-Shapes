@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Dissertation.Util.Localisation;
 using Dissertation.Character;
+using Dissertation.Util;
 
 namespace Dissertation
 {

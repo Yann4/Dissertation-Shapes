@@ -72,6 +72,10 @@ namespace Dissertation.NodeGraph
 				Sentence.ToSay[idx] = GUI.TextField(currentContentRect, Sentence.ToSay[idx]);
 				currentContentRect.y += currentContentRect.height + 5;
 			}
+
+
+			EditorGUILayout.EnumPopup(Sentence.Output);
+			currentContentRect.y += currentContentRect.height + 5;
 		}
 #endif //UNITY_EDITOR
 	}
