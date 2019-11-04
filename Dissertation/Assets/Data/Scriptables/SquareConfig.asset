@@ -77,5 +77,4 @@ MonoBehaviour:
   _defaultState: 2
   _visionRange: 70
   AvailableConversations:
-  - Greeting
-  - Greeting
+  - GiveMoney

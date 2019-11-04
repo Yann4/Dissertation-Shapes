@@ -71,6 +71,15 @@ namespace Dissertation.Character
 			Contents.Add(additionalContents);
 		}
 
+		public void TransferCurrencyTo(Inventory other, int amount)
+		{
+			if (Contents.Currency >= amount)
+			{
+				other.Contents.Currency += (uint)amount;
+				Contents.Currency -= (uint)amount;
+			}
+		}
+
 		private void OnDestroy()
 		{
 			if (!Dropped && Owner != null)
@@ -125,6 +134,7 @@ namespace Dissertation.Character
 				Destroy(gameObject);
 			}
 		}
+
 		private void OnTriggerExit2D(Collider2D collision)
 		{
 			if (Dropped)
