@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using Dissertation.Character;
 using System.Collections.Generic;
+using Data = Dissertation.Character.ConversationFragment.ConversationData;
 
 namespace Dissertation.NodeGraph
 {

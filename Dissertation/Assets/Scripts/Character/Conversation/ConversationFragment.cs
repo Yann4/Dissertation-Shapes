@@ -8,42 +8,42 @@ namespace Dissertation.Character
 		TransferMoney
 	}
 
-	public class Data
-	{
-		public string sVal;
-		public int iVal;
-		public bool bVal;
-		public float fVal;
-
-		public Data()
-		{
-			sVal = string.Empty;
-		}
-
-		public Data(BinaryReader reader)
-		{
-			sVal = reader.ReadString();
-			iVal = reader.ReadInt32();
-			bVal = reader.ReadBoolean();
-			fVal = reader.ReadSingle();
-		}
-
-		public void Serialise(BinaryWriter writer)
-		{
-			writer.Write(sVal);
-			writer.Write(iVal);
-			writer.Write(bVal);
-			writer.Write(fVal);
-		}
-	}
-
 	public class ConversationFragment
 	{
+		public class ConversationData
+		{
+			public string sVal;
+			public int iVal;
+			public bool bVal;
+			public float fVal;
+
+			public ConversationData()
+			{
+				sVal = string.Empty;
+			}
+
+			public ConversationData(BinaryReader reader)
+			{
+				sVal = reader.ReadString();
+				iVal = reader.ReadInt32();
+				bVal = reader.ReadBoolean();
+				fVal = reader.ReadSingle();
+			}
+
+			public void Serialise(BinaryWriter writer)
+			{
+				writer.Write(sVal);
+				writer.Write(iVal);
+				writer.Write(bVal);
+				writer.Write(fVal);
+			}
+		}
+
 		public bool IsPlayer;
 		public string[] ToSay;
 
 		public ConversationOutput Output = ConversationOutput.None;
-		public Data[] OptionOutputData;
+		public ConversationData[] OptionOutputData;
 
 		public ConversationFragment[] NextFragments;
 
@@ -52,12 +52,12 @@ namespace Dissertation.Character
 			IsPlayer = isPlayer;
 
 			ToSay = new string[SentenceOptions];
-			OptionOutputData = new Data[SentenceOptions];
+			OptionOutputData = new ConversationData[SentenceOptions];
 
 			for (int idx = 0; idx < SentenceOptions; idx++)
 			{
 				ToSay[idx] = string.Empty;
-				OptionOutputData[idx] = new Data();
+				OptionOutputData[idx] = new ConversationData();
 			}
 		}
 
@@ -67,7 +67,7 @@ namespace Dissertation.Character
 
 			int count = reader.ReadInt32();
 			ToSay = new string[count];
-			OptionOutputData = new Data[count];
+			OptionOutputData = new ConversationData[count];
 
 			for (int idx = 0; idx < count; idx++)
 			{
@@ -78,7 +78,7 @@ namespace Dissertation.Character
 
 			for (int idx = 0; idx < count; idx++)
 			{
-				OptionOutputData[idx] = new Data(reader);
+				OptionOutputData[idx] = new ConversationData(reader);
 			}
 		}
 
@@ -94,7 +94,7 @@ namespace Dissertation.Character
 
 			writer.Write((short)Output);
 
-			foreach(Data data in OptionOutputData)
+			foreach(ConversationData data in OptionOutputData)
 			{
 				data.Serialise(writer);
 			}

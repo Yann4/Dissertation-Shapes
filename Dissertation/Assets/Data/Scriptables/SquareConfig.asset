@@ -78,3 +78,4 @@ MonoBehaviour:
   _visionRange: 70
   AvailableConversations:
   - GiveMoney
+  - GiveMoney

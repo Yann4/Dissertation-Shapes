@@ -1,4 +1,6 @@
-﻿namespace Dissertation.Character
+﻿using Data = Dissertation.Character.ConversationFragment.ConversationData;
+
+namespace Dissertation.Character
 {
 	public static class ConversationFunctionLibrary
 	{
