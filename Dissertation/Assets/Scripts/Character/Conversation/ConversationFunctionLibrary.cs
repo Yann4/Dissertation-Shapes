@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Dissertation.Character
+﻿namespace Dissertation.Character
 {
 	public static class ConversationFunctionLibrary
 	{
