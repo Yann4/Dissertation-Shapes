@@ -1,9 +1,7 @@
 ﻿using Dissertation.Character.Player;
 using Dissertation.Util;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Dissertation.Character.AI
 {
@@ -187,11 +185,6 @@ namespace Dissertation.Character.AI
 			{
 				_inConversationWithPlayer = null;
 			}
-		}
-
-		public void RunConversationFunction(string key, params string[] parameters )
-		{
-
 		}
 	}
 }

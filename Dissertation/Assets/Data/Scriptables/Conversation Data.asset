@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Conversation Data
   m_EditorClassIdentifier: 
   Conversations:
-  - Reference: Greeting
-    Asset: {fileID: 4900000, guid: 47730f083d973ed4695cd392a534d450, type: 3}
+  - Reference: GiveMoney
+    Asset: {fileID: 4900000, guid: 3610cd0094957fb4c81f3ddddb7d3b58, type: 3}

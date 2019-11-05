@@ -193,11 +193,13 @@ namespace Dissertation.NodeGraph
 					_isHeld = true;
 					_isSelected = true;
 					_style = _selectedNodeStyle;
+					OnSelect();
 				}
 				else
 				{
 					_isSelected = false;
 					_style = _defaultNodeStyle;
+					OnDeselect();
 				}
 
 				GUI.changed = true;
@@ -215,6 +217,12 @@ namespace Dissertation.NodeGraph
 			menu.AddItem(new GUIContent("Remove node"), false, () => _onRemoveNode.InvokeSafe(this));
 			menu.ShowAsContext();
 		}
+
+		protected virtual void OnSelect()
+		{ }
+
+		protected virtual void OnDeselect()
+		{ }
 #endif //UNITY_EDITOR
 	}
 }

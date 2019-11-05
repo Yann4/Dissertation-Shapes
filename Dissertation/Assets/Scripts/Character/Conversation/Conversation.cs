@@ -27,6 +27,7 @@ namespace Dissertation.Character
 		private int _optionSelected = 0;
 
 		private List<BaseCharacterController> _potentialParticipants = new List<BaseCharacterController>();
+		private BaseCharacterController _talkingTo = null;
 
 		public static Action<ConversationFragment, AgentController> ConversationStarted;
 		public static Action<AgentController> ConversationEnded;
@@ -80,9 +81,10 @@ namespace Dissertation.Character
 		}
 
 		//Starts specific conversation
-		public void StartConversation(string conversationReference)
+		public void StartConversation( string conversationReference, BaseCharacterController listener )
 		{
 			_currentFragment = App.AIBlackboard.GetConversation(conversationReference);
+			_talkingTo = listener;
 
 			StartCoroutine(RunConversation());
 		}
@@ -95,7 +97,7 @@ namespace Dissertation.Character
 				return;
 			}
 
-			StartConversation(_availableConversations.Pop());
+			StartConversation(_availableConversations.Pop(), other);
 		}
 
 		private IEnumerator RunConversation()
@@ -116,6 +118,7 @@ namespace Dissertation.Character
 				}
 			}
 
+			_talkingTo = null;
 			IsInConversation = false;
 			ConversationEnded.InvokeSafe(_owner);
 
@@ -162,6 +165,8 @@ namespace Dissertation.Character
 		private void OnDialogueClosed()
 		{
 			_dialogueClosed = true;
+
+			ConversationFunctionLibrary.RunFunction(_currentFragment.Output, _currentFragment.OptionOutputData[_optionSelected], _owner, _talkingTo);
 
 			if (_currentFragment.NextFragments.Length > 0)
 			{
