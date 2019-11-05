@@ -68,5 +68,10 @@ namespace Dissertation.Character.AI
 					return null;
 			}
 		}
+
+		private static bool HasStateAvailable(AgentController owner, States state)
+		{
+			return (owner.AvailableBehaviours & state) != 0;
+		}
 	}
 }

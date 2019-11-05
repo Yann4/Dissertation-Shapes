@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Dissertation.Character.AI
 {
@@ -7,6 +8,9 @@ namespace Dissertation.Character.AI
 	{
 		[SerializeField] private States _defaultState = 0;
 		public States DefaultState { get { return _defaultState; } }
+
+		[SerializeField] private List<Trait> _traits = new List<Trait>();
+		public IEnumerable<Trait> Traits { get { return _traits; } }
 
 		[SerializeField] private float _visionRange = 20.0f;
 		public float VisionRange { get { return _visionRange; } }

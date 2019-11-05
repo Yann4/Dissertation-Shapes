@@ -41,12 +41,30 @@ namespace Dissertation.Character.AI
 		private AgentDebugUI _debugUI;
 		private Conversation _conversation;
 
+		private Desire[] _desires = new Desire[(int)DesireType.COUNT];
+		public States AvailableBehaviours { get; private set; }
+
 		protected override void Start()
 		{
 			base.Start();
 			Debug.Assert(_config is AgentConfig);
 
 			_agentConfig = _config as AgentConfig;
+
+			for(int traitType = 0; traitType < (int)DesireType.COUNT; traitType++)
+			{
+				_desires[traitType] = new Desire((DesireType)traitType);
+			}
+
+			foreach(Trait trait in _agentConfig.Traits)
+			{
+				foreach(Desire.Modifier modifier in trait.DesireModifiers)
+				{
+					_desires[(int)modifier.ToModify].ApplyModifier(modifier);
+				}
+
+				AvailableBehaviours |= trait.SpecialBehaviours;
+			}
 
 			PushState( StateFactory.GetDefaultState(_agentConfig.DefaultState, this) );
 
