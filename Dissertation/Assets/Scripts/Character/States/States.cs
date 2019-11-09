@@ -1,6 +1,7 @@
-﻿namespace Dissertation.Character.AI
+﻿using System;
+
+namespace Dissertation.Character.AI
 {
-	[System.Flags]
 	public enum States
 	{
 		INVALID,
@@ -9,5 +10,11 @@
 		Traverse,
 		PathTo,
 		Attack,
+	}
+
+	[Flags]
+	public enum SpecialistStates
+	{
+		COUNT
 	}
 }

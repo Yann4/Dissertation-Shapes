@@ -12,7 +12,7 @@ namespace Dissertation.Character.AI
 		[SerializeField] private List<Desire.Modifier> _desireModifiers = new List<Desire.Modifier>();
 		public IEnumerable<Desire.Modifier> DesireModifiers { get { return _desireModifiers; } }
 
-		[SerializeField] private States _specialBehaviours;
-		public States SpecialBehaviours { get { return _specialBehaviours; } }
+		[SerializeField] private SpecialistStates _specialBehaviours;
+		public SpecialistStates SpecialBehaviours { get { return _specialBehaviours; } }
 	}
 }

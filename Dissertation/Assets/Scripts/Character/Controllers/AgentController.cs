@@ -42,7 +42,7 @@ namespace Dissertation.Character.AI
 		private Conversation _conversation;
 
 		private Desire[] _desires = new Desire[(int)DesireType.COUNT];
-		public States AvailableBehaviours { get; private set; }
+		public SpecialistStates AvailableBehaviours { get; private set; }
 
 		protected override void Start()
 		{
@@ -78,6 +78,8 @@ namespace Dissertation.Character.AI
 
 		protected override void Update()
 		{
+			CheckSpecialistStates();
+
 			UnityEngine.Profiling.Profiler.BeginSample("Update agent state");
 			UnityEngine.Profiling.Profiler.BeginSample("Update agent state " + Current.Config.StateType);
 			Current.Update();
@@ -85,6 +87,17 @@ namespace Dissertation.Character.AI
 			UnityEngine.Profiling.Profiler.EndSample();
 
 			base.Update();
+		}
+
+		private void CheckSpecialistStates()
+		{
+			for(int state = 0; state < (int)SpecialistStates.COUNT; state++)
+			{
+				if(((int)AvailableBehaviours & state) != 0 && StateFactory.ShouldEnterState(this, (SpecialistStates)state, out StateConfig config))
+				{
+					PushState( config );
+				}
+			}
 		}
 
 		public void PushState(StateConfig config)

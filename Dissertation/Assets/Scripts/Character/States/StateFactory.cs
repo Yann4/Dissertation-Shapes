@@ -4,6 +4,16 @@ namespace Dissertation.Character.AI
 {
 	public static class StateFactory
 	{
+		private static SpecialistState[] _referenceSpecialistStates = new SpecialistState[(int)SpecialistStates.COUNT];
+
+		static StateFactory()
+		{
+			for(int idx = 0; idx < (int)SpecialistStates.COUNT; idx++)
+			{
+				_referenceSpecialistStates[idx] = GetReferenceState((SpecialistStates)idx);
+			}
+		}
+
 		public static State GetState(StateConfig config)
 		{
 			UnityEngine.Profiling.Profiler.BeginSample("Construct state");
@@ -69,9 +79,31 @@ namespace Dissertation.Character.AI
 			}
 		}
 
-		private static bool HasStateAvailable(AgentController owner, States state)
+		private static SpecialistState GetReferenceState(SpecialistStates state)
 		{
-			return (owner.AvailableBehaviours & state) != 0;
+			switch (state)
+			{
+				case SpecialistStates.COUNT:
+				default:
+					Debug.Assert(false, "Can't get reference state for " + state);
+					return null;
+			}
+		}
+
+		public static bool ShouldEnterState(AgentController owner, SpecialistStates state, out StateConfig config)
+		{
+			Debug.Assert(state != SpecialistStates.COUNT);
+			return _referenceSpecialistStates[(int)state].ShouldRunState(owner, out config);
+		}
+
+
+		private static States GetAsState(SpecialistState state)
+		{
+			switch (state)
+			{
+				default:
+					return States.INVALID;
+			}
 		}
 	}
 }
