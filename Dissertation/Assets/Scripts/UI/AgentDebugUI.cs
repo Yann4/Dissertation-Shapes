@@ -18,6 +18,10 @@ namespace Dissertation.UI
 
 		[SerializeField] private Text _health;
 
+		[SerializeField] private Text _moneyDesire;
+		[SerializeField] private Text _safetyDesire;
+		[SerializeField] private Text _powerDesire;
+
 		private AgentController _owner;
 		private LineDrawer _drawer;
 
@@ -59,13 +63,17 @@ namespace Dissertation.UI
 
 		private void RefreshText()
 		{
-			_longTerm.text = ConstructString("Long Term", _owner.GetLongTermStack_Debug());
-			_normal.text = ConstructString("Normal", _owner.GetNormalStack_Debug());
-			_immediate.text = ConstructString("Immediate", _owner.GetImmediateStack_Debug());
+			_longTerm.text = ConstructStackTitleString("Long Term", _owner.GetLongTermStack_Debug());
+			_normal.text = ConstructStackTitleString("Normal", _owner.GetNormalStack_Debug());
+			_immediate.text = ConstructStackTitleString("Immediate", _owner.GetImmediateStack_Debug());
 
 			_hostility.text = App.AIBlackboard.IsHostileToPlayer(_owner) ? _hostileText : _friendlyText;
 
 			_health.text = _owner.Health.IsDead ? _deadText : string.Format(_healthText, _owner.Health.CurrentHealth, _owner.Config.MaxHealth);
+
+			_moneyDesire.text = ConstructDesireString(DesireType.Money);
+			_safetyDesire.text = ConstructDesireString(DesireType.Safety);
+			_powerDesire.text = ConstructDesireString(DesireType.Power);
 		}
 
 		public override void SetVisible(bool visible)
@@ -78,7 +86,7 @@ namespace Dissertation.UI
 			}
 		}
 
-		private string ConstructString(string title, State[] states)
+		private string ConstructStackTitleString(string title, State[] states)
 		{
 			StringBuilder builder = new StringBuilder();
 			foreach(State state in states)
@@ -93,6 +101,12 @@ namespace Dissertation.UI
 			builder.Append("</color>");
 
 			return builder.ToString();
+		}
+
+		private string ConstructDesireString(DesireType type)
+		{
+			Desire desire = _owner.GetDesire_Debug(type);
+			return string.Format("<color=yellow>{0}</color>: {1}/{2} (Rate: {3})", type, desire.Value.ToString("N2"), desire.MaxValue.ToString("N1"), desire.FillRate.ToString("N2"));
 		}
 	}
 }

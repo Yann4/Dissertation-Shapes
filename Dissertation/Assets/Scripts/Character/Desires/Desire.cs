@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Dissertation.Character.AI
 {
@@ -18,7 +19,7 @@ namespace Dissertation.Character.AI
 		{
 			public DesireType ToModify;
 			public float MaximumValue;
-			public float FillRate;
+			[Tooltip("Additional above the base in units/second")] public float FillRate;
 		}
 
 		public float Value { get; private set; }
@@ -27,7 +28,7 @@ namespace Dissertation.Character.AI
 
 		private float _baseValue = 0.0f;
 		private float _baseMaxValue = 10.0f;
-		private float _baseFillRate = 0.1f;
+		private float _baseFillRate = 0.5f / 60.0f;
 
 		public DesireType Type { get; private set; }
 
@@ -65,6 +66,11 @@ namespace Dissertation.Character.AI
 				FillRate += modifier.FillRate;
 				MaxValue += modifier.MaximumValue;
 			}
+		}
+
+		public void Update()
+		{
+			Value = Mathf.Min(MaxValue, Value + (FillRate * Time.deltaTime));
 		}
 	}
 }

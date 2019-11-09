@@ -16,5 +16,5 @@ MonoBehaviour:
   _desireModifiers:
   - ToModify: 0
     MaximumValue: 20
-    FillRate: 0.5
-  _specialBehaviours: 2
+    FillRate: 0.1
+  _specialBehaviours: 0

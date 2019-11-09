@@ -78,6 +78,7 @@ namespace Dissertation.Character.AI
 
 		protected override void Update()
 		{
+			UpdateDesires();
 			CheckSpecialistStates();
 
 			UnityEngine.Profiling.Profiler.BeginSample("Update agent state");
@@ -97,6 +98,14 @@ namespace Dissertation.Character.AI
 				{
 					PushState( config );
 				}
+			}
+		}
+
+		private void UpdateDesires()
+		{
+			foreach(Desire desire in _desires)
+			{
+				desire.Update();
 			}
 		}
 
@@ -247,6 +256,12 @@ namespace Dissertation.Character.AI
 		public State[] GetLongTermStack_Debug()
 		{
 			return _longTerm.ToArray();
+		}
+
+		public Desire GetDesire_Debug(DesireType desire)
+		{
+			Debug.Assert(desire != DesireType.COUNT);
+			return _desires[(int)desire];
 		}
 	}
 }
