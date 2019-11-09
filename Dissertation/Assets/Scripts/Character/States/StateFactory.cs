@@ -96,7 +96,6 @@ namespace Dissertation.Character.AI
 			return _referenceSpecialistStates[(int)state].ShouldRunState(owner, out config);
 		}
 
-
 		private static States GetAsState(SpecialistState state)
 		{
 			switch (state)
