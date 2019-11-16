@@ -49,6 +49,9 @@ public class CharacterConfig : ScriptableObject
 	[SerializeField] private CharacterFaction _faction;
 	public CharacterFaction Faction { get { return _faction; } }
 
+	[SerializeField] private BaseCharacterController.Attack _defaultAttack;
+	public BaseCharacterController.Attack DefaultAttack { get { return _defaultAttack; } }
+
 	[SerializeField] private int _maxHealth = 5;
 	public int MaxHealth { get { return _maxHealth; } }
 

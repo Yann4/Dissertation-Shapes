@@ -53,6 +53,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   _maxJumps: 1
   _faction: 3
+  _defaultAttack: 2
   _maxHealth: 5
   _baseMeleeDamage: 2
   _meleeAttackSpeed: 0.3
@@ -75,5 +76,6 @@ MonoBehaviour:
   _rangedAttackPrefab: {fileID: 6078864212887572438, guid: 8073af09f076c51488647ba17b5605a2,
     type: 3}
   _defaultState: 2
+  _traits: []
   _visionRange: 70
   AvailableConversations: []

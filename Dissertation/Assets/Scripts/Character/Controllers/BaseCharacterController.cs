@@ -4,7 +4,6 @@
 
 using Dissertation.Input;
 using Dissertation.Util;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -169,6 +168,10 @@ namespace Dissertation.Character
 		private bool _canJump = false;
 		private int _numJumps = 0;
 
+		public enum Attack { Melee, Ranged, Dash };
+
+		protected Attack _activeAttack;
+
 		//Attacking state variables
 		protected bool IsAttacking { get { return IsMeleeAttacking || IsRangedAttacking || IsDashAttacking; } }
 		protected bool IsMeleeAttacking { get; private set; }
@@ -201,6 +204,7 @@ namespace Dissertation.Character
 			SkinWidth = _skinWidth;
 
 			_enemyMask = Config.EnemyMask;
+			_activeAttack = Config.DefaultAttack;
 
 			UpdateLayerCollision();
 
@@ -354,19 +358,19 @@ namespace Dissertation.Character
 
 		public bool CanMeleeAttack()
 		{
-			return !IsAttacking && !Health.IsDead 
+			return !IsAttacking && !Health.IsDead && _activeAttack == Attack.Melee
 				&& (Time.time - _meleeAttackEndTime >= Config.MeleeAttackCooldown);
 		}
 
 		public bool CanRangedAttack()
 		{
-			return !IsAttacking && !Health.IsDead
+			return !IsAttacking && !Health.IsDead && _activeAttack == Attack.Ranged
 				&& (Time.time - _lastRangedAttackTime >= Config.RangedAttackCooldown);
 		}
 
 		public bool CanDashAttack()
 		{
-			return !IsAttacking && !Health.IsDead && !_dashAttack.activeSelf
+			return !IsAttacking && !Health.IsDead && !_dashAttack.activeSelf && _activeAttack == Attack.Dash
 				&& (Time.time - _dashAttackEndTime >= Config.DashAttackCooldown);
 		}
 
