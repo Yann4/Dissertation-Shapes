@@ -83,15 +83,15 @@ namespace Dissertation.Input
 			}
 		}
 
-		private Tuple<bool, int> _talk;
-		public bool Talk
+		private Tuple<bool, int> _interact;
+		public bool Interact
 		{
-			get { return _talk.Item1; }
+			get { return _interact.Item1; }
 			set
 			{
-				if (value != _talk.Item1)
+				if (value != _interact.Item1)
 				{
-					_talk = new Tuple<bool, int>(value, Time.frameCount);
+					_interact = new Tuple<bool, int>(value, Time.frameCount);
 				}
 			}
 		}
@@ -105,7 +105,7 @@ namespace Dissertation.Input
 			_meleeAttack = new Tuple<bool, int>(false, frameCount);
 			_rangedAttack = new Tuple<bool, int>(false, frameCount);
 			_dashAttack = new Tuple<bool, int>(false, frameCount);
-			_talk = new Tuple<bool, int>(false, frameCount);
+			_interact = new Tuple<bool, int>(false, frameCount);
 		}
 
 		public void Reset()
@@ -116,7 +116,7 @@ namespace Dissertation.Input
 			MeleeAttack = false;
 			RangedAttack = false;
 			DashAttack = false;
-			Talk = false;
+			Interact = false;
 		}
 
 		public bool GetButton(InputAction action)
@@ -137,8 +137,8 @@ namespace Dissertation.Input
 					return RangedAttack;
 				case InputAction.DashAttack:
 					return DashAttack;
-				case InputAction.Talk:
-					return Talk;
+				case InputAction.Interact:
+					return Interact;
 				default:
 					Debug.AssertFormat(false, "Action {0} needs adding to the yoke", action);
 					return false;
@@ -165,8 +165,8 @@ namespace Dissertation.Input
 					return !RangedAttack && _rangedAttack.Item2 == Time.frameCount;
 				case InputAction.DashAttack:
 					return !DashAttack && _dashAttack.Item2 == Time.frameCount;
-				case InputAction.Talk:
-					return !Talk && _talk.Item2 == Time.frameCount;
+				case InputAction.Interact:
+					return !Interact && _interact.Item2 == Time.frameCount;
 				default:
 					Debug.AssertFormat(false, "Action {0} needs adding to the yoke", action);
 					return false;
@@ -193,8 +193,8 @@ namespace Dissertation.Input
 					return RangedAttack && _rangedAttack.Item2 == Time.frameCount;
 				case InputAction.DashAttack:
 					return DashAttack && _dashAttack.Item2 == Time.frameCount;
-				case InputAction.Talk:
-					return Talk && _talk.Item2 == Time.frameCount;
+				case InputAction.Interact:
+					return Interact && _interact.Item2 == Time.frameCount;
 				default:
 					Debug.AssertFormat(false, "Action {0} needs adding to the yoke", action);
 					return false;
@@ -219,8 +219,8 @@ namespace Dissertation.Input
 					return BoolToFloat(RangedAttack);
 				case InputAction.DashAttack:
 					return BoolToFloat(DashAttack);
-				case InputAction.Talk:
-					return BoolToFloat(Talk);
+				case InputAction.Interact:
+					return BoolToFloat(Interact);
 				default:
 					Debug.AssertFormat(false, "Action {0} needs adding to the yoke", action);
 					return 0.0f;

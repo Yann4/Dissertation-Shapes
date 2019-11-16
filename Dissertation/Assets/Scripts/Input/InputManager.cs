@@ -14,7 +14,7 @@ namespace Dissertation.Input
 		MeleeAttack,
 		RangedAttack,
 		DashAttack,
-		Talk,
+		Interact,
 	}
 
 	/*

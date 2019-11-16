@@ -55,7 +55,7 @@ namespace Dissertation.Character
 			{
 				foreach (BaseCharacterController character in _potentialParticipants)
 				{
-					if (character.CharacterYoke.GetButtonDown(InputAction.Talk))
+					if (character.CharacterYoke.GetButtonDown(InputAction.Interact))
 					{
 						TryStartConversation(character);
 					}
