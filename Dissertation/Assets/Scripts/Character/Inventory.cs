@@ -11,6 +11,8 @@ namespace Dissertation.Character
 		{
 			public uint Currency = 0;
 
+			public InventoryContents() { }
+
 			public InventoryContents(InventoryContents other)
 			{
 				Currency = other.Currency;
@@ -21,7 +23,14 @@ namespace Dissertation.Character
 				if(additionalContents != null)
 				{
 					Currency += additionalContents.Currency;
+
+					additionalContents.Clear();
 				}
+			}
+
+			public void Clear()
+			{
+				Currency = 0;
 			}
 
 			public bool IsEmpty()
@@ -39,11 +48,13 @@ namespace Dissertation.Character
 		[SerializeField] private UnityEngine.UI.Image _progressbar;
 
 		[SerializeField] private float _pickDuration = 4.0f;
+		[SerializeField] private InventoryContents _baseContents;
+		[SerializeField] private bool _placedContainer = false;
 
-		public InventoryContents Contents { get; private set; }
+		public InventoryContents Contents { get; private set; } = new InventoryContents();
 
 		public BaseCharacterController Owner { get; private set; }
-		public bool Dropped { get; private set; } = false;
+		public bool OnGround { get; private set; } = false;
 
 		private Vector3 _deathLocation;
 
@@ -51,15 +62,21 @@ namespace Dissertation.Character
 		private float _pickerEnterTime;
 		private Coroutine _pickUp;
 
+		private void Start()
+		{
+			OnGround |= _placedContainer;
+			Contents.Add(_baseContents);
+		}
+
 		public void Initialise(BaseCharacterController owner, InventoryContents initialContents, bool dropped = false)
 		{
-			Contents = initialContents;
+			Contents.Add(initialContents);
 			Owner = owner;
-			Dropped = dropped;
+			OnGround = dropped;
 
 			Debug.Assert(Contents != null);
 
-			if (!Dropped)
+			if (!OnGround)
 			{
 				Owner.Health.OnDied += OnDie;
 				Owner.Health.OnRespawn += DropInventory;
@@ -82,7 +99,7 @@ namespace Dissertation.Character
 
 		private void OnDestroy()
 		{
-			if (!Dropped && Owner != null)
+			if (!OnGround && Owner != null)
 			{
 				Owner.Health.OnDied -= OnDie;
 				Owner.Health.OnRespawn -= DropInventory;
@@ -105,7 +122,7 @@ namespace Dissertation.Character
 
 		private void OnTriggerEnter2D(Collider2D collision)
 		{
-			if (Dropped)
+			if (OnGround && !Contents.IsEmpty())
 			{
 				BaseCharacterController controller = collision.gameObject.GetComponent<BaseCharacterController>();
 				if ( controller != null && _picker == null )
@@ -113,14 +130,27 @@ namespace Dissertation.Character
 					_picker = controller;
 					_pickerEnterTime = Time.time;
 					_prompt.SetActive(true);
-					_pickUp = StartCoroutine(TryPickUp());
+
+					if (_pickDuration != 0)
+					{
+						_pickUp = StartCoroutine(TryPickUp());
+					}
 				}
+			}
+		}
+
+		private void Update()
+		{
+			if(_pickDuration == 0 && !Contents.IsEmpty() && 
+				_picker != null && _picker.CharacterYoke.GetButtonDown(Input.InputAction.Interact))
+			{
+				_picker.Inventory.Add(Contents);
 			}
 		}
 
 		private IEnumerator TryPickUp()
 		{
-			if (Dropped)
+			if (OnGround)
 			{
 				float stayDuration = 0.0f;
 				while (stayDuration < _pickDuration)
@@ -137,14 +167,18 @@ namespace Dissertation.Character
 
 		private void OnTriggerExit2D(Collider2D collision)
 		{
-			if (Dropped)
+			if (OnGround)
 			{
 				if ( _picker != null && collision.gameObject == _picker.gameObject )
 				{
 					_picker = null;
 					_prompt.SetActive(false);
-					StopCoroutine(_pickUp);
-					_pickUp = null;
+
+					if (_pickUp != null)
+					{
+						StopCoroutine(_pickUp);
+						_pickUp = null;
+					}
 				}
 			}
 		}
