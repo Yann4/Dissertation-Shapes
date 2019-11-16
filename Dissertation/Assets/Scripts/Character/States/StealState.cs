@@ -16,6 +16,7 @@ namespace Dissertation.Character.AI
 		}
 
 		private StealConfig _stealConfig;
+		private const float _moneyDesireThreshold = 2.0f;
 
 		public StealState() : base(States.Steal)
 		{ }
@@ -70,7 +71,7 @@ namespace Dissertation.Character.AI
 
 		public override bool ShouldRunState(AgentController owner, out StateConfig config)
 		{
-			if(!owner.IsInState<StealState>(false))
+			if( !owner.IsInState<StealState>(false) && owner.GetAbsoluteDesireValue(DesireType.Money) > _moneyDesireThreshold )
 			{
 				Inventory[] inventories = GameObject.FindObjectsOfType<Inventory>();
 				Inventory toSteal = inventories.FirstOrDefault(inventory => inventory.OnGround && inventory.Owner != owner && IsInventoryUnattended(inventory, owner));

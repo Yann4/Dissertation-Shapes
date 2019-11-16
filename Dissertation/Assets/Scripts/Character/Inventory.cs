@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dissertation.Util;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,7 +25,6 @@ namespace Dissertation.Character
 				if(additionalContents != null)
 				{
 					Currency += additionalContents.Currency;
-
 					additionalContents.Clear();
 				}
 			}
@@ -63,6 +63,9 @@ namespace Dissertation.Character
 		private float _pickerEnterTime;
 		private Coroutine _pickUp;
 
+		public Action<int> OnGetCurrency;
+		public Action<int> OnLoseCurrency;
+
 		private void Start()
 		{
 			OnGround |= _placedContainer;
@@ -86,7 +89,10 @@ namespace Dissertation.Character
 
 		public void Add(InventoryContents additionalContents)
 		{
+			int currencyChange = (int)additionalContents.Currency;
 			Contents.Add(additionalContents);
+
+			OnGetCurrency.InvokeSafe(currencyChange);
 		}
 
 		public void TransferCurrencyTo(Inventory other, int amount)
@@ -95,6 +101,8 @@ namespace Dissertation.Character
 			{
 				other.Contents.Currency += (uint)amount;
 				Contents.Currency -= (uint)amount;
+
+				OnLoseCurrency.InvokeSafe(amount);
 			}
 		}
 

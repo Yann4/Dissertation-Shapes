@@ -72,5 +72,10 @@ namespace Dissertation.Character.AI
 		{
 			Value = Mathf.Min(MaxValue, Value + (FillRate * Time.deltaTime));
 		}
+
+		public void Reset()
+		{
+			Value = 0;
+		}
 	}
 }

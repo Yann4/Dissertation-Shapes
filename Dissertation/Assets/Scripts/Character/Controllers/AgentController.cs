@@ -74,6 +74,8 @@ namespace Dissertation.Character.AI
 			_conversation = GetComponent<Conversation>();
 
 			Health.OnDamaged += OnTakeDamage;
+			Inventory.OnGetCurrency += OnAcquireCurrency;
+			Inventory.OnLoseCurrency += OnLoseCurrency;
 		}
 
 		protected override void Update()
@@ -213,6 +215,16 @@ namespace Dissertation.Character.AI
 			}
 		}
 
+		private void OnAcquireCurrency(int amount)
+		{
+			_desires[(int)DesireType.Money].Reset();
+		}
+
+		private void OnLoseCurrency(int amount)
+		{
+			_desires[(int)DesireType.Money].ApplyModifier(new Desire.Modifier() { ToModify = DesireType.Money, FillRate = 0.1f });
+		}
+
 		public bool IsInState<T>(bool activeOnly) where T : State
 		{
 			Type type = typeof(T);
@@ -242,6 +254,11 @@ namespace Dissertation.Character.AI
 
 				return false;
 			}
+		}
+
+		public float GetAbsoluteDesireValue(DesireType desire)
+		{
+			return _desires[(int)desire].Value;
 		}
 
 		public State[] GetImmediateStack_Debug()
