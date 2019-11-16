@@ -2,6 +2,7 @@
 #define DEBUG_CC2D_RAYS
 #endif
 
+using Dissertation.Environment;
 using Dissertation.Input;
 using Dissertation.Util;
 using System.Collections;
@@ -108,6 +109,8 @@ namespace Dissertation.Character
 
 		[SerializeField] private Inventory _inventory;
 		public Inventory Inventory { get { return _inventory; } private set { _inventory = value; } }
+
+		public Home CharacterHome;
 
 		public CharacterEvents Events { get; private set; } = new CharacterEvents();
 

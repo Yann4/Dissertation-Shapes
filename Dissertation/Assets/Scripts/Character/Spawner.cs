@@ -12,6 +12,7 @@ namespace Dissertation.Character
 		[SerializeField] private bool _primaryPlayerSpawnPoint = false;
 
 		public static Action<BaseCharacterController> OnSpawn;
+		public Action<BaseCharacterController> OnSpawnNonStatic;
 
 		private void Start()
 		{
@@ -24,6 +25,7 @@ namespace Dissertation.Character
 			spawned.OnSpawn(this);
 
 			OnSpawn.InvokeSafe(spawned);
+			OnSpawnNonStatic.InvokeSafe(spawned);
 		}
 	}
 }
