@@ -217,12 +217,17 @@ namespace Dissertation.Character.AI
 
 		private void OnAcquireCurrency(int amount)
 		{
-			_desires[(int)DesireType.Money].Reset();
+			ResetDesire(DesireType.Money);
 		}
 
 		private void OnLoseCurrency(int amount)
 		{
 			_desires[(int)DesireType.Money].ApplyModifier(new Desire.Modifier() { ToModify = DesireType.Money, FillRate = 0.1f });
+		}
+
+		public void ResetDesire(DesireType desire)
+		{
+			_desires[(int)desire].Reset();
 		}
 
 		public bool IsInState<T>(bool activeOnly) where T : State

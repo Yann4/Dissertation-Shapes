@@ -68,6 +68,10 @@ namespace Dissertation.Character.AI
 					Debug.Assert(config is StealState.StealConfig);
 					state = new StealState(config as StealState.StealConfig);
 					break;
+				case States.Justice:
+					Debug.Assert(config is ServeJusticeState.JusticeConfig);
+					state = new ServeJusticeState(config as ServeJusticeState.JusticeConfig);
+					break;
 				case States.INVALID:
 				default:
 					Debug.LogError("Factory not set up for state type " + config.StateType);
@@ -96,6 +100,8 @@ namespace Dissertation.Character.AI
 			{
 				case SpecialistStates.Steal:
 					return new StealState();
+				case SpecialistStates.Justice:
+					return new ServeJusticeState();
 				case SpecialistStates.INVALID:
 					return null;
 				default:

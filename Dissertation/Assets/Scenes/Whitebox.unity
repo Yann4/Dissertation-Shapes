@@ -2084,5 +2084,10 @@ PrefabInstance:
       propertyPath: _placedContainer
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6522840067810800762, guid: cb317fab577f2ad41b4440d18f47d485,
+        type: 3}
+      propertyPath: _linkedSpawner
+      value: 
+      objectReference: {fileID: 910076856195687202}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cb317fab577f2ad41b4440d18f47d485, type: 3}

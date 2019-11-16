@@ -11,6 +11,8 @@ namespace Dissertation.Character.AI
 		private Dictionary<CharacterFaction, List<AgentController>> _agentsByFaction = new Dictionary<CharacterFaction, List<AgentController>>();
 		private Dictionary<AgentController, bool> _hostileToPlayer = new Dictionary<AgentController, bool>();
 
+		public List<BaseCharacterController> Criminals = new List<BaseCharacterController>();
+
 		private ConversationData _conversations;
 
 		public bool PlayerIsInConversation { get { return _inConversationWithPlayer != null; } }
@@ -170,6 +172,21 @@ namespace Dissertation.Character.AI
 
 				return 0;
 			}
+		}
+
+		public void AddCriminal(BaseCharacterController criminal)
+		{
+			if (!Criminals.Contains(criminal))
+			{
+				criminal.Health.OnDied += OnCriminalDie;
+				Criminals.Add(criminal);
+			}
+		}
+
+		private void OnCriminalDie(BaseCharacterController died)
+		{
+			Criminals.Remove(died);
+			died.Health.OnDied -= OnCriminalDie;
 		}
 
 		public ConversationFragment GetConversation(string conversationReference)

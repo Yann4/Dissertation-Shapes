@@ -20,7 +20,7 @@ namespace Dissertation.Character
 
 				if(_currentHealth <= 0)
 				{
-					OnDied.InvokeSafe();
+					OnDied.InvokeSafe(_character);
 				}
 			}
 		}
@@ -28,7 +28,7 @@ namespace Dissertation.Character
 		public bool IsDead { get { return CurrentHealth <= 0; } }
 
 		public Action<int> OnHealthChanged;
-		public Action OnDied;
+		public Action<BaseCharacterController> OnDied;
 		public Action OnRespawn;
 		public Action<DamageSource> OnDamaged;
 

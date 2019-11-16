@@ -50,7 +50,7 @@ namespace Dissertation.Character.Player
 			base.Update();
 		}
 
-		private void OnDie()
+		private void OnDie(BaseCharacterController died)
 		{
 			StartCoroutine(HandleDeath());
 		}

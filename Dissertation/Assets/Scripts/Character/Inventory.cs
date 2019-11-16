@@ -51,6 +51,7 @@ namespace Dissertation.Character
 		[SerializeField] private float _pickDuration = 4.0f;
 		[SerializeField] private InventoryContents _baseContents;
 		[SerializeField] private bool _placedContainer = false;
+		[SerializeField] private Spawner _linkedSpawner;
 
 		public InventoryContents Contents { get; private set; } = new InventoryContents();
 
@@ -70,6 +71,16 @@ namespace Dissertation.Character
 		{
 			OnGround |= _placedContainer;
 			Contents.Add(_baseContents);
+
+			if(_linkedSpawner != null)
+			{
+				_linkedSpawner.OnSpawnNonStatic += OnSpawn;
+			}
+		}
+
+		private void OnSpawn(BaseCharacterController spawned)
+		{
+			Owner = spawned;
 		}
 
 		public void Initialise(BaseCharacterController owner, InventoryContents initialContents, bool dropped = false)
@@ -115,7 +126,7 @@ namespace Dissertation.Character
 			}
 		}
 
-		private void OnDie()
+		private void OnDie(BaseCharacterController died)
 		{
 			_deathLocation = Owner.transform.position;
 		}
@@ -160,8 +171,7 @@ namespace Dissertation.Character
 				{
 					if(picker.CharacterYoke.GetButton(Input.InputAction.Interact))
 					{
-						picker.Inventory.Add(Contents);
-						_prompt.SetActive(false);
+						PickUp(picker);
 					}
 				}
 			}
@@ -179,8 +189,19 @@ namespace Dissertation.Character
 					yield return null;
 				}
 
-				picker.Inventory.Add(Contents);
+				PickUp(picker);
 				Destroy(gameObject);
+			}
+		}
+
+		private void PickUp(BaseCharacterController picker)
+		{
+			picker.Inventory.Add(Contents);
+			_prompt.SetActive(false);
+
+			if( Owner != null && picker != Owner )
+			{
+				App.AIBlackboard.AddCriminal(picker);
 			}
 		}
 
