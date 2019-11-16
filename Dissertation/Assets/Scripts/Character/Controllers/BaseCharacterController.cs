@@ -168,7 +168,7 @@ namespace Dissertation.Character
 		private bool _canJump = false;
 		private int _numJumps = 0;
 
-		public enum Attack { Melee, Ranged, Dash };
+		public enum Attack { Melee, Ranged, Dash }
 
 		protected Attack _activeAttack;
 
