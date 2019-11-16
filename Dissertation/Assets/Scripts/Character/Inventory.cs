@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Dissertation.Character
@@ -58,7 +59,7 @@ namespace Dissertation.Character
 
 		private Vector3 _deathLocation;
 
-		private BaseCharacterController _picker;
+		private List<BaseCharacterController> _pickers = new List<BaseCharacterController>();
 		private float _pickerEnterTime;
 		private Coroutine _pickUp;
 
@@ -125,15 +126,19 @@ namespace Dissertation.Character
 			if (OnGround && !Contents.IsEmpty())
 			{
 				BaseCharacterController controller = collision.gameObject.GetComponent<BaseCharacterController>();
-				if ( controller != null && _picker == null )
+				if ( controller != null && !_pickers.Contains(controller) )
 				{
-					_picker = controller;
+					_pickers.Add(controller);
 					_pickerEnterTime = Time.time;
-					_prompt.SetActive(true);
+
+					if (controller is Player.PlayerController)
+					{
+						_prompt.SetActive(true);
+					}
 
 					if (_pickDuration != 0)
 					{
-						_pickUp = StartCoroutine(TryPickUp());
+						_pickUp = StartCoroutine(TryPickUp(controller));
 					}
 				}
 			}
@@ -141,14 +146,20 @@ namespace Dissertation.Character
 
 		private void Update()
 		{
-			if(_pickDuration == 0 && !Contents.IsEmpty() && 
-				_picker != null && _picker.CharacterYoke.GetButtonDown(Input.InputAction.Interact))
+			if( _pickDuration == 0 && !Contents.IsEmpty() )
 			{
-				_picker.Inventory.Add(Contents);
+				foreach (BaseCharacterController picker in _pickers)
+				{
+					if(picker.CharacterYoke.GetButton(Input.InputAction.Interact))
+					{
+						picker.Inventory.Add(Contents);
+						_prompt.SetActive(false);
+					}
+				}
 			}
 		}
 
-		private IEnumerator TryPickUp()
+		private IEnumerator TryPickUp(BaseCharacterController picker)
 		{
 			if (OnGround)
 			{
@@ -160,7 +171,7 @@ namespace Dissertation.Character
 					yield return null;
 				}
 
-				_picker.Inventory.Add(Contents);
+				picker.Inventory.Add(Contents);
 				Destroy(gameObject);
 			}
 		}
@@ -169,10 +180,15 @@ namespace Dissertation.Character
 		{
 			if (OnGround)
 			{
-				if ( _picker != null && collision.gameObject == _picker.gameObject )
+				BaseCharacterController picker = _pickers.Find(p => p.gameObject == collision.gameObject);
+				if ( picker != null )
 				{
-					_picker = null;
-					_prompt.SetActive(false);
+					_pickers.Remove(picker);
+
+					if (picker is Player.PlayerController)
+					{
+						_prompt.SetActive(false);
+					}
 
 					if (_pickUp != null)
 					{

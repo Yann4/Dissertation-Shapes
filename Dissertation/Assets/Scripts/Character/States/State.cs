@@ -29,7 +29,6 @@ namespace Dissertation.Character.AI
 			Debug.Assert(config != null);
 
 			Config = config;
-			Config.Validate();
 		}
 
 		public virtual void OnEnable()

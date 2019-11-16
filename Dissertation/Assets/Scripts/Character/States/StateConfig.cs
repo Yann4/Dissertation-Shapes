@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Dissertation.Character.AI
+﻿namespace Dissertation.Character.AI
 {
 	public class StateConfig
 	{
@@ -13,11 +11,6 @@ namespace Dissertation.Character.AI
 			StateType = type;
 			Priority = prio;
 			Owner = owner;
-		}
-
-		public virtual void Validate()
-		{
-			Debug.Assert(Owner != null);
 		}
 	}
 }

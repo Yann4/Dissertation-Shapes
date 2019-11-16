@@ -1,16 +1,22 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Dissertation.Character.AI
 {
 	public static class StateFactory
 	{
-		private static SpecialistState[] _referenceSpecialistStates = new SpecialistState[(int)SpecialistStates.COUNT];
+		public static int NumSpecialistStates = Enum.GetNames(typeof(SpecialistStates)).Length;
+
+		private static SpecialistState[] _referenceSpecialistStates = new SpecialistState[NumSpecialistStates];
 
 		static StateFactory()
 		{
-			for(int idx = 0; idx < (int)SpecialistStates.COUNT; idx++)
+			for(int idx = 0; idx < NumSpecialistStates; idx++)
 			{
-				_referenceSpecialistStates[idx] = GetReferenceState((SpecialistStates)idx);
+				if ((SpecialistStates)idx != SpecialistStates.INVALID)
+				{
+					_referenceSpecialistStates[idx] = GetReferenceState((SpecialistStates)idx);
+				}
 			}
 		}
 
@@ -57,6 +63,11 @@ namespace Dissertation.Character.AI
 						}
 						break;
 					}
+
+				case States.Steal:
+					Debug.Assert(config is StealState.StealConfig);
+					state = new StealState(config as StealState.StealConfig);
+					break;
 				case States.INVALID:
 				default:
 					Debug.LogError("Factory not set up for state type " + config.StateType);
@@ -83,7 +94,10 @@ namespace Dissertation.Character.AI
 		{
 			switch (state)
 			{
-				case SpecialistStates.COUNT:
+				case SpecialistStates.Steal:
+					return new StealState();
+				case SpecialistStates.INVALID:
+					return null;
 				default:
 					Debug.Assert(false, "Can't get reference state for " + state);
 					return null;
@@ -92,17 +106,8 @@ namespace Dissertation.Character.AI
 
 		public static bool ShouldEnterState(AgentController owner, SpecialistStates state, out StateConfig config)
 		{
-			Debug.Assert(state != SpecialistStates.COUNT);
+			Debug.Assert(state != SpecialistStates.INVALID);
 			return _referenceSpecialistStates[(int)state].ShouldRunState(owner, out config);
-		}
-
-		private static States GetAsState(SpecialistState state)
-		{
-			switch (state)
-			{
-				default:
-					return States.INVALID;
-			}
 		}
 	}
 }

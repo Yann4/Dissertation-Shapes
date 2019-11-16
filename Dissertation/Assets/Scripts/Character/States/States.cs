@@ -10,11 +10,16 @@ namespace Dissertation.Character.AI
 		Traverse,
 		PathTo,
 		Attack,
+		Steal
 	}
 
 	[Flags]
 	public enum SpecialistStates
 	{
-		COUNT
+		INVALID = 0,
+		Steal = 1 << 0,
+// 		Justice = 1 << 1,
+// 		Flee = 1 << 2,
+// 		Defend = 1 << 3,
 	}
 }

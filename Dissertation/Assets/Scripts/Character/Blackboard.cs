@@ -139,8 +139,14 @@ namespace Dissertation.Character.AI
 		{
 			float distance = Vector3.Distance(other.transform.position, agent.transform.position);
 
-			return distance <= agent._agentConfig.VisionRange &&
-				!Physics2D.Raycast(agent.transform.position, (other.transform.position - agent.transform.position).normalized, 
+			return LineOfSightCheck(agent.transform, other.transform, agent._agentConfig.VisionRange);
+		}
+
+		public bool LineOfSightCheck(Transform a, Transform b, float visionRange)
+		{
+			float distance = Vector3.Distance(a.position, b.position);
+			return distance <= visionRange &&
+				!Physics2D.Raycast(a.position, (b.position - a.position).normalized,
 									distance, Layers.GroundMask | Layers.DefaultMask);
 		}
 

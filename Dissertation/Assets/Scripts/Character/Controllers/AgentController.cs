@@ -42,7 +42,7 @@ namespace Dissertation.Character.AI
 		private Conversation _conversation;
 
 		private Desire[] _desires = new Desire[(int)DesireType.COUNT];
-		public SpecialistStates AvailableBehaviours { get; private set; }
+		public SpecialistStates AvailableBehaviours { get; private set; } = SpecialistStates.INVALID;
 
 		protected override void Start()
 		{
@@ -92,9 +92,10 @@ namespace Dissertation.Character.AI
 
 		private void CheckSpecialistStates()
 		{
-			for(int state = 0; state < (int)SpecialistStates.COUNT; state++)
+			for(int state = 0; state < StateFactory.NumSpecialistStates; state++)
 			{
-				if(((int)AvailableBehaviours & state) != 0 && StateFactory.ShouldEnterState(this, (SpecialistStates)state, out StateConfig config))
+				SpecialistStates specialistState = (SpecialistStates)state;
+				if (specialistState != SpecialistStates.INVALID && AvailableBehaviours.HasFlag(specialistState) && StateFactory.ShouldEnterState(this, specialistState, out StateConfig config))
 				{
 					PushState( config );
 				}
