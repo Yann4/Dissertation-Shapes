@@ -9,7 +9,7 @@ namespace Dissertation.Environment
 		[SerializeField] private Spawner _associatedSpawner;
 
 		private Vector2 Size { get { return _size; } set { _size = value; RecalculateBounds(); } }
-		private Vector3 Centre { get { return transform.position; } set { transform.position = value; RecalculateBounds(); } }
+		public Vector3 Centre { get { return transform.position; } set { transform.position = value; RecalculateBounds(); } }
 
 		private Bounds _bounds;
 		private BaseCharacterController _owner;

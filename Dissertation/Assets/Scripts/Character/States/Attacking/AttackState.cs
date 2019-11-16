@@ -1,4 +1,5 @@
-﻿using Dissertation.Util;
+﻿using Dissertation.Pathfinding;
+using Dissertation.Util;
 using UnityEngine;
 
 namespace Dissertation.Character.AI
@@ -54,6 +55,14 @@ namespace Dissertation.Character.AI
 			}
 
 			_targetDirection = _attackConfig.Target.transform.position.x > Config.Owner.transform.position.x ? Facing.Right : Facing.Left;
+
+			if(ShouldFlee(out Vector3 fleeTo))
+			{
+				Config.Owner.PopState(this);
+				Config.Owner.PushState(new PathToState.PathToConfig(Config.Owner, fleeTo,
+					new HasTargetMoved(_attackConfig.Target.transform, _attackConfig.Target.transform.position)));
+				return true;
+			}
 
 			if (ShouldReposition(out Vector3 targetPosition))
 			{
@@ -160,6 +169,30 @@ namespace Dissertation.Character.AI
 		protected override bool IsValid()
 		{
 			return !_attackConfig.Target.Health.IsDead && !Config.Owner.Health.IsDead;
+		}
+
+		protected bool ShouldFlee(out Vector3 fleeTo)
+		{
+			float healthPercentage = (float)Config.Owner.Health.CurrentHealth / (float)Config.Owner.Config.MaxHealth;
+			if(healthPercentage <= Config.Owner._agentConfig.FleeHealthPercentage)
+			{
+				if(Config.Owner.CharacterHome != null && !Config.Owner.CharacterHome.Contains(Config.Owner.transform.position))
+				{
+					//If we're not home, run there
+					fleeTo = Config.Owner.CharacterHome.Centre;
+				}
+				else
+				{
+					//Just get away to not here
+					int randomIndex = Random.Range(0, Node.AllNodes.Count);
+					fleeTo = Node.AllNodes[randomIndex].Position;
+				}
+
+				return true;
+			}
+
+			fleeTo = Vector3.zero;
+			return false;
 		}
 	}
 }
