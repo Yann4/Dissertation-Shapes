@@ -56,6 +56,14 @@ namespace Dissertation.UI
 				() => App.Quit());
 		}
 
+		public void UnlockAllShapes()
+		{
+			PlayerController player = FindObjectOfType<PlayerController>();
+			player.UnlockShape(Character.CharacterFaction.Circle);
+			player.UnlockShape(Character.CharacterFaction.Triangle);
+			player.UnlockShape(Character.CharacterFaction.Square);
+		}
+
 		public override void SetVisible(bool visible)
 		{
 			_canvas.enabled = visible;
