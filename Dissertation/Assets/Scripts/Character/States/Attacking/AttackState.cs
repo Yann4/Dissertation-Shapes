@@ -39,6 +39,8 @@ namespace Dissertation.Character.AI
 		protected float _minAttackRange = 0.5f;
 
 		private Facing _targetDirection;
+		private float _lostSightTime = 0.0f;
+		private const float _giveUpTime = 3.0f;
 
 		public AttackState(AttackConfig config, float maxRange, float minAttackRange) : base(config)
 		{
@@ -52,6 +54,18 @@ namespace Dissertation.Character.AI
 			if(!base.Update())
 			{
 				return false;
+			}
+
+			if( _lostSightTime == 0.0f )
+			{
+				if (!App.AIBlackboard.CanSeeCharacter(Config.Owner, _attackConfig.Target))
+				{
+					_lostSightTime = Time.time;
+				}
+			}
+			else if( App.AIBlackboard.CanSeeCharacter(Config.Owner, _attackConfig.Target) )
+			{
+				_lostSightTime = 0.0f;
 			}
 
 			_targetDirection = _attackConfig.Target.transform.position.x > Config.Owner.transform.position.x ? Facing.Right : Facing.Left;
@@ -168,7 +182,7 @@ namespace Dissertation.Character.AI
 
 		protected override bool IsValid()
 		{
-			return !_attackConfig.Target.Health.IsDead && !Config.Owner.Health.IsDead;
+			return !_attackConfig.Target.Health.IsDead && !Config.Owner.Health.IsDead && Time.time - _lostSightTime < _giveUpTime;
 		}
 
 		protected bool ShouldFlee(out Vector3 fleeTo)

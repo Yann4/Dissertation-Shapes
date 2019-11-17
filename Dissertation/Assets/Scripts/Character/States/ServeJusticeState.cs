@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Dissertation.Character.AI
+﻿namespace Dissertation.Character.AI
 {
 	public class ServeJusticeState : SpecialistState
 	{

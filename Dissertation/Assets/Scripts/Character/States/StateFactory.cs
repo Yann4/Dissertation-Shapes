@@ -7,15 +7,16 @@ namespace Dissertation.Character.AI
 	{
 		public static int NumSpecialistStates = Enum.GetNames(typeof(SpecialistStates)).Length;
 
-		private static SpecialistState[] _referenceSpecialistStates = new SpecialistState[NumSpecialistStates];
+		private static SpecialistState[] _referenceSpecialistStates = new SpecialistState[NumSpecialistStates - 1];
 
 		static StateFactory()
 		{
-			for(int idx = 0; idx < NumSpecialistStates; idx++)
+			for(int idx = 0; idx < NumSpecialistStates - 1; idx++)
 			{
-				if ((SpecialistStates)idx != SpecialistStates.INVALID)
+				SpecialistStates state = (SpecialistStates)(1 << idx);
+				if (state != SpecialistStates.INVALID)
 				{
-					_referenceSpecialistStates[idx] = GetReferenceState((SpecialistStates)idx);
+					_referenceSpecialistStates[idx] = GetReferenceState(state);
 				}
 			}
 		}
@@ -72,6 +73,10 @@ namespace Dissertation.Character.AI
 					Debug.Assert(config is ServeJusticeState.JusticeConfig);
 					state = new ServeJusticeState(config as ServeJusticeState.JusticeConfig);
 					break;
+				case States.Flee:
+					Debug.Assert(config is FleeState.FleeConfig);
+					state = new FleeState(config as FleeState.FleeConfig);
+					break;
 				case States.INVALID:
 				default:
 					Debug.LogError("Factory not set up for state type " + config.StateType);
@@ -102,8 +107,9 @@ namespace Dissertation.Character.AI
 					return new StealState();
 				case SpecialistStates.Justice:
 					return new ServeJusticeState();
+				case SpecialistStates.Flee:
+					return new FleeState();
 				case SpecialistStates.INVALID:
-					return null;
 				default:
 					Debug.Assert(false, "Can't get reference state for " + state);
 					return null;
@@ -113,7 +119,9 @@ namespace Dissertation.Character.AI
 		public static bool ShouldEnterState(AgentController owner, SpecialistStates state, out StateConfig config)
 		{
 			Debug.Assert(state != SpecialistStates.INVALID);
-			return _referenceSpecialistStates[(int)state].ShouldRunState(owner, out config);
+			int idx = Array.FindIndex((SpecialistStates[])Enum.GetValues(typeof(SpecialistStates)), x => x == state) - 1; //-1 to account for SpecialistStates.INVALID
+
+			return _referenceSpecialistStates[idx].ShouldRunState(owner, out config);
 		}
 	}
 }

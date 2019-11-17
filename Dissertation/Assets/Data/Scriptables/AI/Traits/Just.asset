@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7d3a4a71396b8f4c93540aaf23a6a88, type: 3}
   m_Name: Just
   m_EditorClassIdentifier: 
-  _name: 
+  _name: Just
   _desireModifiers:
   - ToModify: 2
     MaximumValue: 20

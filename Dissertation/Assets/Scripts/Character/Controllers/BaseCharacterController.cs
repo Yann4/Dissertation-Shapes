@@ -117,6 +117,8 @@ namespace Dissertation.Character
 		public bool IsGrounded { get { return _collisionState.Below; } }
 		protected bool CanMove { get { return !Health.IsDead && !IsMeleeAttacking && !IsDashAttacking; } }
 
+		public float RunSpeedModifier = 1.0f;
+
 		/// <summary>
 		/// when true, one way platforms will be ignored when moving vertically for a single frame
 		/// </summary>
@@ -325,7 +327,7 @@ namespace Dissertation.Character
 					_canJump = false;
 				}
 
-				_velocity.x = horizontalMovement * _config.RunSpeed;
+				_velocity.x = horizontalMovement * _config.RunSpeed * RunSpeedModifier;
 
 				// if holding down bump up our movement amount and turn off one way platform detection for a frame.
 				// this lets us jump down through one way platforms

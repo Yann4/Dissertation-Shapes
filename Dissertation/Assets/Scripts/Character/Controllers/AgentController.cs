@@ -1,5 +1,4 @@
-﻿using Dissertation.Character.Player;
-using Dissertation.UI;
+﻿using Dissertation.UI;
 using Dissertation.Util.Localisation;
 using System;
 using System.Collections.Generic;
@@ -94,9 +93,9 @@ namespace Dissertation.Character.AI
 
 		private void CheckSpecialistStates()
 		{
-			for(int state = 0; state < StateFactory.NumSpecialistStates; state++)
+			for(int state = 0; state < StateFactory.NumSpecialistStates - 1; state++)
 			{
-				SpecialistStates specialistState = (SpecialistStates)state;
+				SpecialistStates specialistState = (SpecialistStates)(1 << state);
 				if (specialistState != SpecialistStates.INVALID && AvailableBehaviours.HasFlag(specialistState) && StateFactory.ShouldEnterState(this, specialistState, out StateConfig config))
 				{
 					PushState( config );
@@ -209,7 +208,11 @@ namespace Dissertation.Character.AI
 				HUD.Instance.CreateMenu<SpeechBubble>().Show(transform, LocManager.GetTranslation("/Dialogue/Agent/Hostile/Attack"), () => App.AIBlackboard.Player.Health.IsDead);
 			}
 
-			if(!IsInState<AttackState>(false)) //We're not already attacking something
+			if (AvailableBehaviours.HasFlag(SpecialistStates.Flee))
+			{
+				PushState(new FleeState.FleeConfig(this, source.Owner));
+			}
+			else if(!IsInState<AttackState>(false)) //We're not already attacking something
 			{
 				PushState(new AttackState.AttackConfig(this, source.Owner));
 			}

@@ -12,6 +12,7 @@ namespace Dissertation.Character.AI
 		Attack,
 		Steal,
 		Justice,
+		Flee,
 	}
 
 	[Flags]
@@ -20,7 +21,7 @@ namespace Dissertation.Character.AI
 		INVALID = 0,
 		Steal = 1 << 0,
 		Justice = 1 << 1,
-// 		Flee = 1 << 2,
+		Flee = 1 << 2,
 // 		Defend = 1 << 3,
 	}
 }

@@ -10,14 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a7d3a4a71396b8f4c93540aaf23a6a88, type: 3}
-  m_Name: Criminal
+  m_Name: Pushover
   m_EditorClassIdentifier: 
-  _name: Criminal
+  _name: Pushover
   _desireModifiers:
-  - ToModify: 0
-    MaximumValue: 20
-    FillRate: 0.1
-  - ToModify: 2
-    MaximumValue: 20
-    FillRate: 0.1
-  _specialBehaviours: 1
+  - ToModify: 1
+    MaximumValue: 30
+    FillRate: 0.2
+  _specialBehaviours: 4
