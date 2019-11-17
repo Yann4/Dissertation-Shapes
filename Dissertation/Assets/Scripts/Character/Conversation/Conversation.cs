@@ -51,7 +51,7 @@ namespace Dissertation.Character
 
 		private void Update()
 		{
-			if (_availableConversations.Count > 0)
+			if (IsConversationAvailable())
 			{
 				foreach (BaseCharacterController character in _potentialParticipants)
 				{
@@ -92,7 +92,7 @@ namespace Dissertation.Character
 		//Starts next conversation off stack
 		public void TryStartConversation(BaseCharacterController other)
 		{
-			if ( IsInConversation || _availableConversations.Count == 0 || !_conversationTrigger.bounds.Contains(other.transform.position) )
+			if ( IsInConversation || !IsConversationAvailable() || !_conversationTrigger.bounds.Contains(other.transform.position) )
 			{
 				return;
 			}
@@ -197,7 +197,7 @@ namespace Dissertation.Character
 
 		private void OnTriggerEnter2D(Collider2D collision)
 		{
-			if (_availableConversations.Count > 0)
+			if (IsConversationAvailable())
 			{
 				BaseCharacterController character = collision.gameObject.GetComponent<BaseCharacterController>();
 
@@ -215,7 +215,7 @@ namespace Dissertation.Character
 
 		private void OnTriggerExit2D(Collider2D collision)
 		{
-			if (_availableConversations.Count > 0)
+			if (IsConversationAvailable())
 			{
 				BaseCharacterController character = collision.gameObject.GetComponent<BaseCharacterController>();
 
@@ -233,7 +233,12 @@ namespace Dissertation.Character
 
 		private void SetPromptVisible(bool visible)
 		{
-			_prompt.SetVisible( visible && _availableConversations.Count > 0 );
+			_prompt.SetVisible( visible && IsConversationAvailable() );
+		}
+
+		private bool IsConversationAvailable()
+		{
+			return _availableConversations.Count > 0 && ConversationFunctionLibrary.IsAvailable(App.AIBlackboard.GetConversation(_availableConversations.Peek()).IsAvailable, _owner);
 		}
 	}
 }

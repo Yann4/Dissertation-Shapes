@@ -5,7 +5,14 @@ namespace Dissertation.Character
 	public enum ConversationOutput : short
 	{
 		None,
-		TransferMoney
+		TransferMoney,
+		Heal,
+	}
+
+	public enum ConversationPredicate : short
+	{
+		None,
+		PlayerIsHurt
 	}
 
 	public class ConversationFragment
@@ -43,6 +50,8 @@ namespace Dissertation.Character
 		public string[] ToSay;
 
 		public ConversationOutput Output = ConversationOutput.None;
+		public ConversationPredicate IsAvailable = ConversationPredicate.None;
+
 		public ConversationData[] OptionOutputData;
 
 		public ConversationFragment[] NextFragments;
@@ -75,6 +84,7 @@ namespace Dissertation.Character
 			}
 
 			Output = (ConversationOutput)reader.ReadInt16();
+			IsAvailable = (ConversationPredicate)reader.ReadInt16();
 
 			for (int idx = 0; idx < count; idx++)
 			{
@@ -93,6 +103,7 @@ namespace Dissertation.Character
 			}
 
 			writer.Write((short)Output);
+			writer.Write((short)IsAvailable);
 
 			foreach(ConversationData data in OptionOutputData)
 			{

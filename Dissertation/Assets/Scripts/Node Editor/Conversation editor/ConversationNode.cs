@@ -12,7 +12,8 @@ namespace Dissertation.NodeGraph
 	{
 		public ConversationFragment Sentence;
 		private const int _sentenceOptions = 2;
-		private string _enumTemp = "None";
+		private string _outputEnumTemp = "None";
+		private string _predicateEnumTemp = "None";
 		private string[] _intTemp = new string[_sentenceOptions];
 		private string[] _floatTemp = new string[_sentenceOptions];
 
@@ -82,7 +83,9 @@ namespace Dissertation.NodeGraph
 
 			Sentence = new ConversationFragment(reader);
 
-			_enumTemp = Sentence.Output.ToString();
+			_outputEnumTemp = Sentence.Output.ToString();
+			_predicateEnumTemp = Sentence.IsAvailable.ToString();
+
 			for(int idx = 0; idx < Sentence.OptionOutputData.Length; idx++)
 			{
 				_intTemp[idx] = Sentence.OptionOutputData[idx].iVal.ToString();
@@ -111,10 +114,19 @@ namespace Dissertation.NodeGraph
 			{
 				GUI.Label(currentContentRect, new GUIContent("ConversationOutput value (should map to enum)"));
 				currentContentRect.y += currentContentRect.height + 5;
-				_enumTemp = GUI.TextField(currentContentRect, _enumTemp);
-				if (Enum.TryParse(_enumTemp, out ConversationOutput val) && val != Sentence.Output)
+				_outputEnumTemp = GUI.TextField(currentContentRect, _outputEnumTemp);
+				if (Enum.TryParse(_outputEnumTemp, out ConversationOutput output) && output != Sentence.Output)
 				{
-					Sentence.Output = val;
+					Sentence.Output = output;
+				}
+				currentContentRect.y += currentContentRect.height + 5;
+
+				GUI.Label(currentContentRect, new GUIContent("Predicate value (should map to enum)"));
+				currentContentRect.y += currentContentRect.height + 5;
+				_predicateEnumTemp = GUI.TextField(currentContentRect, _predicateEnumTemp);
+				if (Enum.TryParse(_predicateEnumTemp, out ConversationPredicate pred) && pred != Sentence.IsAvailable)
+				{
+					Sentence.IsAvailable = pred;
 				}
 				currentContentRect.y += currentContentRect.height + 5;
 

@@ -13,6 +13,20 @@ namespace Dissertation.Character
 				case ConversationOutput.TransferMoney:
 					TransferMoney(speaker, listener, parameters.iVal);
 					break;
+				case ConversationOutput.Heal:
+					HealListener(listener, parameters.iVal);
+					break;
+			}
+		}
+
+		public static bool IsAvailable( ConversationPredicate predicate, BaseCharacterController speaker )
+		{
+			switch(predicate)
+			{
+				case ConversationPredicate.PlayerIsHurt:
+					return IsPlayerHurt();
+				default:
+					return true;
 			}
 		}
 
@@ -26,6 +40,23 @@ namespace Dissertation.Character
 			{
 				listener.Inventory.TransferCurrencyTo(speaker.Inventory, -amount);
 			}
+		}
+
+		private static void HealListener(BaseCharacterController listener, int healBy)
+		{
+			if (healBy == 0)
+			{
+				listener.Health.FullHeal();
+			}
+			else
+			{
+				listener.Health.Heal((uint)healBy);
+			}
+		}
+
+		private static bool IsPlayerHurt()
+		{
+			return App.AIBlackboard.Player.Health.HealthPercentage < 1.0f;
 		}
 	}
 }

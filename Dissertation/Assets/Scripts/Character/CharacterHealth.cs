@@ -25,6 +25,8 @@ namespace Dissertation.Character
 			}
 		}
 
+		public float HealthPercentage { get { return (float)CurrentHealth / (float)_character.Config.MaxHealth; } }
+
 		public bool IsDead { get { return CurrentHealth <= 0; } }
 
 		public Action<int> OnHealthChanged;
@@ -47,6 +49,11 @@ namespace Dissertation.Character
 		public void Heal(uint healBy)
 		{
 			ModifyHealth((int)healBy);
+		}
+
+		public void FullHeal()
+		{
+			ModifyHealth(_character.Config.MaxHealth);
 		}
 
 		private void ModifyHealth(int modifyBy)
