@@ -234,7 +234,6 @@ namespace Dissertation.Character
 
 			//Setup dash attack
 			_dashAttackHighlightSprite = _dashAttack.GetComponent<SpriteRenderer>();
-			_dashAttackHighlightSprite.sprite = _characterSprite.sprite;
 
 			_dashAttackCollider = _dashAttack.GetComponent<Collider2D>();
 			_dashAttackCollider.enabled = false;
@@ -361,19 +360,19 @@ namespace Dissertation.Character
 			}
 		}
 
-		public bool CanMeleeAttack()
+		public virtual bool CanMeleeAttack()
 		{
 			return !IsAttacking && !Health.IsDead && _activeAttack == Attack.Melee
 				&& (Time.time - _meleeAttackEndTime >= Config.MeleeAttackCooldown);
 		}
 
-		public bool CanRangedAttack()
+		public virtual bool CanRangedAttack()
 		{
 			return !IsAttacking && !Health.IsDead && _activeAttack == Attack.Ranged
 				&& (Time.time - _lastRangedAttackTime >= Config.RangedAttackCooldown);
 		}
 
-		public bool CanDashAttack()
+		public virtual bool CanDashAttack()
 		{
 			return !IsAttacking && !Health.IsDead && !_dashAttack.activeSelf && _activeAttack == Attack.Dash
 				&& (Time.time - _dashAttackEndTime >= Config.DashAttackCooldown);

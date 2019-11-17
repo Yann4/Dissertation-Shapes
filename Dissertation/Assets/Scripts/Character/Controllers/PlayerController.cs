@@ -7,9 +7,44 @@ namespace Dissertation.Character.Player
 {
 	public class PlayerController : BaseCharacterController
 	{
+		[SerializeField] SpriteRenderer _square;
+		[SerializeField] SpriteRenderer _triangle;
+		[SerializeField] SpriteRenderer _circle;
+
 		private PlayerConfig _playerConfig;
 
 		private PlayerInventory _inventoryUI;
+
+		private CharacterFaction _shape;
+		private CharacterFaction CurrentShape
+		{
+			get { return _shape; }
+			set
+			{
+				switch (value)
+				{
+					case CharacterFaction.Square:
+						_activeAttack = Attack.Melee;
+						_shape = value;
+						break;
+					case CharacterFaction.Triangle:
+						_activeAttack = Attack.Ranged;
+						_shape = value;
+						break;
+					case CharacterFaction.Circle:
+						_activeAttack = Attack.Dash;
+						_shape = value;
+						break;
+					case CharacterFaction.Player:
+					default:
+						Debug.Assert(false, "Don't do that");
+						break;
+				}
+			}
+		}
+
+		private Coroutine _transforming = null;
+		public bool IsTransforming { get { return _transforming != null; } }
 
 		protected override void Start()
 		{
@@ -23,6 +58,29 @@ namespace Dissertation.Character.Player
 			_inventoryUI.Setup(this);
 
 			Health.OnDied += OnDie;
+
+			_square.color = Color.clear;
+			_triangle.color = Color.clear;
+			_circle.color = Color.clear;
+
+			switch (_playerConfig.DefaultShape)
+			{
+				case CharacterFaction.Square:
+					_square.color = Color.white;
+					break;
+				case CharacterFaction.Triangle:
+					_triangle.color = Color.white;
+					break;
+				case CharacterFaction.Circle:
+					_circle.color = Color.white;
+					break;
+				case CharacterFaction.Player:
+				default:
+					Debug.Assert(false, "Don't have that as the default shape");
+					break;
+			}
+
+			CurrentShape = _playerConfig.DefaultShape;
 		}
 
 		protected override void OnDestroy()
@@ -47,6 +105,25 @@ namespace Dissertation.Character.Player
 				_inventoryUI.Toggle();
 			}
 
+			if(!IsTransforming && InputManager.GetButtonDown(InputAction.Transform))
+			{
+				CharacterFaction nextShape = CurrentShape;
+				switch (CurrentShape)
+				{
+					case CharacterFaction.Square:
+						nextShape = CharacterFaction.Triangle;
+						break;
+					case CharacterFaction.Triangle:
+						nextShape = CharacterFaction.Circle;
+						break;
+					case CharacterFaction.Circle:
+						nextShape = CharacterFaction.Square;
+						break;
+				}
+
+				_transforming = StartCoroutine(TransformInto(_playerConfig.TransformDuration, nextShape));
+			}
+
 			base.Update();
 		}
 
@@ -67,6 +144,82 @@ namespace Dissertation.Character.Player
 			_characterSprite.enabled = true;
 
 			Health.Respawn();
+		}
+
+		private IEnumerator TransformInto(float duration, CharacterFaction transformTo)
+		{
+			SpriteRenderer current;
+			switch (CurrentShape)
+			{
+				case CharacterFaction.Square:
+					current = _square;
+					break;
+				case CharacterFaction.Triangle:
+					current = _triangle;
+					break;
+				case CharacterFaction.Circle:
+					current = _circle;
+					break;
+				case CharacterFaction.Player:
+				default:
+					current = null;
+					Debug.Assert(false, "Don't do that");
+					break;
+			}
+
+			SpriteRenderer next;
+			switch (transformTo)
+			{
+				case CharacterFaction.Square:
+					next = _square;
+					break;
+				case CharacterFaction.Triangle:
+					next = _triangle;
+					break;
+				case CharacterFaction.Circle:
+					next = _circle;
+					break;
+				case CharacterFaction.Player:
+				default:
+					next = null;
+					Debug.Assert(false, "Don't do that");
+					break;
+			}
+
+			if(current == null || next == null)
+			{
+				yield break;
+			}
+
+			float t = 0.0f;
+			float startTime = Time.time;
+			while(t <= 1.0f)
+			{
+				t = (Time.time - startTime) / duration;
+				next.color = Color.Lerp(Color.clear, Color.white, t);
+				current.color = Color.Lerp(Color.white, Color.clear, t);
+
+				yield return null;
+			}
+
+			CurrentShape = transformTo;
+			_characterSprite = next;
+			_transforming = null;
+		}
+
+		public override bool CanDashAttack()
+		{
+			return base.CanDashAttack() && !IsTransforming;
+		}
+
+		public override bool CanMeleeAttack()
+		{
+			return base.CanMeleeAttack() && !IsTransforming;
+		}
+
+		public override bool CanRangedAttack()
+		{
+			return base.CanRangedAttack() && !IsTransforming;
 		}
 	}
 }

@@ -15,6 +15,7 @@ namespace Dissertation.Input
 		RangedAttack,
 		DashAttack,
 		Interact,
+		Transform,
 	}
 
 	/*
