@@ -182,7 +182,7 @@ namespace Dissertation.Character.AI
 
 		protected override bool IsValid()
 		{
-			return !_attackConfig.Target.Health.IsDead && !Config.Owner.Health.IsDead && Time.time - _lostSightTime < _giveUpTime;
+			return !_attackConfig.Target.Health.IsDead && !Config.Owner.Health.IsDead && (_lostSightTime == 0.0f || Time.time - _lostSightTime < _giveUpTime);
 		}
 
 		protected bool ShouldFlee(out Vector3 fleeTo)
