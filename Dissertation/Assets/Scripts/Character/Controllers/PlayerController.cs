@@ -15,6 +15,10 @@ namespace Dissertation.Character.Player
 
 		private PlayerInventory _inventoryUI;
 
+		private bool _squareUnlocked = false;
+		private bool _triangleUnlocked = false;
+		private bool _circleUnlocked = false;
+
 		private CharacterFaction _shape;
 		private CharacterFaction CurrentShape
 		{
@@ -67,12 +71,15 @@ namespace Dissertation.Character.Player
 			{
 				case CharacterFaction.Square:
 					_square.color = Color.white;
+					_squareUnlocked = true;
 					break;
 				case CharacterFaction.Triangle:
 					_triangle.color = Color.white;
+					_triangleUnlocked = true;
 					break;
 				case CharacterFaction.Circle:
 					_circle.color = Color.white;
+					_circleUnlocked = true;
 					break;
 				case CharacterFaction.Player:
 				default:
@@ -107,21 +114,12 @@ namespace Dissertation.Character.Player
 
 			if(!IsTransforming && InputManager.GetButtonDown(InputAction.Transform))
 			{
-				CharacterFaction nextShape = CurrentShape;
-				switch (CurrentShape)
-				{
-					case CharacterFaction.Square:
-						nextShape = CharacterFaction.Triangle;
-						break;
-					case CharacterFaction.Triangle:
-						nextShape = CharacterFaction.Circle;
-						break;
-					case CharacterFaction.Circle:
-						nextShape = CharacterFaction.Square;
-						break;
-				}
+				CharacterFaction next = NextFaction(CurrentShape);
 
-				_transforming = StartCoroutine(TransformInto(_playerConfig.TransformDuration, nextShape));
+				if (next != CurrentShape)
+				{
+					_transforming = StartCoroutine(TransformInto(_playerConfig.TransformDuration, next));
+				}
 			}
 
 			base.Update();
@@ -130,6 +128,22 @@ namespace Dissertation.Character.Player
 		private void OnDie(BaseCharacterController died)
 		{
 			StartCoroutine(HandleDeath());
+		}
+
+		public void UnlockShape(CharacterFaction shape)
+		{
+			switch (shape)
+			{
+				case CharacterFaction.Square:
+					_squareUnlocked = true;
+					break;
+				case CharacterFaction.Triangle:
+					_triangleUnlocked = true;
+					break;
+				case CharacterFaction.Circle:
+					_circleUnlocked = true;
+					break;
+			}
 		}
 
 		private IEnumerator HandleDeath()
@@ -186,7 +200,7 @@ namespace Dissertation.Character.Player
 					break;
 			}
 
-			if(current == null || next == null)
+			if (current == null || next == null)
 			{
 				yield break;
 			}
@@ -220,6 +234,41 @@ namespace Dissertation.Character.Player
 		public override bool CanRangedAttack()
 		{
 			return base.CanRangedAttack() && !IsTransforming;
+		}
+
+		private CharacterFaction NextFaction(CharacterFaction from)
+		{
+			CharacterFaction next = from + 1;
+			int numFactions = System.Enum.GetValues(typeof(CharacterFaction)).Length;
+
+			while (!FactionUnlocked(next))
+			{
+				if ((int)next >= numFactions)
+				{
+					next = 0;
+				}
+				else
+				{
+					next++;
+				}
+			}
+
+			return next;
+		}
+
+		private bool FactionUnlocked(CharacterFaction faction)
+		{
+			switch (faction)
+			{
+				case CharacterFaction.Square:
+					return _squareUnlocked;
+				case CharacterFaction.Triangle:
+					return _triangleUnlocked;
+				case CharacterFaction.Circle:
+					return _circleUnlocked;
+			}
+
+			return false;
 		}
 	}
 }
