@@ -109,6 +109,8 @@ namespace Dissertation.Character.AI
 					return new ServeJusticeState();
 				case SpecialistStates.Flee:
 					return new FleeState();
+				case SpecialistStates.Defend:
+					return new DefendState();
 				case SpecialistStates.INVALID:
 				default:
 					Debug.Assert(false, "Can't get reference state for " + state);

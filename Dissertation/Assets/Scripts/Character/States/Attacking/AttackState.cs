@@ -187,10 +187,16 @@ namespace Dissertation.Character.AI
 
 		protected bool ShouldFlee(out Vector3 fleeTo)
 		{
-			float healthPercentage = (float)Config.Owner.Health.CurrentHealth / (float)Config.Owner.Config.MaxHealth;
-			if(healthPercentage <= Config.Owner._agentConfig.FleeHealthPercentage)
+			if (Config.Owner.AvailableBehaviours.HasFlag(SpecialistStates.Defend) && Config.Owner.CharacterHome != null && Config.Owner.CharacterHome.Contains(Config.Owner.transform.position))
 			{
-				if(Config.Owner.CharacterHome != null && !Config.Owner.CharacterHome.Contains(Config.Owner.transform.position))
+				fleeTo = Vector3.zero;
+				return false;
+			}
+
+			float healthPercentage = (float)Config.Owner.Health.CurrentHealth / (float)Config.Owner.Config.MaxHealth;
+			if (healthPercentage <= Config.Owner._agentConfig.FleeHealthPercentage)
+			{
+				if (Config.Owner.CharacterHome != null && !Config.Owner.CharacterHome.Contains(Config.Owner.transform.position))
 				{
 					//If we're not home, run there
 					fleeTo = Config.Owner.CharacterHome.Centre;
