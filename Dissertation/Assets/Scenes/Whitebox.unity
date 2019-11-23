@@ -2089,5 +2089,10 @@ PrefabInstance:
       propertyPath: _linkedSpawner
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6522840067810800762, guid: cb317fab577f2ad41b4440d18f47d485,
+        type: 3}
+      propertyPath: _refillTime
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cb317fab577f2ad41b4440d18f47d485, type: 3}

@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Dissertation.Character
@@ -52,6 +53,7 @@ namespace Dissertation.Character
 		[SerializeField] private InventoryContents _baseContents;
 		[SerializeField] private bool _placedContainer = false;
 		[SerializeField] private Spawner _linkedSpawner;
+		[SerializeField, Tooltip("Time for placed container to refill it's contents (with baseContents). 0.0 means it doesn't refill")] private float _refillTime = 0.0f;
 
 		public InventoryContents Contents { get; private set; } = new InventoryContents();
 
@@ -70,7 +72,7 @@ namespace Dissertation.Character
 		private void Start()
 		{
 			OnGround |= _placedContainer;
-			Contents.Add(_baseContents);
+			Contents.Add(_baseContents.Copy());
 
 			if(_linkedSpawner != null)
 			{
@@ -202,6 +204,23 @@ namespace Dissertation.Character
 			if( Owner != null && picker != Owner )
 			{
 				App.AIBlackboard.AddCriminal(picker);
+			}
+
+			if(_refillTime != 0.0f)
+			{
+				StartCoroutine(RefillContainer());
+			}
+		}
+
+		private IEnumerator RefillContainer()
+		{
+			yield return new WaitForSeconds(_refillTime);
+
+			Contents.Add( _baseContents );
+
+			if(_pickers.Any(picker => picker is Player.PlayerController))
+			{
+				_prompt.SetActive(true);
 			}
 		}
 
