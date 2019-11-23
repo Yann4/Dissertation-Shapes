@@ -1,6 +1,7 @@
 ﻿using Dissertation.Character.Player;
 using Dissertation.Util;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Dissertation.Character.AI
@@ -18,6 +19,8 @@ namespace Dissertation.Character.AI
 		public bool PlayerIsInConversation { get { return _inConversationWithPlayer != null; } }
 		private AgentController _inConversationWithPlayer = null;
 
+		private List<Inventory> _minePoints = new List<Inventory>();
+
 		public Blackboard( ConversationData conversations )
 		{
 			Spawner.OnSpawn += OnCharacterSpawned;
@@ -30,6 +33,8 @@ namespace Dissertation.Character.AI
 
 			_conversations = conversations;
 			_conversations.Setup();
+
+			App.OnLevelLoaded += OnLevelLoaded;
 		}
 
 		~Blackboard()
@@ -37,6 +42,13 @@ namespace Dissertation.Character.AI
 			Spawner.OnSpawn -= OnCharacterSpawned;
 			Conversation.ConversationStarted -= OnConverationStarted;
 			Conversation.ConversationEnded -= OnConversationEnded;
+
+			App.OnLevelLoaded -= OnLevelLoaded;
+		}
+
+		private void OnLevelLoaded()
+		{
+			_minePoints = GameObject.FindObjectsOfType<Inventory>().Where(inventory => inventory.OnGround && inventory.Owner == null).ToList();
 		}
 
 		private void OnCharacterSpawned(BaseCharacterController character)
@@ -192,6 +204,11 @@ namespace Dissertation.Character.AI
 		public ConversationFragment GetConversation(string conversationReference)
 		{
 			return _conversations.GetConversation(conversationReference);
+		}
+
+		public List<Inventory> GetAvailableMinePoints()
+		{
+			return _minePoints.Where(inventory => !inventory.Contents.IsEmpty()).ToList();
 		}
 
 		private void OnConverationStarted(ConversationFragment conversation, AgentController owner)

@@ -14,6 +14,7 @@ namespace Dissertation.Character.AI
 		Justice,
 		Flee,
 		Defend,
+		Mine,
 	}
 
 	[Flags]
@@ -24,5 +25,6 @@ namespace Dissertation.Character.AI
 		Justice = 1 << 1,
 		Flee = 1 << 2,
 		Defend = 1 << 3,
+		Mine = 1 << 4,
 	}
 }

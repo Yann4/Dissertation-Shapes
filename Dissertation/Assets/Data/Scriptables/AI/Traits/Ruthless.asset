@@ -20,4 +20,4 @@ MonoBehaviour:
   - ToModify: 2
     MaximumValue: 10
     FillRate: 0.1
-  _specialBehaviours: 8
+  _specialBehaviours: 24

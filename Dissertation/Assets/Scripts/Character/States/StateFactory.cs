@@ -77,6 +77,11 @@ namespace Dissertation.Character.AI
 					Debug.Assert(config is FleeState.FleeConfig);
 					state = new FleeState(config as FleeState.FleeConfig);
 					break;
+				case States.Mine:
+					Debug.Assert(config is MineCurrencyState.MineCurrencyConfig);
+					state = new MineCurrencyState(config as MineCurrencyState.MineCurrencyConfig);
+					break;
+				case States.Defend:
 				case States.INVALID:
 				default:
 					Debug.LogError("Factory not set up for state type " + config.StateType);
@@ -111,6 +116,8 @@ namespace Dissertation.Character.AI
 					return new FleeState();
 				case SpecialistStates.Defend:
 					return new DefendState();
+				case SpecialistStates.Mine:
+					return new MineCurrencyState();
 				case SpecialistStates.INVALID:
 				default:
 					Debug.Assert(false, "Can't get reference state for " + state);

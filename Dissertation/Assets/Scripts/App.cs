@@ -4,6 +4,8 @@ using UnityEngine.SceneManagement;
 using Dissertation.Util.Localisation;
 using Dissertation.Character;
 using Dissertation.Util;
+using System;
+using System.Collections;
 
 namespace Dissertation
 {
@@ -21,6 +23,8 @@ namespace Dissertation
 
 		public static Blackboard AIBlackboard { get; private set; }
 
+		public static Action OnLevelLoaded;
+
 		private void Start()
 		{
 			new LocManager(_localisation); //Need to create the instance, but don't need to worry about holding a reference
@@ -30,7 +34,15 @@ namespace Dissertation
 			LoadScene(_HUDSceneName);
 			LoadScene(_whiteboxScene);
 
+			StartCoroutine(InvokeLevelLoaded());
+
 			_timeScale = Time.timeScale;
+		}
+
+		private IEnumerator InvokeLevelLoaded()
+		{
+			yield return null;
+			OnLevelLoaded.InvokeSafe();
 		}
 
 		private void LoadScene(string sceneName)

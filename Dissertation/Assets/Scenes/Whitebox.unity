@@ -1310,7 +1310,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1866740692
 Transform:
   m_ObjectHideFlags: 0
@@ -2088,6 +2088,6 @@ PrefabInstance:
         type: 3}
       propertyPath: _linkedSpawner
       value: 
-      objectReference: {fileID: 910076856195687202}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cb317fab577f2ad41b4440d18f47d485, type: 3}

@@ -10,7 +10,7 @@ namespace Dissertation.Util
 
 	public static class Positional
 	{
-		public static bool IsAtPosition(Transform transform, Vector3 position, float tolerance = 1.0f)
+		public static bool IsAtPosition(Transform transform, Vector3 position, float tolerance = 2.0f)
 		{
 			if(transform.position.z != position.z)
 			{
