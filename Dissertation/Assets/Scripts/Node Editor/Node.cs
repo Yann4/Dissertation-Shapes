@@ -23,6 +23,9 @@ namespace Dissertation.NodeGraph
 #if UNITY_EDITOR
 		private bool _isHeld = false;
 		protected bool _isSelected = false;
+
+		protected Vector2 _selectedSize;
+		protected Vector2 _unselectedSize;
 #endif //UNITY_EDITOR
 
 		public ConnectionPoint InPoint { get; private set; }
@@ -37,6 +40,9 @@ namespace Dissertation.NodeGraph
 #if UNITY_EDITOR
 		public Node(Vector2 position, Vector2 size, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onRemoveNode, GUID? guid = null)
 		{
+			_unselectedSize = size;
+			_selectedSize = size;
+
 			NodeRect = new Rect(position.x, position.y, size.x, size.y);
 			_style = nodeStyle;
 			_defaultNodeStyle = nodeStyle;
@@ -96,10 +102,25 @@ namespace Dissertation.NodeGraph
 		{
 			writer.Write(UID);
 
+			if (_isSelected)
+			{
+				NodeRect.size = _unselectedSize;
+			}
+
 			writer.Write(NodeRect.x);
 			writer.Write(NodeRect.y);
 			writer.Write(NodeRect.width);
 			writer.Write(NodeRect.height);
+
+			if (_isSelected)
+			{
+				NodeRect.size = _selectedSize;
+			}
+
+			writer.Write(_unselectedSize.x);
+			writer.Write(_unselectedSize.y);
+			writer.Write(_selectedSize.x);
+			writer.Write(_selectedSize.y);
 
 			writer.Write(Title);
 

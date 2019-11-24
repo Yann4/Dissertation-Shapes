@@ -19,9 +19,6 @@ namespace Dissertation.Narrative.Editor
 		int _numOptionalActions = 0;
 
 #if UNITY_EDITOR
-		private Vector2 _selectedSize;
-		private Vector2 _unselectedSize;
-
 		public BeatNode(Vector2 position, Vector2 size, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onRemoveNode, GUID? guid = null)
 			: base(position, size, nodeStyle, selectedStyle, inPointStyle, outPointStyle, onClickInPoint, onClickOutPoint, onRemoveNode, guid)
 		{
@@ -88,22 +85,7 @@ namespace Dissertation.Narrative.Editor
 
 		public override void Serialize(BinaryWriter writer)
 		{
-			if (_isSelected)
-			{
-				NodeRect.size = _unselectedSize;
-			}
-
 			base.Serialize(writer);
-
-			if (_isSelected)
-			{
-				NodeRect.size = _selectedSize;
-			}
-
-			writer.Write(_unselectedSize.x);
-			writer.Write(_unselectedSize.y);
-			writer.Write(_selectedSize.x);
-			writer.Write(_selectedSize.y);
 
 			writer.Write(_numPreconditions);
 			writer.Write(_numRequiredActions);

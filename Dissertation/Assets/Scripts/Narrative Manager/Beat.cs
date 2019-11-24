@@ -95,8 +95,6 @@ namespace Dissertation.Narrative
 		}
 
 		public void Update()
-		{
-
-		}
+		{ }
 	}
 }

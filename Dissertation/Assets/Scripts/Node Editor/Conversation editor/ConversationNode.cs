@@ -17,15 +17,13 @@ namespace Dissertation.NodeGraph
 		private string[] _intTemp = new string[_sentenceOptions];
 		private string[] _floatTemp = new string[_sentenceOptions];
 
-		private Vector2 _selectedSize;
-		private Vector2 _unselectedSize;
-
 #if UNITY_EDITOR
 		public ConversationNode(Vector2 position, Vector2 size, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onRemoveNode, GUID? guid = null)
 			: base(position, size, nodeStyle, selectedStyle, inPointStyle, outPointStyle, onClickInPoint, onClickOutPoint, onRemoveNode, guid)
 		{
 			_unselectedSize = size;
 			_selectedSize = new Vector2(300.0f, 700.0f);
+
 			Title = "Sentence";
 			Sentence = new ConversationFragment(false, _sentenceOptions);
 		}
@@ -54,22 +52,7 @@ namespace Dissertation.NodeGraph
 
 		public override void Serialize(BinaryWriter writer)
 		{
-			if (_isSelected)
-			{
-				NodeRect.size = _unselectedSize;
-			}
-
 			base.Serialize(writer);
-
-			if (_isSelected)
-			{
-				NodeRect.size = _selectedSize;
-			}
-
-			writer.Write(_unselectedSize.x);
-			writer.Write(_unselectedSize.y);
-			writer.Write(_selectedSize.x);
-			writer.Write(_selectedSize.y);
 
 			Sentence.Serialise(writer);
 		}
