@@ -1,49 +1,50 @@
 ﻿using System.IO;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace Dissertation.Narrative
 {
+	[CreateAssetMenu(fileName = "WorldProperty.asset", menuName = "Dissertation/Scriptables/Narrative/World Property")]
 	public class WorldProperty : ScriptableObject
 	{
+		[HideInInspector] public string guid;
+
 		public long ObjectID;
 		public EProperty Property;
 
-		public int iValue;
-		public bool bValue;
-		public float fValue;
-		public string sValue;
+		[Tooltip("Int value")]		public int iValue;
+		[Tooltip("Bool value")]		public bool bValue;
+		[Tooltip("Float value")]	public float fValue;
+		[Tooltip("String value")]	public string sValue;
 
-		public WorldProperty(long objectID, EProperty property)
+		public static WorldProperty Deserialise(BinaryReader reader)
 		{
-			ObjectID = objectID;
-			Property = property;
-
-			iValue = 0;
-			bValue = false;
-			fValue = 0.0f;
-			sValue = string.Empty;
-		}
-
-		public WorldProperty(BinaryReader reader)
-		{
-			ObjectID = reader.ReadInt64();
-			Property = (EProperty)reader.ReadInt32();
-
-			iValue = reader.ReadInt32();
-			bValue = reader.ReadBoolean();
-			fValue = reader.ReadSingle();
-			sValue = reader.ReadString();
+			return NarrativeDictionary.GetAsset().GetWorldProperty(reader.ReadString());
 		}
 
 		public void Serialize(BinaryWriter writer)
 		{
-			writer.Write(ObjectID);
-			writer.Write((int)Property);
-
-			writer.Write(iValue);
-			writer.Write(bValue);
-			writer.Write(fValue);
-			writer.Write(sValue);
+			writer.Write(guid);
 		}
 	}
+
+#if UNITY_EDITOR
+	[CustomEditor(typeof(WorldProperty))]
+	public class WorldPropertyEditor : UnityEditor.Editor
+	{
+		public override void OnInspectorGUI()
+		{
+			WorldProperty myTarget = (WorldProperty)target;
+			if (GUILayout.Button("Generate GUID"))
+			{
+				myTarget.guid = GUID.Generate().ToString();
+			}
+
+			DrawDefaultInspector();
+		}
+	}
+#endif //UNITY_EDITOR
 }

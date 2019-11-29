@@ -15,7 +15,7 @@ namespace Dissertation.Narrative
 		public float Importance { get; private set; } = 0.0f;
 		public int Order { get; private set; } = -1;
 
-		public int MaxRepetitions { get; private set; } = 1;
+		public int MaxRepetitions { get; set; } = 1;
 		public int RepetitionsPerformed { get; private set; } = 0;
 
 		public List<Action> RequiredActions { get; private set; } = new List<Action>();
@@ -29,7 +29,7 @@ namespace Dissertation.Narrative
 			int preconditionCount = reader.ReadInt32();
 			for(int idx = 0; idx < preconditionCount; idx++)
 			{
-				Preconditions.Add(new WorldProperty(reader));
+				Preconditions.Add(WorldProperty.Deserialise(reader));
 			}
 
 			Archetype = new PlayerArchetype(reader);
@@ -43,13 +43,14 @@ namespace Dissertation.Narrative
 			int requiredActionCount = reader.ReadInt32();
 			for (int idx = 0; idx < requiredActionCount; idx++)
 			{
-				RequiredActions.Add(new Action(reader));
+				Action action = UnityEngine.ScriptableObject.CreateInstance(typeof(Action)) as Action;
+				RequiredActions.Add(Action.Deserialise(reader));
 			}
 
 			int optionalActionCount = reader.ReadInt32();
 			for (int idx = 0; idx < optionalActionCount; idx++)
 			{
-				OptionalActions.Add(new Action(reader));
+				OptionalActions.Add(Action.Deserialise(reader));
 			}
 
 			CalculatePostconditions();
@@ -74,13 +75,13 @@ namespace Dissertation.Narrative
 			writer.Write(RequiredActions.Count);
 			for (int idx = 0; idx < RequiredActions.Count; idx++)
 			{
-				RequiredActions[idx].Serialize(writer);
+				RequiredActions[idx].Serialise(writer);
 			}
 
 			writer.Write(OptionalActions.Count);
 			for (int idx = 0; idx < OptionalActions.Count; idx++)
 			{
-				OptionalActions[idx].Serialize(writer);
+				OptionalActions[idx].Serialise(writer);
 			}
 		}
 

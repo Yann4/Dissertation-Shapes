@@ -1,50 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using static Dissertation.Narrative.ActionFunctionLibrary;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace Dissertation.Narrative
 {
-	[Serializable]
+	[CreateAssetMenu(fileName = "Action.asset", menuName = "Dissertation/Scriptables/Narrative/Action")]
 	public class Action : ScriptableObject
 	{
+		[HideInInspector] public string guid;
+
 		public List<WorldProperty> Preconditions = new List<WorldProperty>();
 		public List<WorldProperty> Postconditions = new List<WorldProperty>();
 		public Actions PerformFunction = Actions.NONE;
 
-		public Action(BinaryReader reader)
+		public static Action Deserialise (BinaryReader reader)
 		{
-			int preconditionCount = reader.ReadInt32();
-			for(int idx = 0; idx < preconditionCount; idx++)
-			{
-				Preconditions.Add(new WorldProperty(reader));
-			}
-
-			int postconditionCount = reader.ReadInt32();
-			for(int idx = 0; idx < postconditionCount; idx++)
-			{
-				Postconditions.Add(new WorldProperty(reader));
-			}
-
-			PerformFunction = (Actions)reader.ReadInt32();
+			return NarrativeDictionary.GetAsset().GetAction(reader.ReadString());
 		}
 
-		public void Serialize(BinaryWriter writer)
+		public void Serialise(BinaryWriter writer)
 		{
-			writer.Write(Preconditions.Count);
-			foreach(WorldProperty property in Preconditions)
-			{
-				property.Serialize(writer);
-			}
-
-			writer.Write(Postconditions.Count);
-			foreach(WorldProperty property in Postconditions)
-			{
-				property.Serialize(writer);
-			}
-
-			writer.Write((int)PerformFunction);
+			writer.Write(guid);
 		}
 
 		public void Perform()
@@ -55,4 +36,21 @@ namespace Dissertation.Narrative
 			}
 		}
 	}
+
+#if UNITY_EDITOR
+	[CustomEditor(typeof(Action))]
+	public class ActionEditor : UnityEditor.Editor
+	{
+		public override void OnInspectorGUI()
+		{
+			Action myTarget = (Action)target;
+			if (GUILayout.Button("Generate GUID"))
+			{
+				myTarget.guid = GUID.Generate().ToString();
+			}
+
+			DrawDefaultInspector();
+		}
+	}
+#endif //UNITY_EDITOR
 }

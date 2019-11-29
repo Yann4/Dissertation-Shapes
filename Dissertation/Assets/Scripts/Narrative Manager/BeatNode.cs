@@ -24,7 +24,7 @@ namespace Dissertation.Narrative.Editor
 		{
 			_unselectedSize = size;
 			_selectedSize = new Vector2(300.0f, 700.0f);
-			Title = "Sentence";
+			Title = "";
 			BeatData = new Beat();
 		}
 
@@ -42,8 +42,9 @@ namespace Dissertation.Narrative.Editor
 
 		protected override void DrawContent(ref Rect currentContentRect)
 		{
-			base.DrawContent(ref currentContentRect);
 			GUILayout.BeginArea(NodeRect);
+
+			PreviousOption = EditorGUILayout.IntField(new GUIContent("Previous option"), PreviousOption);
 
 			DrawList<WorldProperty>(BeatData.Preconditions, "Preconditions", ref _numPreconditions);
 
@@ -52,14 +53,16 @@ namespace Dissertation.Narrative.Editor
 			DrawList<Action>(BeatData.RequiredActions, "Required Actions", ref _numRequiredActions);
 			DrawList<Action>(BeatData.OptionalActions, "Optional Actions", ref _numOptionalActions);
 
+			BeatData.MaxRepetitions = EditorGUILayout.IntField(new GUIContent("Max Repetitions"), BeatData.MaxRepetitions);
+
 			GUILayout.EndArea();
 		}
 
-		private void DrawList<T>(List<T> container, string label, ref int count) where T : class
+		private void DrawList<T>(List<T> container, string label, ref int count) where T : UnityEngine.Object
 		{
 			count = EditorGUILayout.IntField(new GUIContent(label), count);
 
-			while (container.Count < _numPreconditions)
+			while (container.Count < count)
 			{
 				container.Add(default(T));
 			}
@@ -71,7 +74,7 @@ namespace Dissertation.Narrative.Editor
 
 			for (int idx = 0; idx < count; idx++)
 			{
-				container[idx] = EditorGUILayout.ObjectField(BeatData.Preconditions[idx], typeof(T), false) as T;
+				container[idx] = EditorGUILayout.ObjectField(container[idx], typeof(T), false) as T;
 			}
 		}
 #endif //UNITY_EDITOR
