@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d221b5fc1b51ce429ffc6c3ce5f9ee4, type: 3}
   m_Name: NarrativeDictionary
   m_EditorClassIdentifier: 
-  WorldProperties: []
-  Actions: []
+  WorldProperties:
+  - {fileID: 11400000, guid: edd7904ffdb13544e9293732272bd434, type: 2}
+  Actions:
+  - {fileID: 11400000, guid: 9d37eb6a20c4fea4f94524df7d93537f, type: 2}

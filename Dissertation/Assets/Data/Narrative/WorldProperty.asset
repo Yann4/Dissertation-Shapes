@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13823e498df81a6499d6c6541befbb5e, type: 3}
   m_Name: WorldProperty
   m_EditorClassIdentifier: 
-  ObjectID: 0
+  guid: d7d69d721dc146049bd4291b7beaa798
+  ObjectType: 1
+  ObjectIndex: 16
   Property: 0
   iValue: 0
   bValue: 0

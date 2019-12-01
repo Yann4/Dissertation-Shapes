@@ -25,6 +25,14 @@ namespace Dissertation.Narrative
 
 		public void Serialise(BinaryWriter writer)
 		{
+#if UNITY_EDITOR
+			if (string.IsNullOrEmpty(guid))
+			{
+				guid = GUID.Generate().ToString();
+				EditorUtility.SetDirty(this);
+			}
+#endif //UNITY_EDITOR
+
 			writer.Write(guid);
 		}
 

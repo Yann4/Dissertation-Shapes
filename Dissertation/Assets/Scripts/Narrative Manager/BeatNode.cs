@@ -58,8 +58,6 @@ namespace Dissertation.Narrative.Editor
 			contentRect.height -= 20;
 			GUILayout.BeginArea(contentRect);
 
-			PreviousOption = EditorGUILayout.IntField(new GUIContent("Previous option"), PreviousOption);
-
 			DrawList<WorldProperty>(BeatData.Preconditions, "Preconditions", ref _numPreconditions);
 
 			BeatData.Archetype.DrawContent();
@@ -104,12 +102,22 @@ namespace Dissertation.Narrative.Editor
 		}
 #endif //UNITY_EDITOR
 
-			public BeatNode(BinaryReader reader, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onRemoveNode)
-			: base(reader, nodeStyle, selectedStyle, inPointStyle, outPointStyle, onClickInPoint, onClickOutPoint, onRemoveNode)
-		{ }
+		public BeatNode(BinaryReader reader, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onRemoveNode)
+		: base(reader, nodeStyle, selectedStyle, inPointStyle, outPointStyle, onClickInPoint, onClickOutPoint, onRemoveNode)
+		{
+			_baseSelectedHeight = (10 * _elementHeight) + (PlayerArchetype.NumArchetypes * _elementHeight);
+
+			_unselectedSize = new Vector2(200.0f, _baseSelectedHeight);
+			_selectedSize = new Vector2(300.0f, 700.0f);
+		}
 
 		public BeatNode(BinaryReader reader) : base(reader)
-		{ }
+		{
+			_baseSelectedHeight = (10 * _elementHeight) + (PlayerArchetype.NumArchetypes * _elementHeight);
+
+			_unselectedSize = new Vector2(200.0f, _baseSelectedHeight);
+			_selectedSize = new Vector2(300.0f, 700.0f);
+		}
 
 		public override void Serialize(BinaryWriter writer)
 		{
@@ -131,6 +139,30 @@ namespace Dissertation.Narrative.Editor
 			_numOptionalActions = reader.ReadInt32();
 
 			BeatData = new Beat(reader);
+		}
+
+		public override void Connect(List<Node> connectsTo)
+		{
+			base.Connect(connectsTo);
+
+			if(BeatData.Importance == 1)
+			{
+				int next = BeatData.Order + 1;
+				List<Node> nextNodes = connectsTo.FindAll(node =>
+				{
+					Beat beat = (node as BeatNode).BeatData;
+					return beat.Importance == 1 && beat.Order == next;
+				});
+
+				if(nextNodes.Count == 1) //Ideal
+				{
+					BeatData.NextMajorBeat = (nextNodes[0] as BeatNode).BeatData;
+				}
+				else if (nextNodes.Count > 1)
+				{
+					Debug.LogErrorFormat("Multiple beats with order {0} is invalid", next);
+				}
+			}
 		}
 	}
 }

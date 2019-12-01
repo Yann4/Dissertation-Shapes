@@ -13,12 +13,20 @@ namespace Dissertation.Narrative
 
 		public WorldProperty GetWorldProperty(string guid)
 		{
-			return WorldProperties.Find(property => property.guid == guid);
+			WorldProperty foundProperty =  WorldProperties.Find(property => property.guid == guid);
+
+			UnityEngine.Debug.Assert(foundProperty != null, "Couldn't find property with guid " + guid);
+
+			return foundProperty;
 		}
 
 		public Action GetAction(string guid)
 		{
-			return Actions.Find(action => action.guid == guid);
+			Action foundAction = Actions.Find(action => action.guid == guid);
+
+			UnityEngine.Debug.Assert(foundAction != null, "Couldn't find action with guid " + guid);
+
+			return foundAction;
 		}
 
 		public static NarrativeDictionary GetAsset()

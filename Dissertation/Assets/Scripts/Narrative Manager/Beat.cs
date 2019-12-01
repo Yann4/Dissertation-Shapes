@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Dissertation.Narrative
 {
@@ -14,6 +15,7 @@ namespace Dissertation.Narrative
 
 		public float Importance { get; private set; } = 0.0f;
 		public int Order { get; private set; } = -1;
+		public Beat NextMajorBeat { get; set; }
 
 		public int MaxRepetitions { get; set; } = 1;
 		public int RepetitionsPerformed { get; private set; } = 0;
@@ -57,10 +59,14 @@ namespace Dissertation.Narrative
 
 		public void Serialise(BinaryWriter writer)
 		{
-			writer.Write(Preconditions.Count);
+			int nonNullCount = Preconditions.Count(x => x != null);
+			writer.Write(nonNullCount);
 			foreach(WorldProperty property in Preconditions)
 			{
-				property.Serialize(writer);
+				if (property != null)
+				{
+					property.Serialize(writer);
+				}
 			}
 
 			Archetype.Serialize(writer);
@@ -71,16 +77,24 @@ namespace Dissertation.Narrative
 			writer.Write(MaxRepetitions);
 			writer.Write(RepetitionsPerformed);
 
-			writer.Write(RequiredActions.Count);
+			nonNullCount = RequiredActions.Count(x => x != null);
+			writer.Write(nonNullCount);
 			for (int idx = 0; idx < RequiredActions.Count; idx++)
 			{
-				RequiredActions[idx].Serialise(writer);
+				if (RequiredActions[idx] != null)
+				{
+					RequiredActions[idx].Serialise(writer);
+				}
 			}
 
-			writer.Write(OptionalActions.Count);
+			nonNullCount = OptionalActions.Count(x => x != null);
+			writer.Write(nonNullCount);
 			for (int idx = 0; idx < OptionalActions.Count; idx++)
 			{
-				OptionalActions[idx].Serialise(writer);
+				if (OptionalActions[idx] != null)
+				{
+					OptionalActions[idx].Serialise(writer);
+				}
 			}
 		}
 

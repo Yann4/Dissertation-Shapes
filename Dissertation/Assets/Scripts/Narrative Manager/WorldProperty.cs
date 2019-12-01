@@ -12,7 +12,16 @@ namespace Dissertation.Narrative
 	{
 		[HideInInspector] public string guid;
 
-		public long ObjectID;
+		public long ObjectID
+		{
+			get
+			{
+				return ((long)ObjectType << 32) | ((long)ObjectIndex);
+			}
+		}
+
+		public ObjectClass ObjectType = ObjectClass.ANY;
+		public int ObjectIndex = 0;
 		public EProperty Property;
 
 		[Tooltip("Int value")]		public int iValue;
@@ -27,7 +36,26 @@ namespace Dissertation.Narrative
 
 		public void Serialize(BinaryWriter writer)
 		{
+#if UNITY_EDITOR
+			if (string.IsNullOrEmpty(guid))
+			{
+				guid = GUID.Generate().ToString();
+				EditorUtility.SetDirty(this);
+			}
+#endif //UNITY_EDITOR
 			writer.Write(guid);
+		}
+
+		public ObjectClass FromID()
+		{
+			int cl = (int)(ObjectID >> 32);
+			return (ObjectClass)cl;
+		}
+
+		public int GetIndexFromID()
+		{
+			long idx = ObjectID << 32;
+			return (int)(idx >> 32);
 		}
 	}
 
