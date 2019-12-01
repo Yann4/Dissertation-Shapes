@@ -137,6 +137,10 @@ namespace Dissertation.NodeGraph
 			UID = reader.ReadInt32();
 
 			NodeRect = new Rect(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+
+			_unselectedSize = new Vector2(reader.ReadSingle(), reader.ReadSingle());
+			_selectedSize = new Vector2(reader.ReadSingle(), reader.ReadSingle());
+
 			Title = reader.ReadString();
 			PreviousOption = reader.ReadInt32();
 			_previousOptionField = PreviousOption.ToString();

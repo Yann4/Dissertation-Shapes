@@ -61,9 +61,6 @@ namespace Dissertation.NodeGraph
 		{
 			base.Deserialise(reader);
 
-			_unselectedSize = new Vector2(reader.ReadSingle(), reader.ReadSingle());
-			_selectedSize = new Vector2(reader.ReadSingle(), reader.ReadSingle());
-
 			Sentence = new ConversationFragment(reader);
 
 			_outputEnumTemp = Sentence.Output.ToString();

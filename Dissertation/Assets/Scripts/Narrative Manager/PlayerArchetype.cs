@@ -10,7 +10,8 @@ namespace Dissertation.Narrative
 {
 	public class PlayerArchetype
 	{
-		public enum Type { Fighter, Storyteller }
+		public enum Type { Fighter, Storyteller, MethodActor, Tactician, PowerGamer }
+		public static readonly int NumArchetypes = Enum.GetNames(typeof(Type)).Length;
 
 		private float[] Values = new float[Enum.GetNames(typeof(Type)).Length];
 
@@ -46,14 +47,15 @@ namespace Dissertation.Narrative
 		{
 			GUILayout.BeginVertical();
 
+			EditorGUILayout.Space();
 			EditorGUILayout.LabelField("Player archetype values");
 
-			int numValues = Enum.GetNames(typeof(Type)).Length;
-
-			for (int idx = 0; idx < numValues; idx++)
+			for (int idx = 0; idx < NumArchetypes; idx++)
 			{
 				Values[idx] = EditorGUILayout.FloatField(((Type)idx).ToString(), Values[idx]);
 			}
+
+			EditorGUILayout.Space();
 
 			GUILayout.EndVertical();
 		}

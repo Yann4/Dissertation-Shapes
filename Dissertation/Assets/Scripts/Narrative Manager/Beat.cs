@@ -43,7 +43,6 @@ namespace Dissertation.Narrative
 			int requiredActionCount = reader.ReadInt32();
 			for (int idx = 0; idx < requiredActionCount; idx++)
 			{
-				Action action = UnityEngine.ScriptableObject.CreateInstance(typeof(Action)) as Action;
 				RequiredActions.Add(Action.Deserialise(reader));
 			}
 
