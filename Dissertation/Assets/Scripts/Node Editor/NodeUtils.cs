@@ -74,7 +74,6 @@ namespace Dissertation.NodeGraph
 
 				if(node.PreviousOption == -1)
 				{
-					Debug.Assert(startNode == null, "Can't have multiple start nodes (ones with PreviousOption == -1)");
 					startNode = node;
 				}
 			}
