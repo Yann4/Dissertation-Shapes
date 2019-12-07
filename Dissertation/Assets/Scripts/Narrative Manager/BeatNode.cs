@@ -12,7 +12,7 @@ namespace Dissertation.Narrative.Editor
 {
 	public class BeatNode : Node
 	{
-		private Beat BeatData;
+		public Beat BeatData;
 
 		private int _numPreconditions = 0;
 		private int _numRequiredActions = 0;
@@ -138,7 +138,7 @@ namespace Dissertation.Narrative.Editor
 			_numRequiredActions = reader.ReadInt32();
 			_numOptionalActions = reader.ReadInt32();
 
-			BeatData = new Beat(reader);
+			BeatData = new Beat(reader, UID);
 		}
 
 		public override void Connect(List<Node> connectsTo)

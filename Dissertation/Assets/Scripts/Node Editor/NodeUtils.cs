@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dissertation.Narrative.Editor;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -125,6 +126,10 @@ namespace Dissertation.NodeGraph
 			if (typeof(T) == typeof(ConversationNode))
 			{
 				return new ConversationNode(reader);
+			}
+			else if (typeof(T) == typeof(BeatNode))
+			{
+				return new BeatNode(reader);
 			}
 
 			return new Node(reader);

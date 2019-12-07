@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Unity.Collections;
 
 namespace Dissertation.Narrative
 {
@@ -6,31 +7,33 @@ namespace Dissertation.Narrative
 	{
 		private List<WorldProperty> _worldProperties = new List<WorldProperty>();
 
-		public bool IsInState<PropertyValue>(ObjectClass objectType, EProperty toQuery, PropertyValue value)
+		public bool IsInState( WorldProperty property )
 		{
-			return IsInState(objectType, 0, toQuery, value);
-		}
-
-		public bool IsInState<PropertyValue>(ObjectClass objectType, int objectIndex, EProperty toQuery, PropertyValue value)
-		{
-			return IsInState(WorldProperty.GetObjectID(objectType, objectIndex), toQuery, value);
-		}
-
-		private bool IsInState<PropertyValue>(long id, EProperty toQuery, PropertyValue value)
-		{
-			List<WorldProperty> propertiesWithID = _worldProperties.FindAll(property => property.ObjectID == id);
+			List<WorldProperty> propertiesWithID = _worldProperties.FindAll(prop => prop.ObjectID == property.ObjectID);
 			if(propertiesWithID.Count > 0)
 			{
-				foreach(WorldProperty property in propertiesWithID)
+				foreach(WorldProperty withID in propertiesWithID)
 				{
-					if(property.Property == toQuery)
+					if(withID.Property == property.Property)
 					{
-						return property.Query(value);
+						return WorldProperty.Query(withID.Property, new WorldProperty.Value(property));
 					}
 				}
 			}
 
 			return false;
+		}
+
+		public NativeHashMap<WorldProperty.Key, WorldProperty.Value> GetCurrentWorldState()
+		{
+			NativeHashMap<WorldProperty.Key, WorldProperty.Value> state = new NativeHashMap<WorldProperty.Key, WorldProperty.Value>(_worldProperties.Count, Allocator.TempJob);
+
+			foreach (WorldProperty worldProperty in _worldProperties)
+			{
+				state.TryAdd(new WorldProperty.Key(worldProperty), new WorldProperty.Value(worldProperty));
+			}
+
+			return state;
 		}
 	}
 }

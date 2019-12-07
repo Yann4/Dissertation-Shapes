@@ -23,11 +23,15 @@ namespace Dissertation.Narrative
 		public List<Action> RequiredActions { get; private set; } = new List<Action>();
 		public List<Action> OptionalActions { get; private set; } = new List<Action>();
 
+		public int UID { get; private set; }
+
 		public Beat()
 		{ }
 
-		public Beat(BinaryReader reader)
+		public Beat(BinaryReader reader, int uid)
 		{
+			UID = uid;
+
 			int preconditionCount = reader.ReadInt32();
 			for(int idx = 0; idx < preconditionCount; idx++)
 			{
@@ -110,5 +114,18 @@ namespace Dissertation.Narrative
 
 		public void Update()
 		{ }
+
+		internal bool MeetsPreconditions(WorldStateManager worldState)
+		{
+			foreach (WorldPropertyScriptable condition in Preconditions)
+			{
+				if (worldState.IsInState(condition.GetRuntimeProperty()))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
 	}
 }

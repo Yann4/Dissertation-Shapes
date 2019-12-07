@@ -57,13 +57,13 @@ namespace Dissertation.Narrative
 			return (ObjectClass)cl;
 		}
 
-		public bool Query<ValueType>(ValueType value)
+		public static bool Query(EProperty property, Value value)
 		{
-			switch (Property)
+			switch (property)
 			{
 				case EProperty.INVALID:
 				default:
-					UnityEngine.Debug.LogErrorFormat("Invalid property type to query {0}", Property);
+					UnityEngine.Debug.LogErrorFormat("Invalid property type to query {0}", property);
 					return false;
 			}
 		}
@@ -77,6 +77,41 @@ namespace Dissertation.Narrative
 		public static long GetObjectID(ObjectClass type, int index)
 		{
 			return ((long)type << 32) | ((long)index);
+		}
+
+		public struct Key : IEquatable<Key>
+		{
+			public long ObjectID;
+			private int _property;
+
+			public EProperty Property { get { return (EProperty)_property; } }
+
+			public Key(WorldProperty worldProperty)
+			{
+				ObjectID = worldProperty.ObjectID;
+				_property = (int)worldProperty.Property;
+			}
+
+			public bool Equals(Key other)
+			{
+				return ObjectID == other.ObjectID && _property == other._property;
+			}
+		}
+
+		public struct Value
+		{
+			private int iVal;
+			private int bVal;
+			private float fVal;
+			private string sVal;
+
+			public Value(WorldProperty worldProperty)
+			{
+				iVal = worldProperty.iValue;
+				bVal = worldProperty.bValue ? 1 : 0;
+				fVal = worldProperty.fValue;
+				sVal = worldProperty.sValue;
+			}
 		}
 	}
 }
