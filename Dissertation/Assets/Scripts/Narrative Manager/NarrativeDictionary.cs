@@ -6,14 +6,14 @@ namespace Dissertation.Narrative
 	[CreateAssetMenu(fileName = "NarrativeDictionary.asset", menuName = "Dissertation/Scriptables/Narrative/Narrative Dictionary")]
 	public class NarrativeDictionary : ScriptableObject
 	{
-		[SerializeField] private List<WorldProperty> WorldProperties = new List<WorldProperty>();
+		[SerializeField] private List<WorldPropertyScriptable> WorldProperties = new List<WorldPropertyScriptable>();
 		[SerializeField] private List<Action> Actions = new List<Action>();
 
 		private static NarrativeDictionary _instance = null;
 
-		public WorldProperty GetWorldProperty(string guid)
+		public WorldPropertyScriptable GetWorldProperty(string guid)
 		{
-			WorldProperty foundProperty =  WorldProperties.Find(property => property.guid == guid);
+			WorldPropertyScriptable foundProperty =  WorldProperties.Find(property => property.guid == guid);
 
 			UnityEngine.Debug.Assert(foundProperty != null, "Couldn't find property with guid " + guid);
 

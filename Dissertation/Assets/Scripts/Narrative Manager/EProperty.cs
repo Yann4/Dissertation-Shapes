@@ -2,6 +2,7 @@
 {
 	public enum EProperty
 	{
-		INVALID
+		INVALID,
+		IsDead
 	}
 }

@@ -58,7 +58,7 @@ namespace Dissertation.Narrative.Editor
 			contentRect.height -= 20;
 			GUILayout.BeginArea(contentRect);
 
-			DrawList<WorldProperty>(BeatData.Preconditions, "Preconditions", ref _numPreconditions);
+			DrawList<WorldPropertyScriptable>(BeatData.Preconditions, "Preconditions", ref _numPreconditions);
 
 			BeatData.Archetype.DrawContent();
 

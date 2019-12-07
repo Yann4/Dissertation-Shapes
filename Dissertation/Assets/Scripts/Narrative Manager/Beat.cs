@@ -8,8 +8,8 @@ namespace Dissertation.Narrative
 	[Serializable]
 	public class Beat
 	{
-		public List<WorldProperty> Preconditions { get; private set; } = new List<WorldProperty>();
-		private List<WorldProperty> _postconditions = new List<WorldProperty>();
+		public List<WorldPropertyScriptable> Preconditions { get; private set; } = new List<WorldPropertyScriptable>();
+		private List<WorldPropertyScriptable> _postconditions = new List<WorldPropertyScriptable>();
 
 		public PlayerArchetype Archetype { get; private set; } = new PlayerArchetype();
 
@@ -31,7 +31,7 @@ namespace Dissertation.Narrative
 			int preconditionCount = reader.ReadInt32();
 			for(int idx = 0; idx < preconditionCount; idx++)
 			{
-				Preconditions.Add(WorldProperty.Deserialise(reader));
+				Preconditions.Add(WorldPropertyScriptable.Deserialise(reader));
 			}
 
 			Archetype = new PlayerArchetype(reader);
@@ -61,7 +61,7 @@ namespace Dissertation.Narrative
 		{
 			int nonNullCount = Preconditions.Count(x => x != null);
 			writer.Write(nonNullCount);
-			foreach(WorldProperty property in Preconditions)
+			foreach(WorldPropertyScriptable property in Preconditions)
 			{
 				if (property != null)
 				{

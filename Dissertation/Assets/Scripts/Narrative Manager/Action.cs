@@ -14,8 +14,8 @@ namespace Dissertation.Narrative
 	{
 		[HideInInspector] public string guid;
 
-		public List<WorldProperty> Preconditions = new List<WorldProperty>();
-		public List<WorldProperty> Postconditions = new List<WorldProperty>();
+		public List<WorldPropertyScriptable> Preconditions = new List<WorldPropertyScriptable>();
+		public List<WorldPropertyScriptable> Postconditions = new List<WorldPropertyScriptable>();
 		public Actions PerformFunction = Actions.NONE;
 
 		public static Action Deserialise (BinaryReader reader)

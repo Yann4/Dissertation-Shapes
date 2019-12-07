@@ -1,78 +1,82 @@
-﻿using System.IO;
-using UnityEngine;
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+﻿using System;
 
 namespace Dissertation.Narrative
 {
-	[CreateAssetMenu(fileName = "WorldProperty.asset", menuName = "Dissertation/Scriptables/Narrative/World Property")]
-	public class WorldProperty : ScriptableObject
+	[Serializable]
+	public class WorldProperty
 	{
-		[HideInInspector] public string guid;
+		public long ObjectID { get; private set; }
+		public EProperty Property { get; private set; }
 
-		public long ObjectID
+		private int iValue;
+		private bool bValue;
+		private float fValue;
+		private string sValue;
+
+		public WorldProperty(long ID, EProperty property, int i, bool b, float f, string s)
 		{
-			get
-			{
-				return ((long)ObjectType << 32) | ((long)ObjectIndex);
-			}
+			ObjectID = ID;
+			Property = property;
+			iValue = i;
+			bValue = b;
+			fValue = f;
+			sValue = s;
 		}
 
-		public ObjectClass ObjectType = ObjectClass.ANY;
-		public int ObjectIndex = 0;
-		public EProperty Property;
-
-		[Tooltip("Int value")]		public int iValue;
-		[Tooltip("Bool value")]		public bool bValue;
-		[Tooltip("Float value")]	public float fValue;
-		[Tooltip("String value")]	public string sValue;
-
-		public static WorldProperty Deserialise(BinaryReader reader)
+		public WorldProperty(long ID, EProperty property, int value)
 		{
-			return NarrativeDictionary.GetAsset().GetWorldProperty(reader.ReadString());
+			ObjectID = ID;
+			Property = property;
+			iValue = value;
 		}
 
-		public void Serialize(BinaryWriter writer)
+		public WorldProperty(long ID, EProperty property, float value)
 		{
-#if UNITY_EDITOR
-			if (string.IsNullOrEmpty(guid))
-			{
-				guid = GUID.Generate().ToString();
-				EditorUtility.SetDirty(this);
-			}
-#endif //UNITY_EDITOR
-			writer.Write(guid);
+			ObjectID = ID;
+			Property = property;
+			fValue = value;
 		}
 
-		public ObjectClass FromID()
+		public WorldProperty(long ID, EProperty property, bool value)
+		{
+			ObjectID = ID;
+			Property = property;
+			bValue = value;
+		}
+
+		public WorldProperty(long ID, EProperty property, string value)
+		{
+			ObjectID = ID;
+			Property = property;
+			sValue = value;
+		}
+
+		public ObjectClass GetObjectClass()
 		{
 			int cl = (int)(ObjectID >> 32);
 			return (ObjectClass)cl;
 		}
 
-		public int GetIndexFromID()
+		public bool Query<ValueType>(ValueType value)
+		{
+			switch (Property)
+			{
+				case EProperty.INVALID:
+				default:
+					UnityEngine.Debug.LogErrorFormat("Invalid property type to query {0}", Property);
+					return false;
+			}
+		}
+
+		public int GetClassIndex()
 		{
 			long idx = ObjectID << 32;
 			return (int)(idx >> 32);
 		}
-	}
 
-#if UNITY_EDITOR
-	[CustomEditor(typeof(WorldProperty))]
-	public class WorldPropertyEditor : UnityEditor.Editor
-	{
-		public override void OnInspectorGUI()
+		public static long GetObjectID(ObjectClass type, int index)
 		{
-			WorldProperty myTarget = (WorldProperty)target;
-			if (GUILayout.Button("Generate GUID"))
-			{
-				myTarget.guid = GUID.Generate().ToString();
-			}
-
-			DrawDefaultInspector();
+			return ((long)type << 32) | ((long)index);
 		}
 	}
-#endif //UNITY_EDITOR
 }
