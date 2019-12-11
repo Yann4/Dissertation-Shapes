@@ -4,7 +4,6 @@ using Dissertation.Narrative.Editor;
 using Dissertation.NodeGraph;
 using System.Collections.Generic;
 using UnityEngine;
-using PropertyMap = System.Collections.Generic.List<Dissertation.Narrative.WorldProperty>;
 
 namespace Dissertation.Narrative
 {
@@ -109,16 +108,16 @@ namespace Dissertation.Narrative
 			int numPlans = starterBeats.Count;
 			if (numPlans > 0)
 			{
-				PropertyMap goalState = targetState.Preconditions;
+				List<WorldProperty> goalState = targetState.Preconditions;
 				GOAPJob[] jobs = new GOAPJob[numPlans];
 				for (int idx = 0; idx < numPlans; idx++)
 				{
 					jobs[idx] = new GOAPJob()
 					{
-						WorldState = _worldState.GetCurrentWorldState(),
+						State = _worldState.GetCurrentWorldState(),
 						Beats = beatSet,
 						GoalState = goalState,
-						startBeat = starterBeats[idx]
+						StartBeat = starterBeats[idx]
 					};
 
 					jobs[idx].Execute();
@@ -146,13 +145,8 @@ namespace Dissertation.Narrative
 			}
 			else
 			{
-				UnityEngine.Debug.LogError("Couldn't generate any plans as there are no viable starter beats");
+				Debug.LogError("Couldn't generate any plans as there are no viable starter beats");
 			}
-		}
-
-		public Beat FindBeat(int id)
-		{
-			return _beatSet.Find(x => x.UID == id);
 		}
 
 		private class Plan
@@ -174,35 +168,35 @@ namespace Dissertation.Narrative
 
 			private void CalculateScore()
 			{
-				foreach(Beat beat in Beats)
+				foreach( Beat beat in Beats )
 				{
 					Score += beat.Cost;
+					Score += beat.RepetitionsPerformed;
 				}
 			}
 		}
 
-		struct GOAPJob
+		private struct GOAPJob
 		{
-			public PropertyMap WorldState;
+			public WorldState State; //Initial world state
 
-			public List<Beat> Beats;
+			public List<Beat> Beats; //Set of all available beats
 			public List<WorldProperty> GoalState;
 
-			public Plan NarrativePlan;
+			public Beat StartBeat; //current beat (may not have finished executing - think this might be wrong)
 
-			public Beat startBeat;
-
-			private List<PlannerNode> Leaves;
+			private List<PlannerNode> Leaves; //Nodes containing potential plans
+			public Plan NarrativePlan; //Result, this is what to look at
 
 			public void Execute()
 			{
 				Leaves = new List<PlannerNode>();
 
-				PlannerNode startNode = new PlannerNode(null, ApplyBeatToWorldState(ref WorldState, startBeat), startBeat);
+				PlannerNode startNode = new PlannerNode(null, ApplyBeatToWorldState(State, StartBeat), StartBeat);
 
-				if (Beats.Contains(startBeat))
+				if (Beats.Contains(StartBeat))
 				{
-					Beats = BeatSubset(Beats, startBeat);
+					Beats = BeatSubset(Beats, StartBeat);
 				}
 
 				if (BuildGraph(startNode, Beats))
@@ -226,12 +220,11 @@ namespace Dissertation.Narrative
 
 				foreach (Beat beat in availableActions)
 				{
-					if (WorldStateManager.IsInState(parent.State, beat.Preconditions))
+					if (parent.State.IsInState(beat.Preconditions))
 					{
-						PropertyMap newState = ApplyBeatToWorldState(ref parent.State, beat);
-						PlannerNode node = new PlannerNode(parent, newState, beat);
+						PlannerNode node = new PlannerNode(parent, ApplyBeatToWorldState(parent.State, beat), beat);
 
-						if (WorldStateManager.IsInState(newState, GoalState))
+						if (node.State.IsInState(GoalState))
 						{
 							Leaves.Add(node);
 							foundSolution = true;
@@ -249,17 +242,13 @@ namespace Dissertation.Narrative
 				return foundSolution;
 			}
 
-			private PropertyMap ApplyBeatToWorldState(ref PropertyMap worldState, Beat beat)
+			private WorldState ApplyBeatToWorldState(WorldState worldState, Beat beat)
 			{
-				PropertyMap newState = new PropertyMap(worldState.Count + beat.Postconditions.Count);
-				for (int idx = 0; idx < worldState.Count; idx++)
-				{
-					newState.Add(worldState[idx]);
-				}
+				WorldState newState = new WorldState(worldState);
 
 				foreach (WorldProperty prop in beat.Postconditions)
 				{
-					WorldStateManager.SetState(newState, prop);
+					newState.SetState(prop);
 				}
 
 				return newState;
@@ -285,10 +274,10 @@ namespace Dissertation.Narrative
 		{
 			public PlannerNode Parent;
 			public float Cost { get; private set; }
-			public PropertyMap State;
+			public WorldState State;
 			public Beat NodeBeat;
 
-			public PlannerNode(PlannerNode parent, PropertyMap state, Beat beat)
+			public PlannerNode(PlannerNode parent, WorldState state, Beat beat)
 			{
 				Parent = parent;
 

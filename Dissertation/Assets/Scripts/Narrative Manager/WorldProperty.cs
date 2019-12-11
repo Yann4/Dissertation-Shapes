@@ -50,28 +50,6 @@ namespace Dissertation.Narrative
 			return (ObjectClass)cl;
 		}
 
-		public static bool Query(EProperty property, PropertyValue actualValue, PropertyValue expectedValue)
-		{
-			switch (property)
-			{
-				case EProperty.IsDead:
-				case EProperty.CanMelee:
-				case EProperty.CanDash:
-				case EProperty.CanShoot:
-					return actualValue.bVal == expectedValue.bVal;
-				case EProperty.MoneyEqual:
-					return actualValue.iVal == expectedValue.iVal;
-				case EProperty.MoneyGreaterThan:
-					return actualValue.iVal > expectedValue.iVal;
-				case EProperty.MoneyLessThan:
-					return actualValue.iVal < expectedValue.iVal;
-				case EProperty.INVALID:
-				default:
-					UnityEngine.Debug.LogErrorFormat("Invalid property type to query {0}", property);
-					return false;
-			}
-		}
-
 		public int GetClassIndex()
 		{
 			long idx = ObjectID << 32;

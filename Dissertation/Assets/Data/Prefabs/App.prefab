@@ -49,6 +49,7 @@ MonoBehaviour:
   _whiteboxScene: Whitebox
   _localisation: {fileID: 11400000, guid: 3e26ae4c7e0303d40ae00ec14f033bb8, type: 2}
   _conversations: {fileID: 11400000, guid: 8b0aaf24b8fb77c48a3fb4a5b344447d, type: 2}
+  _beatGraph: {fileID: 4900000, guid: c519b9a6bf9c9544c9ff18d7aab08281, type: 3}
 --- !u!114 &298313269387603458
 MonoBehaviour:
   m_ObjectHideFlags: 0
