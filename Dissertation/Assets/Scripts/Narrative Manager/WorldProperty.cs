@@ -120,9 +120,9 @@ namespace Dissertation.Narrative
 			public override int GetHashCode()
 			{
 				var hashCode = 667362690;
-				hashCode = hashCode * -1521134295 + ObjectID.GetHashCode();
-				hashCode = hashCode * -1521134295 + _property.GetHashCode();
-				hashCode = hashCode * -1521134295 + Property.GetHashCode();
+				hashCode = (hashCode * -1521134295) + ObjectID.GetHashCode();
+				hashCode = (hashCode * -1521134295) + _property.GetHashCode();
+				hashCode = (hashCode * -1521134295) + Property.GetHashCode();
 				return hashCode;
 			}
 
