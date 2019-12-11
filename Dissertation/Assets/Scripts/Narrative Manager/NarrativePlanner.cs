@@ -133,19 +133,12 @@ namespace Dissertation.Narrative
 			yield return null;
 #endif //!DEBUG_PLANNER
 
-				Plan[] plans = new Plan[jobs.Length];
-
-				for (int idx = 0; idx < jobs.Length; idx++)
+				Plan bestPlan = jobs[0].NarrativePlan;
+				foreach (GOAPJob job in jobs)
 				{
-					plans[idx] = new Plan(this, jobs[idx].Plan);
-				}
-
-				Plan bestPlan = plans[0];
-				foreach (Plan plan in plans)
-				{
-					if (plan.Score < bestPlan.Score)
+					if (job.NarrativePlan.Score < bestPlan.Score)
 					{
-						bestPlan = plan;
+						bestPlan = job.NarrativePlan;
 					}
 				}
 
@@ -167,12 +160,13 @@ namespace Dissertation.Narrative
 			public List<Beat> Beats;
 			public float Score { get; private set; }
 
-			public Plan(NarrativePlanner planner, Queue<Beat> plan)
+			public Plan(PlannerNode plan)
 			{
-				Beats = new List<Beat>(plan.Count);
-				while(plan.Count > 0)
+				Beats = new List<Beat>();
+				while (plan != null)
 				{
-					Beats.Add(plan.Dequeue());
+					Beats.Add(plan.NodeBeat);
+					plan = plan.Parent;
 				}
 
 				CalculateScore();
@@ -186,136 +180,130 @@ namespace Dissertation.Narrative
 				}
 			}
 		}
-	}
 
-	struct GOAPJob
-	{
-		public PropertyMap WorldState;
-
-		public List<Beat> Beats;
-		public List<WorldProperty> GoalState;
-
-		public Queue<Beat> Plan;
-
-		public Beat startBeat;
-
-		private List<PlannerNode> Leaves;
-
-		public void Execute()
+		struct GOAPJob
 		{
-			Leaves = new List<PlannerNode>();
-			Plan = new Queue<Beat>();
+			public PropertyMap WorldState;
 
-			PlannerNode startNode = new PlannerNode(null, ApplyBeatToWorldState(ref WorldState, startBeat), startBeat);
+			public List<Beat> Beats;
+			public List<WorldProperty> GoalState;
 
-			if(Beats.Contains(startBeat))
+			public Plan NarrativePlan;
+
+			public Beat startBeat;
+
+			private List<PlannerNode> Leaves;
+
+			public void Execute()
 			{
-				Beats = BeatSubset(Beats, startBeat);
-			}
+				Leaves = new List<PlannerNode>();
 
-			if(BuildGraph(startNode, Beats))
-			{
-				PlannerNode bestPlan = Leaves[0];
-				foreach(PlannerNode leaf in Leaves)
+				PlannerNode startNode = new PlannerNode(null, ApplyBeatToWorldState(ref WorldState, startBeat), startBeat);
+
+				if (Beats.Contains(startBeat))
 				{
-					if(leaf.Cost < bestPlan.Cost)
-					{
-						bestPlan = leaf;
-					}
+					Beats = BeatSubset(Beats, startBeat);
 				}
 
-				PlannerNode node = bestPlan;
-				while(node != null)
+				if (BuildGraph(startNode, Beats))
 				{
-					Plan.Enqueue(node.NodeBeat);
-					node = node.Parent;
-				}
-			}
-		}
-
-		private bool BuildGraph(PlannerNode parent, List<Beat> availableActions)
-		{
-			bool foundSolution = false;
-
-			foreach(Beat beat in availableActions)
-			{
-				if(WorldStateManager.IsInState(parent.State, beat.Preconditions))
-				{
-					PropertyMap newState = ApplyBeatToWorldState(ref parent.State, beat);
-					PlannerNode node = new PlannerNode(parent, newState, beat );
-
-					if(WorldStateManager.IsInState(newState, GoalState))
+					PlannerNode bestPlan = Leaves[0];
+					foreach (PlannerNode leaf in Leaves)
 					{
-						Leaves.Add(node);
-						foundSolution = true;
-					}
-					else
-					{
-						if(BuildGraph( node, BeatSubset(availableActions, beat) ))
+						if (leaf.Cost < bestPlan.Cost)
 						{
+							bestPlan = leaf;
+						}
+					}
+
+					NarrativePlan = new Plan(bestPlan);
+				}
+			}
+
+			private bool BuildGraph(PlannerNode parent, List<Beat> availableActions)
+			{
+				bool foundSolution = false;
+
+				foreach (Beat beat in availableActions)
+				{
+					if (WorldStateManager.IsInState(parent.State, beat.Preconditions))
+					{
+						PropertyMap newState = ApplyBeatToWorldState(ref parent.State, beat);
+						PlannerNode node = new PlannerNode(parent, newState, beat);
+
+						if (WorldStateManager.IsInState(newState, GoalState))
+						{
+							Leaves.Add(node);
 							foundSolution = true;
+						}
+						else
+						{
+							if (BuildGraph(node, BeatSubset(availableActions, beat)))
+							{
+								foundSolution = true;
+							}
 						}
 					}
 				}
+
+				return foundSolution;
 			}
 
-			return foundSolution;
-		}
-
-		private PropertyMap ApplyBeatToWorldState(ref PropertyMap worldState, Beat beat)
-		{
-			PropertyMap newState = new PropertyMap(worldState.Count + beat.Postconditions.Count);
-			for(int idx = 0; idx < worldState.Count; idx++)
+			private PropertyMap ApplyBeatToWorldState(ref PropertyMap worldState, Beat beat)
 			{
-				newState.Add(worldState[idx]);
-			}
-
-			foreach(WorldProperty prop in beat.Postconditions)
-			{
-				WorldStateManager.SetState(newState, prop);
-			}
-
-			return newState;
-		}
-
-		private List<Beat> BeatSubset( List<Beat> set, Beat toRemove )
-		{
-			List<Beat> subset = new List<Beat>(set.Count - 1);
-
-			for (int idx = 0; idx < set.Count; idx++)
-			{
-				if(!set[idx].Equals(toRemove))
+				PropertyMap newState = new PropertyMap(worldState.Count + beat.Postconditions.Count);
+				for (int idx = 0; idx < worldState.Count; idx++)
 				{
-					subset.Add(set[idx]);
+					newState.Add(worldState[idx]);
 				}
+
+				foreach (WorldProperty prop in beat.Postconditions)
+				{
+					WorldStateManager.SetState(newState, prop);
+				}
+
+				return newState;
 			}
 
-			return subset;
+			private List<Beat> BeatSubset(List<Beat> set, Beat toRemove)
+			{
+				List<Beat> subset = new List<Beat>(set.Count - 1);
+
+				for (int idx = 0; idx < set.Count; idx++)
+				{
+					if (!set[idx].Equals(toRemove))
+					{
+						subset.Add(set[idx]);
+					}
+				}
+
+				return subset;
+			}
 		}
-	}
 
-	public class PlannerNode
-	{
-		public PlannerNode Parent;
-		public float Cost { get; private set; }
-		public PropertyMap State;
-		public Beat NodeBeat;
-
-		public PlannerNode(PlannerNode parent, PropertyMap state, Beat beat)
+		public class PlannerNode
 		{
-			Parent = parent;
+			public PlannerNode Parent;
+			public float Cost { get; private set; }
+			public PropertyMap State;
+			public Beat NodeBeat;
 
-			if (parent != null)
+			public PlannerNode(PlannerNode parent, PropertyMap state, Beat beat)
 			{
-				Cost = parent.Cost + beat.Cost;
-			}
-			else
-			{
-				Cost = beat.Cost;
-			}
+				Parent = parent;
 
-			State = state;
-			NodeBeat = beat;
+				if (parent != null)
+				{
+					Cost = parent.Cost + beat.Cost;
+				}
+				else
+				{
+					Cost = beat.Cost;
+				}
+
+				State = state;
+				NodeBeat = beat;
+			}
 		}
 	}
 }
