@@ -14,5 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WorldProperties:
   - {fileID: 11400000, guid: edd7904ffdb13544e9293732272bd434, type: 2}
+  - {fileID: 11400000, guid: dd6a0e9ee6930744b8bbda74d4db9f8a, type: 2}
+  - {fileID: 11400000, guid: ecc4897eed696d949a8d6d6627d00c95, type: 2}
+  - {fileID: 11400000, guid: 17c197610ce980941bcb54711ee1831c, type: 2}
   Actions:
   - {fileID: 11400000, guid: 9d37eb6a20c4fea4f94524df7d93537f, type: 2}
+  - {fileID: 11400000, guid: 0b916d5f1304d914cacd9d42be65ac77, type: 2}
+  - {fileID: 11400000, guid: 9f63f16de7ae3ca4caa2edda8d7b7386, type: 2}

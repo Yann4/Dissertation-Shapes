@@ -27,7 +27,7 @@ namespace Dissertation.Narrative.Editor
 			_baseSelectedHeight = (10 * _elementHeight) + (PlayerArchetype.NumArchetypes * _elementHeight);
 
 			_unselectedSize = new Vector2(200.0f, _baseSelectedHeight);
-			_selectedSize = new Vector2(300.0f, 700.0f);
+			_selectedSize = new Vector2(300.0f, 750.0f);
 
 			NodeRect.size = _unselectedSize;
 
@@ -58,7 +58,16 @@ namespace Dissertation.Narrative.Editor
 			contentRect.height -= 20;
 			GUILayout.BeginArea(contentRect);
 
-			DrawList<WorldPropertyScriptable>(BeatData.Preconditions, "Preconditions", ref _numPreconditions);
+			if(_isSelected)
+			{
+				BeatData.Title = EditorGUILayout.TextField("Beat title", BeatData.Title);
+			}
+			else
+			{
+				EditorGUILayout.LabelField(BeatData.Title, new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter });
+			}
+
+			DrawList<WorldPropertyScriptable>(BeatData.ScriptablePreconditions, "Preconditions", ref _numPreconditions);
 
 			BeatData.Archetype.DrawContent();
 
@@ -66,6 +75,16 @@ namespace Dissertation.Narrative.Editor
 			DrawList<Action>(BeatData.OptionalActions, "Optional Actions", ref _numOptionalActions);
 
 			EditorGUILayout.Space();
+
+			BeatData.Importance = EditorGUILayout.Slider("Beat importance", BeatData.Importance, 0.0f, 1.0f);
+			if(BeatData.Importance == 1.0f)
+			{
+				BeatData.Order = EditorGUILayout.IntField("Beat Order", BeatData.Order);
+			}
+			else if(BeatData.Order != -1)
+			{
+				BeatData.Order = -1;
+			}
 
 			BeatData.MaxRepetitions = EditorGUILayout.IntField(new GUIContent("Max Repetitions"), BeatData.MaxRepetitions);
 			BeatData.MaxRepetitions = BeatData.MaxRepetitions >= 1 ? BeatData.MaxRepetitions : 1;

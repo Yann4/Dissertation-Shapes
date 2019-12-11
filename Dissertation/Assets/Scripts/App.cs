@@ -4,8 +4,8 @@ using UnityEngine.SceneManagement;
 using Dissertation.Util.Localisation;
 using Dissertation.Character;
 using Dissertation.Util;
-using System;
 using System.Collections;
+using Dissertation.Narrative;
 
 namespace Dissertation
 {
@@ -16,6 +16,7 @@ namespace Dissertation
 
 		[SerializeField] private LocalisationScriptable _localisation;
 		[SerializeField] private ConversationData _conversations;
+		[SerializeField] private TextAsset _beatGraph;
 
 		public static bool Paused { get { return _pause > 0; } }
 		private static int _pause = 0;
@@ -23,13 +24,21 @@ namespace Dissertation
 
 		public static Blackboard AIBlackboard { get; private set; }
 
-		public static Action OnLevelLoaded;
+		private static WorldStateManager WorldState;
+		private static NarrativePlanner Planner;
+
+		public static System.Action OnLevelLoaded;
 
 		private void Start()
 		{
 			new LocManager(_localisation); //Need to create the instance, but don't need to worry about holding a reference
 
 			AIBlackboard = new Blackboard( _conversations );
+
+			WorldState = new WorldStateManager();
+			WorldState.SetState(new WorldProperty(WorldProperty.GetObjectID(ObjectClass.Player), EProperty.CanDash, false));
+			WorldState.SetState(new WorldProperty(WorldProperty.GetObjectID(ObjectClass.Player), EProperty.MoneyGreaterThan, 81));
+			Planner = new NarrativePlanner(WorldState, this, _beatGraph);
 
 			LoadScene(_HUDSceneName);
 			LoadScene(_whiteboxScene);

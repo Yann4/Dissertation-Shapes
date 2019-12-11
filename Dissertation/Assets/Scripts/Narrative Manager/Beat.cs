@@ -8,13 +8,18 @@ namespace Dissertation.Narrative
 	[Serializable]
 	public class Beat
 	{
-		public List<WorldPropertyScriptable> Preconditions { get; private set; } = new List<WorldPropertyScriptable>();
-		private List<WorldPropertyScriptable> _postconditions = new List<WorldPropertyScriptable>();
+		public string Title = "Beat";
+
+		public List<WorldPropertyScriptable> ScriptablePreconditions = new List<WorldPropertyScriptable>();
+		private List<WorldPropertyScriptable> ScriptablePostconditions = new List<WorldPropertyScriptable>();
+
+		public List<WorldProperty> Preconditions = new List<WorldProperty>();
+		public List<WorldProperty> Postconditions = new List<WorldProperty>();
 
 		public PlayerArchetype Archetype { get; private set; } = new PlayerArchetype();
 
-		public float Importance { get; private set; } = 0.0f;
-		public int Order { get; private set; } = -1;
+		public float Importance { get; set; } = 0.0f;
+		public int Order { get; set; } = -1;
 		public Beat NextMajorBeat { get; set; }
 
 		public int MaxRepetitions { get; set; } = 1;
@@ -24,6 +29,8 @@ namespace Dissertation.Narrative
 		public List<Action> OptionalActions { get; private set; } = new List<Action>();
 
 		public int UID { get; private set; }
+
+		public float Cost = 1;
 
 		public Beat()
 		{ }
@@ -35,12 +42,13 @@ namespace Dissertation.Narrative
 			int preconditionCount = reader.ReadInt32();
 			for(int idx = 0; idx < preconditionCount; idx++)
 			{
-				Preconditions.Add(WorldPropertyScriptable.Deserialise(reader));
+				ScriptablePreconditions.Add(WorldPropertyScriptable.Deserialise(reader));
+				Preconditions.Add(ScriptablePreconditions[idx].GetRuntimeProperty());
 			}
 
 			Archetype = new PlayerArchetype(reader);
 
-			Importance = reader.ReadInt32();
+			Importance = reader.ReadSingle();
 			Order = reader.ReadInt32();
 
 			MaxRepetitions = reader.ReadInt32();
@@ -58,14 +66,16 @@ namespace Dissertation.Narrative
 				OptionalActions.Add(Action.Deserialise(reader));
 			}
 
+			Title = reader.ReadString();
+
 			CalculatePostconditions();
 		}
 
 		public void Serialise(BinaryWriter writer)
 		{
-			int nonNullCount = Preconditions.Count(x => x != null);
+			int nonNullCount = ScriptablePreconditions.Count(x => x != null);
 			writer.Write(nonNullCount);
-			foreach(WorldPropertyScriptable property in Preconditions)
+			foreach(WorldPropertyScriptable property in ScriptablePreconditions)
 			{
 				if (property != null)
 				{
@@ -100,16 +110,29 @@ namespace Dissertation.Narrative
 					OptionalActions[idx].Serialise(writer);
 				}
 			}
+
+			writer.Write(Title);
 		}
 
 		private void CalculatePostconditions()
 		{
-			_postconditions.Clear();
+			ScriptablePostconditions.Clear();
+			Postconditions.Clear();
 
 			foreach(Action action in RequiredActions)
 			{
-				_postconditions.AddRange(action.Postconditions);
+				ScriptablePostconditions.AddRange(action.Postconditions);
 			}
+
+			for(int idx = 0; idx < ScriptablePostconditions.Count; idx++)
+			{
+				Postconditions.Add(ScriptablePostconditions[idx].GetRuntimeProperty());
+			}
+		}
+
+		public void Perform()
+		{
+			RepetitionsPerformed++;
 		}
 
 		public void Update()
@@ -117,15 +140,15 @@ namespace Dissertation.Narrative
 
 		internal bool MeetsPreconditions(WorldStateManager worldState)
 		{
-			foreach (WorldPropertyScriptable condition in Preconditions)
+			foreach (WorldProperty condition in Preconditions)
 			{
-				if (worldState.IsInState(condition.GetRuntimeProperty()))
+				if (worldState.IsInState(condition))
 				{
 					return true;
 				}
 			}
 
-			return false;
+			return Preconditions.Count == 0;
 		}
 	}
 }

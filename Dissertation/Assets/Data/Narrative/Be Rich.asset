@@ -9,7 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bb15d13056133d448f990c9be70109b, type: 3}
-  m_Name: Conversation Data
+  m_Script: {fileID: 11500000, guid: 13823e498df81a6499d6c6541befbb5e, type: 3}
+  m_Name: Be Rich
   m_EditorClassIdentifier: 
-  Conversations: []
+  guid: cafc2b1bb80d87b4dbfa6963bfb334dc
+  _objectType: 1
+  _objectIndex: 0
+  Property: 3
+  iValue: 80
+  bValue: 0
+  fValue: 0

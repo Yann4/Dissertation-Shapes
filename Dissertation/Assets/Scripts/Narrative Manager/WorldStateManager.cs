@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Unity.Collections;
 
 namespace Dissertation.Narrative
 {
@@ -16,7 +15,7 @@ namespace Dissertation.Narrative
 				{
 					if(withID.Property == property.Property)
 					{
-						return WorldProperty.Query(withID.Property, new WorldProperty.Value(property));
+						return WorldProperty.Query(withID.Property, withID.Value, property.Value);
 					}
 				}
 			}
@@ -24,13 +23,54 @@ namespace Dissertation.Narrative
 			return false;
 		}
 
-		public NativeHashMap<WorldProperty.Key, WorldProperty.Value> GetCurrentWorldState()
+		public void SetState(WorldProperty property)
 		{
-			NativeHashMap<WorldProperty.Key, WorldProperty.Value> state = new NativeHashMap<WorldProperty.Key, WorldProperty.Value>(_worldProperties.Count, Allocator.TempJob);
+			SetState(_worldProperties, property);
+		}
 
-			foreach (WorldProperty worldProperty in _worldProperties)
+		public static void SetState(List<WorldProperty> state, WorldProperty property)
+		{
+			WorldProperty toUpdate = state.Find(prop => prop.Key == property.Key);
+			if (toUpdate != null)
 			{
-				state.TryAdd(new WorldProperty.Key(worldProperty), new WorldProperty.Value(worldProperty));
+				toUpdate.Value = property.Value;
+			}
+			else
+			{
+				state.Add(property);
+			}
+		}
+
+		public static bool IsInState(List<WorldProperty> worldState, List<WorldProperty> state)
+		{
+			foreach(WorldProperty property in state)
+			{
+				if(!IsInState(worldState, property))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		public static bool IsInState(List<WorldProperty> worldState, WorldProperty state)
+		{
+			WorldProperty worldProperty = worldState.Find(prop => prop.Key.Equals(state.Key));
+			if(worldProperty != null)
+			{
+				return WorldProperty.Query(state.Property, worldProperty.Value, state.Value);
+			}
+
+			return false;
+		}
+
+		public List<WorldProperty> GetCurrentWorldState()
+		{
+			List<WorldProperty> state = new List<WorldProperty>(_worldProperties.Count);
+			foreach(WorldProperty prop in _worldProperties)
+			{
+				state.Add(prop);
 			}
 
 			return state;

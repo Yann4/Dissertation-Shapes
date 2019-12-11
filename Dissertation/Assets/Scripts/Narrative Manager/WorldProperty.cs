@@ -8,47 +8,40 @@ namespace Dissertation.Narrative
 		public long ObjectID { get; private set; }
 		public EProperty Property { get; private set; }
 
-		private int iValue;
-		private bool bValue;
-		private float fValue;
-		private string sValue;
+		public PropertyKey Key;
+		public PropertyValue Value;
 
-		public WorldProperty(long ID, EProperty property, int i, bool b, float f, string s)
+		public WorldProperty(long ID, EProperty property, int i, bool b, float f)
 		{
 			ObjectID = ID;
 			Property = property;
-			iValue = i;
-			bValue = b;
-			fValue = f;
-			sValue = s;
+
+			Key = new PropertyKey(this);
+			Value = new PropertyValue(i, b, f);
 		}
 
 		public WorldProperty(long ID, EProperty property, int value)
 		{
 			ObjectID = ID;
 			Property = property;
-			iValue = value;
+			Key = new PropertyKey(this);
+			Value = new PropertyValue(value);
 		}
 
 		public WorldProperty(long ID, EProperty property, float value)
 		{
 			ObjectID = ID;
 			Property = property;
-			fValue = value;
+			Key = new PropertyKey(this);
+			Value = new PropertyValue(value);
 		}
 
 		public WorldProperty(long ID, EProperty property, bool value)
 		{
 			ObjectID = ID;
 			Property = property;
-			bValue = value;
-		}
-
-		public WorldProperty(long ID, EProperty property, string value)
-		{
-			ObjectID = ID;
-			Property = property;
-			sValue = value;
+			Key = new PropertyKey(this);
+			Value = new PropertyValue(value);
 		}
 
 		public ObjectClass GetObjectClass()
@@ -57,10 +50,21 @@ namespace Dissertation.Narrative
 			return (ObjectClass)cl;
 		}
 
-		public static bool Query(EProperty property, Value value)
+		public static bool Query(EProperty property, PropertyValue actualValue, PropertyValue expectedValue)
 		{
 			switch (property)
 			{
+				case EProperty.IsDead:
+				case EProperty.CanMelee:
+				case EProperty.CanDash:
+				case EProperty.CanShoot:
+					return actualValue.bVal == expectedValue.bVal;
+				case EProperty.MoneyEqual:
+					return actualValue.iVal == expectedValue.iVal;
+				case EProperty.MoneyGreaterThan:
+					return actualValue.iVal > expectedValue.iVal;
+				case EProperty.MoneyLessThan:
+					return actualValue.iVal < expectedValue.iVal;
 				case EProperty.INVALID:
 				default:
 					UnityEngine.Debug.LogErrorFormat("Invalid property type to query {0}", property);
@@ -79,38 +83,93 @@ namespace Dissertation.Narrative
 			return ((long)type << 32) | ((long)index);
 		}
 
-		public struct Key : IEquatable<Key>
+		public static long GetObjectID(ObjectClass type)
+		{
+			return GetObjectID(type, 0);
+		}
+
+		public class PropertyKey : IEquatable<PropertyKey>
 		{
 			public long ObjectID;
 			private int _property;
 
 			public EProperty Property { get { return (EProperty)_property; } }
 
-			public Key(WorldProperty worldProperty)
+			public PropertyKey(WorldProperty worldProperty)
 			{
 				ObjectID = worldProperty.ObjectID;
 				_property = (int)worldProperty.Property;
 			}
 
-			public bool Equals(Key other)
+			public override bool Equals(object obj)
+			{
+				PropertyKey objKey = obj as PropertyKey;
+				if(objKey != null)
+				{
+					return Equals(objKey);
+				}
+
+				return base.Equals(obj);
+			}
+
+			public bool Equals(PropertyKey other)
 			{
 				return ObjectID == other.ObjectID && _property == other._property;
 			}
+
+			public override int GetHashCode()
+			{
+				var hashCode = 667362690;
+				hashCode = hashCode * -1521134295 + ObjectID.GetHashCode();
+				hashCode = hashCode * -1521134295 + _property.GetHashCode();
+				hashCode = hashCode * -1521134295 + Property.GetHashCode();
+				return hashCode;
+			}
+
+			public static bool operator==(PropertyKey lhs, PropertyKey rhs)
+			{
+				return lhs.Equals(rhs);
+			}
+
+			public static bool operator !=(PropertyKey lhs, PropertyKey rhs)
+			{
+				return !lhs.Equals(rhs);
+			}
 		}
 
-		public struct Value
+		public class PropertyValue
 		{
-			private int iVal;
-			private int bVal;
-			private float fVal;
-			private string sVal;
+			public int iVal { get; private set; }
+			public bool bVal { get; private set; }
+			public float fVal { get; private set; }
 
-			public Value(WorldProperty worldProperty)
+			public PropertyValue(int i, bool b, float f)
 			{
-				iVal = worldProperty.iValue;
-				bVal = worldProperty.bValue ? 1 : 0;
-				fVal = worldProperty.fValue;
-				sVal = worldProperty.sValue;
+				iVal = i;
+				bVal = b;
+				fVal = f;
+			}
+
+			public PropertyValue(int val)
+			{
+				iVal = val;
+			}
+
+			public PropertyValue(bool val)
+			{
+				bVal = val;
+			}
+
+			public PropertyValue(float val)
+			{
+				fVal = val;
+			}
+
+			public PropertyValue(WorldProperty worldProperty)
+			{
+				iVal = worldProperty.Value.iVal;
+				bVal = worldProperty.Value.bVal;
+				fVal = worldProperty.Value.fVal;
 			}
 		}
 	}

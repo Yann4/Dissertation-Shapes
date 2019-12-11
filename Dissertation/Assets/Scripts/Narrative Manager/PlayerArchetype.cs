@@ -52,7 +52,7 @@ namespace Dissertation.Narrative
 
 			for (int idx = 0; idx < NumArchetypes; idx++)
 			{
-				Values[idx] = EditorGUILayout.FloatField(((Type)idx).ToString(), Values[idx]);
+				Values[idx] = EditorGUILayout.Slider(((Type)idx).ToString(), Values[idx], 0.0f, 1.0f);
 			}
 
 			EditorGUILayout.Space();

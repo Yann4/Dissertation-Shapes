@@ -27,7 +27,6 @@ namespace Dissertation.Narrative
 		[Tooltip("Int value")]		public int iValue;
 		[Tooltip("Bool value")]		public bool bValue;
 		[Tooltip("Float value")]	public float fValue;
-		[Tooltip("String value")]	public string sValue;
 
 		public static WorldPropertyScriptable Deserialise(BinaryReader reader)
 		{
@@ -48,7 +47,7 @@ namespace Dissertation.Narrative
 
 		public WorldProperty GetRuntimeProperty()
 		{
-			return new WorldProperty(ObjectID, Property, iValue, bValue, fValue, sValue);
+			return new WorldProperty(ObjectID, Property, iValue, bValue, fValue );
 		}
 	}
 

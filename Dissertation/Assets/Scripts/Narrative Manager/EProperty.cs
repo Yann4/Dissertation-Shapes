@@ -3,6 +3,12 @@
 	public enum EProperty
 	{
 		INVALID,
-		IsDead
+		IsDead,
+		MoneyEqual,
+		MoneyGreaterThan,
+		MoneyLessThan,
+		CanMelee,
+		CanDash,
+		CanShoot,
 	}
 }
