@@ -19,7 +19,7 @@ namespace Dissertation.Narrative.Editor
 		private int _numOptionalActions = 0;
 
 		private readonly float _baseSelectedHeight;
-		private readonly float _elementHeight = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+		private readonly float _elementHeight = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing + 2;
 #if UNITY_EDITOR
 		public BeatNode(Vector2 position, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onRemoveNode, GUID? guid = null)
 			: base(position, Vector2.zero, nodeStyle, selectedStyle, inPointStyle, outPointStyle, onClickInPoint, onClickOutPoint, onRemoveNode, guid)
@@ -27,7 +27,7 @@ namespace Dissertation.Narrative.Editor
 			_baseSelectedHeight = (10 * _elementHeight) + (PlayerArchetype.NumArchetypes * _elementHeight);
 
 			_unselectedSize = new Vector2(200.0f, _baseSelectedHeight);
-			_selectedSize = new Vector2(300.0f, 750.0f);
+			_selectedSize = new Vector2(300.0f, 800.0f);
 
 			NodeRect.size = _unselectedSize;
 

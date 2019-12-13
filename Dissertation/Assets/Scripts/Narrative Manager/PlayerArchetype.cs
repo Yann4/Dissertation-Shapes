@@ -18,6 +18,12 @@ namespace Dissertation.Narrative
 		public PlayerArchetype()
 		{ }
 
+		public PlayerArchetype(params float[] values)
+		{
+			Debug.Assert(values.Length == NumArchetypes, string.Format("Must have exactly {0} values passed through", NumArchetypes));
+			Values = values;
+		}
+
 		public PlayerArchetype(BinaryReader reader)
 		{
 			int numValues = Enum.GetNames(typeof(Type)).Length;
@@ -26,6 +32,42 @@ namespace Dissertation.Narrative
 			{
 				Values[idx] = reader.ReadSingle();
 			}
+		}
+
+		public static float operator*(PlayerArchetype lhs, PlayerArchetype rhs)
+		{
+			float ret = 0.0f;
+
+			for(int idx = 0; idx < NumArchetypes; idx++)
+			{
+				ret += lhs.Values[idx] * rhs.Values[idx];
+			}
+
+			return ret;
+		}
+
+		public static PlayerArchetype operator+(PlayerArchetype lhs, PlayerArchetype rhs)
+		{
+			PlayerArchetype ret = new PlayerArchetype();
+
+			for (int idx = 0; idx < NumArchetypes; idx++)
+			{
+				ret.Values[idx] = lhs.Values[idx] + rhs.Values[idx];
+			}
+
+			return ret;
+		}
+
+		public static PlayerArchetype operator-(PlayerArchetype lhs, PlayerArchetype rhs)
+		{
+			PlayerArchetype ret = new PlayerArchetype();
+
+			for (int idx = 0; idx < NumArchetypes; idx++)
+			{
+				ret.Values[idx] = lhs.Values[idx] - rhs.Values[idx];
+			}
+
+			return ret;
 		}
 
 		public float this[Type type]

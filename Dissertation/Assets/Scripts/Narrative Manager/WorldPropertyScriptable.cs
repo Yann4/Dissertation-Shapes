@@ -16,10 +16,18 @@ namespace Dissertation.Narrative
 		{
 			get
 			{
-				return WorldProperty.GetObjectID(_objectType, _objectIndex);
+				if (_scriptID != null)
+				{
+					return WorldProperty.GetObjectID(_scriptID.Class, _scriptID.ID);
+				}
+				else
+				{
+					return WorldProperty.GetObjectID(_objectType, _objectIndex);
+				}
 			}
 		}
 
+		[SerializeField, Tooltip("This will take precedence over the values on this Scriptable")] ScriptableID _scriptID;
 		[SerializeField] private ObjectClass _objectType = ObjectClass.ANY;
 		[SerializeField] private int _objectIndex = 0;
 		public EProperty Property;

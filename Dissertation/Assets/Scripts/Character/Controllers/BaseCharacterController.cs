@@ -197,6 +197,8 @@ namespace Dissertation.Character
 		public virtual void OnSpawn(Spawner spawner)
 		{
 			_spawnedBy = spawner;
+
+			GetComponent<EntityID>().SetID(Config.CharacterID);
 		}
 
 		protected virtual void Start()

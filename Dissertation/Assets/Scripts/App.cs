@@ -24,7 +24,7 @@ namespace Dissertation
 
 		public static Blackboard AIBlackboard { get; private set; }
 
-		private static WorldStateManager WorldState;
+		public static WorldStateManager WorldState { get; private set; }
 		private static NarrativePlanner Planner;
 
 		public static System.Action OnLevelLoaded;

@@ -18,9 +18,13 @@ MonoBehaviour:
   _oneWayPlatformMask:
     serializedVersion: 2
     m_Bits: 0
+  _enemyMask:
+    serializedVersion: 2
+    m_Bits: 0
   _triggerMask:
     serializedVersion: 2
     m_Bits: 6144
+  _characterID: {fileID: 11400000, guid: f3ccffb62f138d9489ae3ac85eb5db5e, type: 2}
   _gravity: -25
   _runSpeed: 6.04
   _jumpHeight: 20
@@ -50,6 +54,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   _maxJumps: 2
   _faction: 0
+  _defaultAttack: 0
   _maxHealth: 5
   _baseMeleeDamage: 2
   _meleeAttackSpeed: 0.3
@@ -71,3 +76,5 @@ MonoBehaviour:
     type: 3}
   _rangedAttackPrefab: {fileID: 6078864212887572438, guid: 8073af09f076c51488647ba17b5605a2,
     type: 3}
+  _defaultShape: 1
+  _transformDuration: 1

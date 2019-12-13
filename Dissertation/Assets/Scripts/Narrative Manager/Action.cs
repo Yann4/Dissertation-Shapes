@@ -2,6 +2,7 @@
 using System.IO;
 using UnityEngine;
 using static Dissertation.Narrative.ActionFunctionLibrary;
+using System;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -16,11 +17,34 @@ namespace Dissertation.Narrative
 
 		public List<WorldPropertyScriptable> Preconditions = new List<WorldPropertyScriptable>();
 		public List<WorldPropertyScriptable> Postconditions = new List<WorldPropertyScriptable>();
+
+		[SerializeField] private List<WorldPropertyScriptable> ExitCondition;
+
+		private List<WorldProperty> _runtimeExitConditions = new List<WorldProperty>();
+		[NonSerialized, HideInInspector] public List<WorldProperty> RuntimePreconditions = new List<WorldProperty>();
+
 		public Actions PerformFunction = Actions.NONE;
 
 		public static Action Deserialise (BinaryReader reader)
 		{
-			return NarrativeDictionary.GetAsset().GetAction(reader.ReadString());
+			string uid = reader.ReadString();
+			Action action = NarrativeDictionary.GetAsset().GetAction(uid);
+			if(action == null)
+			{
+				return null;
+			}
+
+			foreach (WorldPropertyScriptable prop in action.ExitCondition)
+			{
+				action._runtimeExitConditions.Add(prop.GetRuntimeProperty());
+			}
+
+			foreach(WorldPropertyScriptable precondition in action.Preconditions)
+			{
+				action.RuntimePreconditions.Add(precondition.GetRuntimeProperty());
+			}
+
+			return action;
 		}
 
 		public void Serialise(BinaryWriter writer)
@@ -42,6 +66,11 @@ namespace Dissertation.Narrative
 			{
 				Debug.Assert(false, string.Format("The performFunction is incorrectly set to '{0}'", PerformFunction));
 			}
+		}
+
+		public bool CanExit(WorldState worldState)
+		{
+			return worldState.IsInState(_runtimeExitConditions);
 		}
 	}
 

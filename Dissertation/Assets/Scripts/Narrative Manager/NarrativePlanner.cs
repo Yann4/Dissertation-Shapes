@@ -13,11 +13,12 @@ namespace Dissertation.Narrative
 		private WorldStateManager _worldState = null;
 
 		private Plan _currentPlan = null;
+		private bool IsPlanning { get { return _currentPlan == null; } }
 
 		private MonoBehaviour _toRunCoroutineOn = null;
-
 		private Beat _currentMajorBeat;
 		private Beat _nextMajorBeat;
+		private Beat _currentBeat;
 
 		public NarrativePlanner(WorldStateManager worldState, MonoBehaviour toRunCoroutineOn, TextAsset beatAsset)
 		{
@@ -35,11 +36,35 @@ namespace Dissertation.Narrative
 				_beatSet.Add((node as BeatNode).BeatData);
 			}
 
+			Replan();
+		}
+
+		private void Replan()
+		{
 			_currentMajorBeat = GetNextMajorBeat();
-			_currentMajorBeat.Perform();
+			_currentBeat = _currentMajorBeat;
 			_nextMajorBeat = GetNextMajorBeat();
 
 			GetPlan(_nextMajorBeat);
+		}
+
+		public void Update()
+		{
+			if(_currentBeat != null)
+			{
+				if(!_currentBeat.Update(_worldState))
+				{
+					_currentBeat = _currentPlan.NextBeat();
+					if(_currentBeat == null || !_currentBeat.MeetsPreconditions(_worldState))
+					{
+						Replan();
+					}
+					else
+					{
+						_currentBeat.Perform();
+					}
+				}
+			}
 		}
 
 		private Beat GetNextMajorBeat()
@@ -109,15 +134,16 @@ namespace Dissertation.Narrative
 			if (numPlans > 0)
 			{
 				List<WorldProperty> goalState = targetState.Preconditions;
-				GOAPJob[] jobs = new GOAPJob[numPlans];
+				GoalOrientedActionPlanner[] jobs = new GoalOrientedActionPlanner[numPlans];
 				for (int idx = 0; idx < numPlans; idx++)
 				{
-					jobs[idx] = new GOAPJob()
+					jobs[idx] = new GoalOrientedActionPlanner()
 					{
 						State = _worldState.GetCurrentWorldState(),
 						Beats = beatSet,
 						GoalState = goalState,
-						StartBeat = starterBeats[idx]
+						StartBeat = starterBeats[idx],
+						Archetype = _worldState.Archetype,
 					};
 
 					jobs[idx].Execute();
@@ -133,7 +159,7 @@ namespace Dissertation.Narrative
 #endif //!DEBUG_PLANNER
 
 				Plan bestPlan = jobs[0].NarrativePlan;
-				foreach (GOAPJob job in jobs)
+				foreach (GoalOrientedActionPlanner job in jobs)
 				{
 					if (job.NarrativePlan.Score < bestPlan.Score)
 					{
@@ -151,11 +177,27 @@ namespace Dissertation.Narrative
 
 		private class Plan
 		{
-			public List<Beat> Beats;
+			private List<Beat> Beats;
 			public float Score { get; private set; }
-
-			public Plan(PlannerNode plan)
+			private PlayerArchetype Archetype;
+			private int _currentBeat = 0;
+			public Beat Current
 			{
+				get
+				{
+					if (_currentBeat < Beats.Count)
+					{
+						return Beats[_currentBeat];
+					}
+
+					return null;
+				}
+			}
+
+			public Plan(PlannerNode plan, PlayerArchetype archetype)
+			{
+				Archetype = archetype;
+
 				Beats = new List<Beat>();
 				while (plan != null)
 				{
@@ -166,17 +208,29 @@ namespace Dissertation.Narrative
 				CalculateScore();
 			}
 
+			//Increments the plan and returns the new current beat
+			public Beat NextBeat()
+			{
+				_currentBeat++;
+				return Current;
+			}
+
 			private void CalculateScore()
 			{
+				float affinity = 0.0f;
+
 				foreach( Beat beat in Beats )
 				{
 					Score += beat.Cost;
 					Score += beat.RepetitionsPerformed;
+					affinity += Archetype * beat.Archetype;
 				}
+
+				Score += (1.0f / affinity) * 10.0f; // * 10 as we want the affinity to have a large impact on the score
 			}
 		}
 
-		private struct GOAPJob
+		private struct GoalOrientedActionPlanner
 		{
 			public WorldState State; //Initial world state
 
@@ -187,6 +241,8 @@ namespace Dissertation.Narrative
 
 			private List<PlannerNode> Leaves; //Nodes containing potential plans
 			public Plan NarrativePlan; //Result, this is what to look at
+
+			public PlayerArchetype Archetype;
 
 			public void Execute()
 			{
@@ -210,7 +266,7 @@ namespace Dissertation.Narrative
 						}
 					}
 
-					NarrativePlan = new Plan(bestPlan);
+					NarrativePlan = new Plan(bestPlan, Archetype);
 				}
 			}
 

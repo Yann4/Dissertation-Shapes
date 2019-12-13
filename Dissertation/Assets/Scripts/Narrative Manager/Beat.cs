@@ -28,6 +28,9 @@ namespace Dissertation.Narrative
 		public List<Action> RequiredActions { get; private set; } = new List<Action>();
 		public List<Action> OptionalActions { get; private set; } = new List<Action>();
 
+		private List<Action> _runningActions = new List<Action>();
+		private HashSet<Action> _completedActions = new HashSet<Action>();
+
 		public int UID { get; private set; }
 
 		public float Cost = 1;
@@ -43,7 +46,10 @@ namespace Dissertation.Narrative
 			for(int idx = 0; idx < preconditionCount; idx++)
 			{
 				ScriptablePreconditions.Add(WorldPropertyScriptable.Deserialise(reader));
-				Preconditions.Add(ScriptablePreconditions[idx].GetRuntimeProperty());
+				if (ScriptablePreconditions[idx] != null)
+				{
+					Preconditions.Add(ScriptablePreconditions[idx].GetRuntimeProperty());
+				}
 			}
 
 			Archetype = new PlayerArchetype(reader);
@@ -121,22 +127,65 @@ namespace Dissertation.Narrative
 
 			foreach(Action action in RequiredActions)
 			{
-				ScriptablePostconditions.AddRange(action.Postconditions);
+				if (action != null)
+				{
+					ScriptablePostconditions.AddRange(action.Postconditions);
+				}
 			}
 
 			for(int idx = 0; idx < ScriptablePostconditions.Count; idx++)
 			{
-				Postconditions.Add(ScriptablePostconditions[idx].GetRuntimeProperty());
+				if (ScriptablePostconditions[idx] != null)
+				{
+					Postconditions.Add(ScriptablePostconditions[idx].GetRuntimeProperty());
+				}
 			}
 		}
 
 		public void Perform()
 		{
 			RepetitionsPerformed++;
+
+			_runningActions.AddRange(RequiredActions);
 		}
 
-		public void Update()
-		{ }
+		public bool Update(WorldStateManager worldState)
+		{
+			foreach(Action optionalAction in OptionalActions)
+			{
+				if(!_completedActions.Contains(optionalAction) && !_runningActions.Contains(optionalAction) && worldState.IsInState(optionalAction.RuntimePreconditions))
+				{
+					_runningActions.Add(optionalAction);
+				}
+			}
+
+			for(int idx = _runningActions.Count - 1; idx >= 0; idx--)
+			{
+				if(!_runningActions[idx].CanExit(worldState.GetCurrentWorldState()))
+				{
+					_runningActions[idx].Perform();
+				}
+				else
+				{
+					_completedActions.Add(_runningActions[idx]);
+					_runningActions.RemoveAt(idx);
+				}
+			}
+
+			if(_runningActions.Count == 0)
+			{
+				Cleanup();
+				return false;
+			}
+
+			return true;
+		}
+
+		private void Cleanup()
+		{
+			_runningActions.Clear();
+			_completedActions.Clear();
+		}
 
 		internal bool MeetsPreconditions(WorldStateManager worldState)
 		{

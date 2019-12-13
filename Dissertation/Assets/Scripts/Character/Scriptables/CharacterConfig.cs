@@ -1,4 +1,5 @@
-﻿using Dissertation.Character;
+﻿using Dissertation;
+using Dissertation.Character;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "CharacterConfig.asset", menuName = "Dissertation/Scriptables/Character Config/Character Config")]
@@ -28,6 +29,9 @@ public class CharacterConfig : ScriptableObject
 	/// </summary>
 	[SerializeField] private LayerMask _triggerMask = 0;
 	public LayerMask TriggerMask { get { return _triggerMask; } }
+
+	[SerializeField] private ScriptableID _characterID;
+	public ScriptableID CharacterID { get { return _characterID; } }
 
 	[Header("Movement config")]
 	[SerializeField] private float _gravity = -25f;

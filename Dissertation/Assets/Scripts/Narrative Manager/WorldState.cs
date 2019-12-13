@@ -76,6 +76,11 @@ namespace Dissertation.Narrative
 
 		public bool IsInState(WorldProperty property)
 		{
+			if(property.Property == EProperty.MoneyEqual || property.Property == EProperty.MoneyGreaterThan || property.Property == EProperty.MoneyLessThan)
+			{
+				return Query(property.Key, null, property.Value);
+			}
+
 			List<WorldProperty> propertiesWithID = _worldProperties.FindAll(prop => prop.ObjectID == property.ObjectID);
 			if (propertiesWithID.Count > 0)
 			{
