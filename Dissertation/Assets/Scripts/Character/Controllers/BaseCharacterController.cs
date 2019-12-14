@@ -188,9 +188,10 @@ namespace Dissertation.Character
 		private float _dashAttackEndTime;
 
 		public Yoke CharacterYoke { get; private set; }
+		private EntityID _entity;
+		public long ID { get { return _entity.ObjectID; } }
 
 		protected Spawner _spawnedBy;
-
 		protected GameObject _meleeAttack;
 		protected PrefabPool _rangedAttackPool;
 
@@ -198,7 +199,8 @@ namespace Dissertation.Character
 		{
 			_spawnedBy = spawner;
 
-			GetComponent<EntityID>().SetID(Config.CharacterID);
+			_entity = GetComponent<EntityID>();
+			_entity.SetID(Config.CharacterID);
 		}
 
 		protected virtual void Start()

@@ -24,6 +24,7 @@ MonoBehaviour:
   _triggerMask:
     serializedVersion: 2
     m_Bits: 6144
+  _characterID: {fileID: 11400000, guid: f8b0ad23147f0cd40b8f276374ec94c6, type: 2}
   _gravity: -25
   _runSpeed: 8
   _jumpHeight: 20
