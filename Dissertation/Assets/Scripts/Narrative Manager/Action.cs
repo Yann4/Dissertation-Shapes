@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using static Dissertation.Narrative.ActionFunctionLibrary;
 using System;
+using static Dissertation.Narrative.ActionFunctionLibrary;
 
 #if UNITY_EDITOR
 using UnityEditor;
