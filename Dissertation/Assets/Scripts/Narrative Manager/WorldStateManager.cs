@@ -4,9 +4,14 @@ namespace Dissertation.Narrative
 {
 	public class WorldStateManager
 	{
-		private WorldState _state = new WorldState();
+		private WorldState _state;
 		public PlayerArchetype Archetype { get; private set; } = new PlayerArchetype();
 		public EntityManager Entities { get; private set; } = new EntityManager();
+
+		public WorldStateManager()
+		{
+			_state = WorldState.MakeWorldState();
+		}
 
 		public bool IsInState( WorldProperty property )
 		{
@@ -31,7 +36,7 @@ namespace Dissertation.Narrative
 		//Returns copy of world state
 		public WorldState GetCurrentWorldState()
 		{
-			return new WorldState(_state);
+			return new WorldState(ref _state);
 		}
 	}
 }

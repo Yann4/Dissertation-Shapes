@@ -20,6 +20,7 @@ namespace Dissertation.Character
 
 				if(_currentHealth <= 0)
 				{
+					App.WorldState.SetState(new Narrative.WorldProperty(_character.ID, Narrative.EProperty.IsDead, true));
 					OnDied.InvokeSafe(_character);
 				}
 			}
@@ -38,6 +39,7 @@ namespace Dissertation.Character
 		{
 			_character = GetComponent<BaseCharacterController>();
 			CurrentHealth = _character.Config.MaxHealth;
+			App.WorldState.SetState(new Narrative.WorldProperty(_character.ID, Narrative.EProperty.IsDead, false));
 		}
 
 		public void Damage(DamageSource damage)
@@ -65,6 +67,7 @@ namespace Dissertation.Character
 		public void Respawn()
 		{
 			_currentHealth = _character.Config.MaxHealth;
+			App.WorldState.SetState(new Narrative.WorldProperty(_character.ID, Narrative.EProperty.IsDead, false));
 			OnRespawn.InvokeSafe();
 		}
 	}

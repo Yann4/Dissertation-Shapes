@@ -159,9 +159,9 @@ namespace Dissertation.Narrative
 				}
 			}
 
-			for(int idx = _runningActions.Count - 1; idx >= 0; idx--)
+			for (int idx = _runningActions.Count - 1; idx >= 0; idx--)
 			{
-				if(!_runningActions[idx].CanExit(worldState.GetCurrentWorldState()))
+				if(!_runningActions[idx].CanExit(worldState))
 				{
 					_runningActions[idx].Perform();
 				}

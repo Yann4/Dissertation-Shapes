@@ -2,6 +2,7 @@
 
 using Dissertation.Narrative.Editor;
 using Dissertation.NodeGraph;
+using Dissertation.Util;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,6 +21,10 @@ namespace Dissertation.Narrative
 		private Beat _nextMajorBeat;
 		private Beat _currentBeat;
 
+		private bool Enabled = false;
+
+		private System.Action OnFinished;
+
 		public NarrativePlanner(WorldStateManager worldState, MonoBehaviour toRunCoroutineOn, TextAsset beatAsset)
 		{
 			_worldState = worldState;
@@ -36,6 +41,12 @@ namespace Dissertation.Narrative
 				_beatSet.Add((node as BeatNode).BeatData);
 			}
 
+			OnFinished += OnFinishedPlanning;
+		}
+
+		public void Enable()
+		{
+			Enabled = true;
 			Replan();
 		}
 
@@ -45,12 +56,20 @@ namespace Dissertation.Narrative
 			_currentBeat = _currentMajorBeat;
 			_nextMajorBeat = GetNextMajorBeat();
 
-			GetPlan(_nextMajorBeat);
+			if (_nextMajorBeat != null)
+			{
+				GetPlan(_nextMajorBeat);
+			}
 		}
 
 		public void Update()
 		{
-			if(_currentBeat != null)
+			if(!Enabled || IsPlanning)
+			{
+				return;
+			}
+
+			if(_currentBeat != null && _currentPlan != null)
 			{
 				if(!_currentBeat.Update(_worldState))
 				{
@@ -72,11 +91,11 @@ namespace Dissertation.Narrative
 			if(_currentMajorBeat != null)
 			{
 				int nextBeatOrder = _currentMajorBeat.Order + 1;
-				return _beatSet.Find(beat => beat.Importance == 1.0f && beat.Order == nextBeatOrder);
+				return _beatSet.Find(beat => beat.Importance == 1.0f && beat.Order == nextBeatOrder && beat.RepetitionsPerformed < beat.MaxRepetitions);
 			}
 			else
 			{
-				return _beatSet.Find(beat => beat.Importance == 1.0f && beat.Order == 0);
+				return _beatSet.Find(beat => beat.Importance == 1.0f && beat.Order == 0 && beat.RepetitionsPerformed < beat.MaxRepetitions);
 			}
 		}
 
@@ -94,6 +113,15 @@ namespace Dissertation.Narrative
 			return beat.RepetitionsPerformed < beat.MaxRepetitions && beat.MeetsPreconditions(_worldState);
 		}
 
+		private void OnFinishedPlanning()
+		{
+			if(_currentPlan != null)
+			{
+				_currentBeat = _currentPlan.NextBeat();
+				_currentBeat.Perform();
+			}
+		}
+
 #if DEBUG_PLANNER
 		private void GeneratePlans(Beat targetState)
 #else
@@ -107,7 +135,7 @@ namespace Dissertation.Narrative
 			List<Beat> starterBeats = new List<Beat>(_beatSet);
 			for(int idx = starterBeats.Count - 1; idx >= 0; idx--)
 			{
-				if(!IsBeatViable(starterBeats[idx]))
+				if(!IsBeatViable(starterBeats[idx]) || starterBeats[idx] == _currentBeat)
 				{
 					starterBeats.RemoveAt(idx);
 				}
@@ -161,18 +189,24 @@ namespace Dissertation.Narrative
 				Plan bestPlan = jobs[0].NarrativePlan;
 				foreach (GoalOrientedActionPlanner job in jobs)
 				{
-					if (job.NarrativePlan.Score < bestPlan.Score)
+					if (job.NarrativePlan != null && job.NarrativePlan.Score < bestPlan.Score)
 					{
 						bestPlan = job.NarrativePlan;
 					}
 				}
 
 				_currentPlan = bestPlan;
+				if(_currentPlan == null)
+				{
+					Debug.LogError("No plan found to beat " + targetState.Title);
+				}
 			}
 			else
 			{
 				Debug.LogError("Couldn't generate any plans as there are no viable starter beats");
 			}
+
+			OnFinished.InvokeSafe();
 		}
 
 		private class Plan
@@ -180,12 +214,12 @@ namespace Dissertation.Narrative
 			private List<Beat> Beats;
 			public float Score { get; private set; }
 			private PlayerArchetype Archetype;
-			private int _currentBeat = 0;
+			private int _currentBeat = -1;
 			public Beat Current
 			{
 				get
 				{
-					if (_currentBeat < Beats.Count)
+					if (_currentBeat != -1 && _currentBeat < Beats.Count)
 					{
 						return Beats[_currentBeat];
 					}
@@ -300,7 +334,7 @@ namespace Dissertation.Narrative
 
 			private WorldState ApplyBeatToWorldState(WorldState worldState, Beat beat)
 			{
-				WorldState newState = new WorldState(worldState);
+				WorldState newState = new WorldState(ref worldState);
 
 				foreach (WorldProperty prop in beat.Postconditions)
 				{

@@ -15,9 +15,51 @@ namespace Dissertation.Character.Player
 
 		private PlayerInventory _inventoryUI;
 
-		private bool _squareUnlocked = false;
-		private bool _triangleUnlocked = false;
-		private bool _circleUnlocked = false;
+		private bool _squareUnlocked;
+		private bool _triangleUnlocked;
+		private bool _circleUnlocked;
+
+		private bool SquareUnlocked
+		{
+			set
+			{
+				_squareUnlocked = value;
+				App.WorldState.SetState(new Narrative.WorldProperty(ID, Narrative.EProperty.CanMelee, value));
+			}
+
+			get
+			{
+				return _squareUnlocked;
+			}
+		}
+
+		private bool TriangleUnlocked
+		{
+			set
+			{
+				_triangleUnlocked = value;
+				App.WorldState.SetState(new Narrative.WorldProperty(ID, Narrative.EProperty.CanShoot, value));
+			}
+
+			get
+			{
+				return _triangleUnlocked;
+			}
+		}
+
+		private bool CircleUnlocked
+		{
+			set
+			{
+				_circleUnlocked = value;
+				App.WorldState.SetState(new Narrative.WorldProperty(ID, Narrative.EProperty.CanDash, value));
+			}
+
+			get
+			{
+				return _circleUnlocked;
+			}
+		}
 
 		private CharacterFaction _shape;
 		private CharacterFaction CurrentShape
@@ -67,19 +109,23 @@ namespace Dissertation.Character.Player
 			_triangle.color = Color.clear;
 			_circle.color = Color.clear;
 
+			SquareUnlocked = false;
+			CircleUnlocked = false;
+			TriangleUnlocked = false;
+
 			switch (_playerConfig.DefaultShape)
 			{
 				case CharacterFaction.Square:
 					_square.color = Color.white;
-					_squareUnlocked = true;
+					SquareUnlocked = true;
 					break;
 				case CharacterFaction.Triangle:
 					_triangle.color = Color.white;
-					_triangleUnlocked = true;
+					TriangleUnlocked = true;
 					break;
 				case CharacterFaction.Circle:
 					_circle.color = Color.white;
-					_circleUnlocked = true;
+					CircleUnlocked = true;
 					break;
 				case CharacterFaction.Player:
 				default:
@@ -135,13 +181,13 @@ namespace Dissertation.Character.Player
 			switch (shape)
 			{
 				case CharacterFaction.Square:
-					_squareUnlocked = true;
+					SquareUnlocked = true;
 					break;
 				case CharacterFaction.Triangle:
-					_triangleUnlocked = true;
+					TriangleUnlocked = true;
 					break;
 				case CharacterFaction.Circle:
-					_circleUnlocked = true;
+					CircleUnlocked = true;
 					break;
 			}
 		}
@@ -261,11 +307,11 @@ namespace Dissertation.Character.Player
 			switch (faction)
 			{
 				case CharacterFaction.Square:
-					return _squareUnlocked;
+					return SquareUnlocked;
 				case CharacterFaction.Triangle:
-					return _triangleUnlocked;
+					return TriangleUnlocked;
 				case CharacterFaction.Circle:
-					return _circleUnlocked;
+					return CircleUnlocked;
 			}
 
 			return false;

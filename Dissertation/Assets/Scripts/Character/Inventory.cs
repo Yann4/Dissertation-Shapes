@@ -74,7 +74,12 @@ namespace Dissertation.Character
 			OnGround |= _placedContainer;
 			Contents.Add(_baseContents.Copy());
 
-			if(_linkedSpawner != null)
+			if (!OnGround && Owner != null)
+			{
+				App.WorldState.SetState(new Narrative.WorldProperty(Owner.ID, Narrative.EProperty.MoneyEqual, Contents.Currency));
+			}
+
+			if (_linkedSpawner != null)
 			{
 				_linkedSpawner.OnSpawnNonStatic += OnSpawn;
 			}
@@ -106,6 +111,11 @@ namespace Dissertation.Character
 			Contents.Add(additionalContents);
 
 			OnGetCurrency.InvokeSafe(currencyChange);
+
+			if(Owner != null)
+			{
+				App.WorldState.SetState(new Narrative.WorldProperty(Owner.ID, Narrative.EProperty.MoneyEqual, Contents.Currency));
+			}
 		}
 
 		public void TransferCurrencyTo(Inventory other, int amount)
@@ -116,6 +126,11 @@ namespace Dissertation.Character
 				Contents.Currency -= (uint)amount;
 
 				OnLoseCurrency.InvokeSafe(amount);
+
+				if (Owner != null)
+				{
+					App.WorldState.SetState(new Narrative.WorldProperty(Owner.ID, Narrative.EProperty.MoneyEqual, Contents.Currency));
+				}
 			}
 		}
 

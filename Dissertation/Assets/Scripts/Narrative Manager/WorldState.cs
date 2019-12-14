@@ -2,15 +2,25 @@
 
 namespace Dissertation.Narrative
 {
-	public class WorldState
+	public struct WorldState
 	{
-		private List<WorldProperty> _worldProperties = new List<WorldProperty>();
-		private Dictionary<long, int> _money = new Dictionary<long, int>();
+		private List<WorldProperty> _worldProperties;
+		private Dictionary<long, int> _money;
 
-		public WorldState() { }
-
-		public WorldState(WorldState other)
+		public static WorldState MakeWorldState()
 		{
+			return new WorldState()
+			{
+				_worldProperties = new List<WorldProperty>(),
+				_money = new Dictionary<long, int>()
+			};
+		}
+
+		public WorldState(ref WorldState other)
+		{
+			_worldProperties = new List<WorldProperty>();
+			_money = new Dictionary<long, int>();
+
 			_worldProperties.AddRange(other._worldProperties);
 			foreach (KeyValuePair<long, int> wallet in other._money)
 			{
@@ -18,7 +28,7 @@ namespace Dissertation.Narrative
 			}
 		}
 
-		private bool Query(WorldProperty.PropertyKey key, WorldProperty.PropertyValue actualValue, WorldProperty.PropertyValue expectedValue)
+		private bool Query(WorldProperty.PropertyKey key, WorldProperty.PropertyValue? actualValue, WorldProperty.PropertyValue expectedValue)
 		{
 			switch (key.Property)
 			{
@@ -26,7 +36,7 @@ namespace Dissertation.Narrative
 				case EProperty.CanMelee:
 				case EProperty.CanDash:
 				case EProperty.CanShoot:
-					return actualValue.bVal == expectedValue.bVal;
+					return actualValue.Value.bVal == expectedValue.bVal;
 				case EProperty.MoneyEqual:
 					{
 						if (_money.TryGetValue(key.ObjectID, out int value))
@@ -111,10 +121,10 @@ namespace Dissertation.Narrative
 					return;
 			}
 
-			WorldProperty toUpdate = _worldProperties.Find(prop => prop.Key == property.Key);
-			if (toUpdate != null)
+			int toUpdate = _worldProperties.FindIndex(prop => prop.Key == property.Key);
+			if (toUpdate != -1)
 			{
-				toUpdate.Value = property.Value;
+				_worldProperties[toUpdate] = new WorldProperty(_worldProperties[toUpdate], property.Value);
 			}
 			else
 			{

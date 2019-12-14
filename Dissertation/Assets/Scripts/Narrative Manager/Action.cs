@@ -18,7 +18,7 @@ namespace Dissertation.Narrative
 		public List<WorldPropertyScriptable> Preconditions = new List<WorldPropertyScriptable>();
 		public List<WorldPropertyScriptable> Postconditions = new List<WorldPropertyScriptable>();
 
-		[SerializeField] private List<WorldPropertyScriptable> ExitCondition;
+		[SerializeField] private List<WorldPropertyScriptable> ExitCondition = new List<WorldPropertyScriptable>();
 
 		private List<WorldProperty> _runtimeExitConditions = new List<WorldProperty>();
 		[NonSerialized, HideInInspector] public List<WorldProperty> RuntimePreconditions = new List<WorldProperty>();
@@ -68,7 +68,7 @@ namespace Dissertation.Narrative
 			}
 		}
 
-		public bool CanExit(WorldState worldState)
+		public bool CanExit(WorldStateManager worldState)
 		{
 			return worldState.IsInState(_runtimeExitConditions);
 		}

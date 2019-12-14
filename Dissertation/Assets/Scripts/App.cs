@@ -36,8 +36,6 @@ namespace Dissertation
 			AIBlackboard = new Blackboard( _conversations );
 
 			WorldState = new WorldStateManager();
-			WorldState.SetState(new WorldProperty(WorldProperty.GetObjectID(ObjectClass.Player), EProperty.CanDash, false));
-			WorldState.SetState(new WorldProperty(WorldProperty.GetObjectID(ObjectClass.Player), EProperty.MoneyGreaterThan, 81));
 			Planner = new NarrativePlanner(WorldState, this, _beatGraph);
 
 			LoadScene(_HUDSceneName);
@@ -52,6 +50,8 @@ namespace Dissertation
 		{
 			yield return null;
 			OnLevelLoaded.InvokeSafe();
+
+			Planner.Enable();
 		}
 
 		private void LoadScene(string sceneName)
@@ -97,6 +97,11 @@ namespace Dissertation
 #else
 			Application.Quit();
 #endif
+		}
+
+		public void Update()
+		{
+			Planner.Update();
 		}
 	}
 }

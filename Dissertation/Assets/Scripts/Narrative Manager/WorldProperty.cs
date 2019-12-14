@@ -3,7 +3,7 @@
 namespace Dissertation.Narrative
 {
 	[Serializable]
-	public class WorldProperty
+	public struct WorldProperty
 	{
 		public long ObjectID { get; private set; }
 		public EProperty Property { get; private set; }
@@ -16,7 +16,7 @@ namespace Dissertation.Narrative
 			ObjectID = ID;
 			Property = property;
 
-			Key = new PropertyKey(this);
+			Key = new PropertyKey(ID, property);
 			Value = new PropertyValue(i, b, f);
 		}
 
@@ -24,7 +24,7 @@ namespace Dissertation.Narrative
 		{
 			ObjectID = ID;
 			Property = property;
-			Key = new PropertyKey(this);
+			Key = new PropertyKey(ID, property);
 			Value = new PropertyValue(value);
 		}
 
@@ -32,7 +32,7 @@ namespace Dissertation.Narrative
 		{
 			ObjectID = ID;
 			Property = property;
-			Key = new PropertyKey(this);
+			Key = new PropertyKey(ID, property);
 			Value = new PropertyValue(value);
 		}
 
@@ -40,8 +40,16 @@ namespace Dissertation.Narrative
 		{
 			ObjectID = ID;
 			Property = property;
-			Key = new PropertyKey(this);
+			Key = new PropertyKey(ID, property);
 			Value = new PropertyValue(value);
+		}
+
+		public WorldProperty(WorldProperty property, PropertyValue overwriteValue)
+		{
+			ObjectID = property.ObjectID;
+			Property = property.Property;
+			Key = property.Key;
+			Value = overwriteValue;
 		}
 
 		public ObjectClass GetObjectClass()
@@ -66,7 +74,7 @@ namespace Dissertation.Narrative
 			return GetObjectID(type, 0);
 		}
 
-		public class PropertyKey : IEquatable<PropertyKey>
+		public struct PropertyKey : IEquatable<PropertyKey>
 		{
 			public long ObjectID;
 			private int _property;
@@ -79,15 +87,23 @@ namespace Dissertation.Narrative
 				_property = (int)worldProperty.Property;
 			}
 
+			public PropertyKey(long id, EProperty property)
+			{
+				ObjectID = id;
+				_property = (int)property;
+			}
+
 			public override bool Equals(object obj)
 			{
-				PropertyKey objKey = obj as PropertyKey;
-				if(objKey != null)
+				try
 				{
+					PropertyKey objKey = (PropertyKey)obj;
 					return Equals(objKey);
 				}
-
-				return base.Equals(obj);
+				catch(InvalidCastException)
+				{
+					return false;
+				}
 			}
 
 			public bool Equals(PropertyKey other)
@@ -115,7 +131,7 @@ namespace Dissertation.Narrative
 			}
 		}
 
-		public class PropertyValue
+		public struct PropertyValue
 		{
 			public int iVal { get; private set; }
 			public bool bVal { get; private set; }
@@ -131,16 +147,22 @@ namespace Dissertation.Narrative
 			public PropertyValue(int val)
 			{
 				iVal = val;
+				bVal = false;
+				fVal = 0.0f;
 			}
 
 			public PropertyValue(bool val)
 			{
 				bVal = val;
+				iVal = 0;
+				fVal = 0.0f;
 			}
 
 			public PropertyValue(float val)
 			{
 				fVal = val;
+				iVal = 0;
+				bVal = false;
 			}
 
 			public PropertyValue(WorldProperty worldProperty)
