@@ -18,6 +18,7 @@ namespace Dissertation
 		[SerializeField] private LocalisationScriptable _localisation;
 		[SerializeField] private ConversationData _conversations;
 		[SerializeField] private TextAsset _beatGraph;
+		[SerializeField] private BeatTemplates _templates;
 
 		public static bool Paused { get { return _pause > 0; } }
 		private static int _pause = 0;
@@ -44,7 +45,7 @@ namespace Dissertation
 			Planner = new NarrativePlanner(WorldState, this, _beatGraph);
 
 #if UNITY_EDITOR
-			Generator = new NarrativeGenerator(_beatGraph, WorldState);
+			Generator = new NarrativeGenerator(_beatGraph, _templates, WorldState);
 #endif //UNITY_EDITOR
 
 			LoadScene(_HUDSceneName);

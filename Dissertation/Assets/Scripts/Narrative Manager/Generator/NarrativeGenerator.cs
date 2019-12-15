@@ -13,13 +13,14 @@ namespace Dissertation.Narrative.Generator
 		private TextAsset _nodeGraph;
 		private string _nodeGraphPath;
 		private WorldStateManager _worldState;
+		private BeatTemplates _templates;
 
 		private List<Node> _nodes = new List<Node>();
 		private List<Connection> _connections = new List<Connection>();
 
 		private Vector2 _generatedBeatStartLocation = new Vector2(-100, 0);
 
-		public NarrativeGenerator(TextAsset nodeGraph, WorldStateManager worldState)
+		public NarrativeGenerator(TextAsset nodeGraph, BeatTemplates templates, WorldStateManager worldState)
 		{
 			_nodeGraph = nodeGraph;
 			_nodeGraphPath = AssetDatabase.GetAssetPath(_nodeGraph);
@@ -31,7 +32,7 @@ namespace Dissertation.Narrative.Generator
 			_nodes.Clear();
 			_connections.Clear();
 
-			NodeUtils.LoadGraph(_nodeGraph.bytes, CreateNode, _nodes, _connections, null);
+			NodeUtils.LoadGraph(_nodeGraph.bytes, (reader) => new BeatNode(reader), _nodes, _connections);
 
 			GeneratorUtils.DeleteAllGeneratedAssets();
 
@@ -43,19 +44,31 @@ namespace Dissertation.Narrative.Generator
 				}
 			}
 
-			Vector2 pos = _generatedBeatStartLocation;
-			for(int idx = 0; idx < 10; idx++)
+			List<Beat> generatedBeats = new List<Beat>();
+
+			foreach(Beat template in _templates.Templates)
 			{
-				_nodes.Add(new BeatNode(pos, new Beat(true)));
+				CheckTemplateBeat(template, generatedBeats);
+			}
+
+			Vector2 pos = _generatedBeatStartLocation;
+			foreach(Beat beat in generatedBeats)
+			{
+				_nodes.Add(new BeatNode(pos, beat));
 				pos.y -= (_nodes[0].NodeRect.height + 10);
 			}
 
 			NodeUtils.SaveGraph(_nodeGraphPath, _nodes, _connections);
 		}
 
-		private Node CreateNode(BinaryReader reader)
+		private void CheckTemplateBeat(Beat template, List<Beat> outGeneratedBeats)
 		{
-			return new BeatNode(reader);
+			switch(template.Title)
+			{
+				default:
+					Debug.LogErrorFormat("Not sure how to generate beats for the template '{0}'", template.Title);
+					return;
+			}
 		}
 	}
 }

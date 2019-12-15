@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEditor;
+using UnityEngine;
 
 namespace Dissertation.Narrative
 {
@@ -10,23 +12,23 @@ namespace Dissertation.Narrative
 	{
 		public string Title = "Beat";
 
-		public List<WorldPropertyScriptable> ScriptablePreconditions = new List<WorldPropertyScriptable>();
+		[SerializeField] public List<WorldPropertyScriptable> ScriptablePreconditions = new List<WorldPropertyScriptable>();
 		private List<WorldPropertyScriptable> ScriptablePostconditions = new List<WorldPropertyScriptable>();
 
-		public List<WorldProperty> Preconditions = new List<WorldProperty>();
-		public List<WorldProperty> Postconditions = new List<WorldProperty>();
+		[HideInInspector] public List<WorldProperty> Preconditions = new List<WorldProperty>();
+		[HideInInspector] public List<WorldProperty> Postconditions = new List<WorldProperty>();
 
-		public PlayerArchetype Archetype { get; private set; } = new PlayerArchetype();
+		public PlayerArchetype Archetype = new PlayerArchetype();
 
 		public float Importance { get; set; } = 0.0f;
 		public int Order { get; set; } = -1;
 		public Beat NextMajorBeat { get; set; }
 
-		public int MaxRepetitions { get; set; } = 1;
+		public int MaxRepetitions = 1;
 		public int RepetitionsPerformed { get; private set; } = 0;
 
-		public List<Action> RequiredActions { get; private set; } = new List<Action>();
-		public List<Action> OptionalActions { get; private set; } = new List<Action>();
+		public List<Action> RequiredActions = new List<Action>();
+		public List<Action> OptionalActions = new List<Action>();
 
 		private List<Action> _runningActions = new List<Action>();
 		private HashSet<Action> _completedActions = new HashSet<Action>();
@@ -35,7 +37,7 @@ namespace Dissertation.Narrative
 
 		public float Cost = 1;
 
-		public bool Generated = false;
+		[HideInInspector] public bool Generated = false;
 
 		private const int Version = 1;
 
