@@ -32,7 +32,23 @@ namespace Dissertation.Narrative.Editor
 			NodeRect.size = _unselectedSize;
 
 			Title = "";
-			BeatData = new Beat();
+			BeatData = new Beat(false);
+			SetGeneratedColour();
+		}
+
+		public BeatNode(Vector2 position, Beat beat)
+			: base(position, Vector2.zero, null, null, null, null, null, null, null)
+		{
+
+			_baseSelectedHeight = (10 * _elementHeight) + (PlayerArchetype.NumArchetypes * _elementHeight);
+
+			_unselectedSize = new Vector2(200.0f, _baseSelectedHeight);
+			_selectedSize = new Vector2(300.0f, 800.0f);
+
+			NodeRect.size = _unselectedSize;
+
+			Title = "";
+			BeatData = beat;
 		}
 
 		protected override void OnDeselect()
@@ -124,6 +140,8 @@ namespace Dissertation.Narrative.Editor
 		public BeatNode(BinaryReader reader, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onRemoveNode)
 		: base(reader, nodeStyle, selectedStyle, inPointStyle, outPointStyle, onClickInPoint, onClickOutPoint, onRemoveNode)
 		{
+			SetGeneratedColour();
+
 			_baseSelectedHeight = (10 * _elementHeight) + (PlayerArchetype.NumArchetypes * _elementHeight);
 
 			_unselectedSize = new Vector2(200.0f, _baseSelectedHeight);
@@ -132,10 +150,26 @@ namespace Dissertation.Narrative.Editor
 
 		public BeatNode(BinaryReader reader) : base(reader)
 		{
+			SetGeneratedColour();
+
 			_baseSelectedHeight = (10 * _elementHeight) + (PlayerArchetype.NumArchetypes * _elementHeight);
 
 			_unselectedSize = new Vector2(200.0f, _baseSelectedHeight);
 			_selectedSize = new Vector2(300.0f, 700.0f);
+		}
+
+		private void SetGeneratedColour()
+		{
+			if (BeatData.Generated)
+			{
+				_defaultNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node2.png") as Texture2D;
+				_selectedNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node2 on.png") as Texture2D;
+			}
+			else
+			{
+				_defaultNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
+				_selectedNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1 on.png") as Texture2D;
+			}
 		}
 
 		public override void Serialize(BinaryWriter writer)

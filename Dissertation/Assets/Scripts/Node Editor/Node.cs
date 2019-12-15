@@ -17,8 +17,8 @@ namespace Dissertation.NodeGraph
 		public int UID { get; private set; }
 
 		private GUIStyle _style;
-		private GUIStyle _defaultNodeStyle;
-		private GUIStyle _selectedNodeStyle;
+		protected GUIStyle _defaultNodeStyle;
+		protected GUIStyle _selectedNodeStyle;
 
 #if UNITY_EDITOR
 		private bool _isHeld = false;
@@ -44,9 +44,9 @@ namespace Dissertation.NodeGraph
 			_selectedSize = size;
 
 			NodeRect = new Rect(position.x, position.y, size.x, size.y);
-			_style = nodeStyle;
-			_defaultNodeStyle = nodeStyle;
-			_selectedNodeStyle = selectedStyle;
+			_defaultNodeStyle = new GUIStyle(nodeStyle);
+			_selectedNodeStyle = new GUIStyle(selectedStyle);
+			_style = _defaultNodeStyle;
 			PreviousOption = -1;
 
 			InPoint = new ConnectionPoint(this, ConnectionPointType.In, inPointStyle, onClickInPoint);
@@ -70,9 +70,9 @@ namespace Dissertation.NodeGraph
 		{
 			Deserialise(reader);
 
-			_style = nodeStyle;
-			_defaultNodeStyle = nodeStyle;
-			_selectedNodeStyle = selectedStyle;
+			_defaultNodeStyle = new GUIStyle(nodeStyle);
+			_selectedNodeStyle = new GUIStyle(selectedStyle);
+			_style = _defaultNodeStyle;
 
 			InPoint = new ConnectionPoint(this, ConnectionPointType.In, inPointStyle, onClickInPoint);
 			OutPoint = new ConnectionPoint(this, ConnectionPointType.Out, outPointStyle, onClickOutPoint);

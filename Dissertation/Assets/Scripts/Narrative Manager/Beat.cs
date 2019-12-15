@@ -37,8 +37,10 @@ namespace Dissertation.Narrative
 
 		public bool Generated = false;
 
-		public Beat()
-		{ }
+		public Beat(bool generated)
+		{
+			Generated = generated;
+		}
 
 		public Beat(BinaryReader reader, int uid)
 		{
@@ -75,6 +77,8 @@ namespace Dissertation.Narrative
 			}
 
 			Title = reader.ReadString();
+
+			Generated = reader.ReadBoolean();
 
 			CalculatePostconditions();
 		}
@@ -141,6 +145,8 @@ namespace Dissertation.Narrative
 			}
 
 			writer.Write(Title);
+
+			writer.Write(Generated);
 		}
 
 		private void CalculatePostconditions()

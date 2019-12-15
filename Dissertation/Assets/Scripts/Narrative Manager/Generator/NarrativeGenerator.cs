@@ -17,6 +17,8 @@ namespace Dissertation.Narrative.Generator
 		private List<Node> _nodes = new List<Node>();
 		private List<Connection> _connections = new List<Connection>();
 
+		private Vector2 _generatedBeatStartLocation = new Vector2(-100, 0);
+
 		public NarrativeGenerator(TextAsset nodeGraph, WorldStateManager worldState)
 		{
 			_nodeGraph = nodeGraph;
@@ -39,6 +41,13 @@ namespace Dissertation.Narrative.Generator
 				{
 					_nodes.RemoveAt(idx);
 				}
+			}
+
+			Vector2 pos = _generatedBeatStartLocation;
+			for(int idx = 0; idx < 10; idx++)
+			{
+				_nodes.Add(new BeatNode(pos, new Beat(true)));
+				pos.y -= (_nodes[0].NodeRect.height + 10);
 			}
 
 			NodeUtils.SaveGraph(_nodeGraphPath, _nodes, _connections);
