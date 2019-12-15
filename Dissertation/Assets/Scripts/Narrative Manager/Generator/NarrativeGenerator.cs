@@ -25,6 +25,7 @@ namespace Dissertation.Narrative.Generator
 			_nodeGraph = nodeGraph;
 			_nodeGraphPath = AssetDatabase.GetAssetPath(_nodeGraph);
 			_worldState = worldState;
+			_templates = templates;
 		}
 
 		public void RunGeneration()
