@@ -37,6 +37,8 @@ namespace Dissertation.Narrative
 
 		public bool Generated = false;
 
+		private const int Version = 1;
+
 		public Beat(bool generated)
 		{
 			Generated = generated;
@@ -46,39 +48,16 @@ namespace Dissertation.Narrative
 		{
 			UID = uid;
 
-			int preconditionCount = reader.ReadInt32();
-			for(int idx = 0; idx < preconditionCount; idx++)
+			int version = reader.ReadInt32();
+
+			if (version == 1)
 			{
-				ScriptablePreconditions.Add(WorldPropertyScriptable.Deserialise(reader));
-				if (ScriptablePreconditions[idx] != null)
-				{
-					Preconditions.Add(ScriptablePreconditions[idx].GetRuntimeProperty());
-				}
+				DeserialiseVersion1(reader);
 			}
-
-			Archetype = new PlayerArchetype(reader);
-
-			Importance = reader.ReadSingle();
-			Order = reader.ReadInt32();
-
-			MaxRepetitions = reader.ReadInt32();
-			RepetitionsPerformed = reader.ReadInt32();
-
-			int requiredActionCount = reader.ReadInt32();
-			for (int idx = 0; idx < requiredActionCount; idx++)
+			else
 			{
-				RequiredActions.Add(Action.Deserialise(reader));
+				UnityEngine.Debug.LogErrorFormat("Can't deserialise beat of version {0}. Write deserialisation function", version);
 			}
-
-			int optionalActionCount = reader.ReadInt32();
-			for (int idx = 0; idx < optionalActionCount; idx++)
-			{
-				OptionalActions.Add(Action.Deserialise(reader));
-			}
-
-			Title = reader.ReadString();
-
-			Generated = reader.ReadBoolean();
 
 			CalculatePostconditions();
 		}
@@ -106,6 +85,8 @@ namespace Dissertation.Narrative
 
 		public void Serialise(BinaryWriter writer)
 		{
+			writer.Write(Version);
+
 			int nonNullCount = ScriptablePreconditions.Count(x => x != null);
 			writer.Write(nonNullCount);
 			foreach(WorldPropertyScriptable property in ScriptablePreconditions)
@@ -147,6 +128,43 @@ namespace Dissertation.Narrative
 			writer.Write(Title);
 
 			writer.Write(Generated);
+		}
+
+		private void DeserialiseVersion1(BinaryReader reader)
+		{
+			int preconditionCount = reader.ReadInt32();
+			for (int idx = 0; idx < preconditionCount; idx++)
+			{
+				ScriptablePreconditions.Add(WorldPropertyScriptable.Deserialise(reader));
+				if (ScriptablePreconditions[idx] != null)
+				{
+					Preconditions.Add(ScriptablePreconditions[idx].GetRuntimeProperty());
+				}
+			}
+
+			Archetype = new PlayerArchetype(reader);
+
+			Importance = reader.ReadSingle();
+			Order = reader.ReadInt32();
+
+			MaxRepetitions = reader.ReadInt32();
+			RepetitionsPerformed = reader.ReadInt32();
+
+			int requiredActionCount = reader.ReadInt32();
+			for (int idx = 0; idx < requiredActionCount; idx++)
+			{
+				RequiredActions.Add(Action.Deserialise(reader));
+			}
+
+			int optionalActionCount = reader.ReadInt32();
+			for (int idx = 0; idx < optionalActionCount; idx++)
+			{
+				OptionalActions.Add(Action.Deserialise(reader));
+			}
+
+			Title = reader.ReadString();
+
+			Generated = reader.ReadBoolean();
 		}
 
 		private void CalculatePostconditions()
