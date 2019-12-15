@@ -73,36 +73,13 @@ namespace Dissertation.Narrative
 				return;
 			}
 
-			if(_extraBeat == null)
-			{
-				if(!IsPlanning && Time.time - _lastRunExtraBeat > _frequencyToRunExtraBeats)
-				{
-					_extraBeat = SelectExtraBeat();
-					if(_extraBeat != null)
-					{
-						_extraBeat.Perform();
-					}
-				}
-			}
-			else if(!_extraBeat.Update(_worldState))
-			{
-				if(_extraBeat.ExceededMaxRepititions)
-				{
-					_beatSet.Remove(_extraBeat);
-				}
+			UpdateExtraBeat();
 
-				_extraBeat = null;
-				_lastRunExtraBeat = Time.time;
-			}
-
-			if(!IsPlanning && _currentBeat != null && _currentPlan != null)
+			if (!IsPlanning && _currentBeat != null && _currentPlan != null)
 			{
 				if(!_currentBeat.Update(_worldState))
 				{
-					if (_currentBeat.ExceededMaxRepititions)
-					{
-						_beatSet.Remove(_currentBeat);
-					}
+					OnBeatFinishedExecution(_currentBeat);
 
 					_currentBeat = _currentPlan.NextBeat();
 					if(_currentBeat == null || !_currentBeat.MeetsPreconditions(_worldState))
@@ -114,6 +91,36 @@ namespace Dissertation.Narrative
 						_currentBeat.Perform();
 					}
 				}
+			}
+		}
+
+		private void UpdateExtraBeat()
+		{
+			if (_extraBeat == null)
+			{
+				if (!IsPlanning && Time.time - _lastRunExtraBeat > _frequencyToRunExtraBeats)
+				{
+					_extraBeat = SelectExtraBeat();
+					if (_extraBeat != null)
+					{
+						_extraBeat.Perform();
+					}
+				}
+			}
+			else if (!_extraBeat.Update(_worldState))
+			{
+				OnBeatFinishedExecution(_extraBeat);
+
+				_extraBeat = null;
+				_lastRunExtraBeat = Time.time;
+			}
+		}
+
+		private void OnBeatFinishedExecution(Beat beat)
+		{
+			if (beat.ExceededMaxRepititions)
+			{
+				_beatSet.Remove(beat);
 			}
 		}
 
