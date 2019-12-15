@@ -14,7 +14,7 @@ namespace Dissertation.Narrative
 		private WorldStateManager _worldState = null;
 
 		private Plan _currentPlan = null;
-		private bool IsPlanning { get { return _currentPlan == null; } }
+		private bool IsPlanning { get { return _currentPlan == null && _nextMajorBeat != null; } }
 
 		private MonoBehaviour _toRunCoroutineOn = null;
 		private Beat _currentMajorBeat;
@@ -24,6 +24,10 @@ namespace Dissertation.Narrative
 		private bool Enabled = false;
 
 		private System.Action OnFinished;
+
+		private Beat _extraBeat = null;
+		private const float _frequencyToRunExtraBeats = 60.0f;
+		private float _lastRunExtraBeat = 0.0f;
 
 		public NarrativePlanner(WorldStateManager worldState, MonoBehaviour toRunCoroutineOn, TextAsset beatAsset)
 		{
@@ -64,15 +68,42 @@ namespace Dissertation.Narrative
 
 		public void Update()
 		{
-			if(!Enabled || IsPlanning)
+			if(!Enabled)
 			{
 				return;
 			}
 
-			if(_currentBeat != null && _currentPlan != null)
+			if(_extraBeat == null)
+			{
+				if(!IsPlanning && Time.time - _lastRunExtraBeat > _frequencyToRunExtraBeats)
+				{
+					_extraBeat = SelectExtraBeat();
+					if(_extraBeat != null)
+					{
+						_extraBeat.Perform();
+					}
+				}
+			}
+			else if(!_extraBeat.Update(_worldState))
+			{
+				if(_extraBeat.ExceededMaxRepititions)
+				{
+					_beatSet.Remove(_extraBeat);
+				}
+
+				_extraBeat = null;
+				_lastRunExtraBeat = Time.time;
+			}
+
+			if(!IsPlanning && _currentBeat != null && _currentPlan != null)
 			{
 				if(!_currentBeat.Update(_worldState))
 				{
+					if (_currentBeat.ExceededMaxRepititions)
+					{
+						_beatSet.Remove(_currentBeat);
+					}
+
 					_currentBeat = _currentPlan.NextBeat();
 					if(_currentBeat == null || !_currentBeat.MeetsPreconditions(_worldState))
 					{
@@ -91,11 +122,11 @@ namespace Dissertation.Narrative
 			if(_currentMajorBeat != null)
 			{
 				int nextBeatOrder = _currentMajorBeat.Order + 1;
-				return _beatSet.Find(beat => beat.Importance == 1.0f && beat.Order == nextBeatOrder && beat.RepetitionsPerformed < beat.MaxRepetitions);
+				return _beatSet.Find(beat => beat.Importance == 1.0f && beat.Order == nextBeatOrder && !beat.ExceededMaxRepititions);
 			}
 			else
 			{
-				return _beatSet.Find(beat => beat.Importance == 1.0f && beat.Order == 0 && beat.RepetitionsPerformed < beat.MaxRepetitions);
+				return _beatSet.Find(beat => beat.Importance == 1.0f && beat.Order == 0 && !beat.ExceededMaxRepititions);
 			}
 		}
 
@@ -110,7 +141,7 @@ namespace Dissertation.Narrative
 
 		private bool IsBeatViable(Beat beat)
 		{
-			return beat.RepetitionsPerformed < beat.MaxRepetitions && beat.MeetsPreconditions(_worldState);
+			return !beat.ExceededMaxRepititions && beat.MeetsPreconditions(_worldState);
 		}
 
 		private void OnFinishedPlanning()
@@ -120,6 +151,26 @@ namespace Dissertation.Narrative
 				_currentBeat = _currentPlan.NextBeat();
 				_currentBeat.Perform();
 			}
+		}
+
+		private Beat SelectExtraBeat()
+		{
+			List<Beat> potentialBeats = new List<Beat>(_beatSet.Capacity);
+			foreach(Beat beat in _beatSet)
+			{
+				if(beat.Importance != 1.0f && IsBeatViable(beat) && (_currentPlan == null || _currentPlan.IsBeatInPlan(beat)))
+				{
+					potentialBeats.Add(beat);
+				}
+			}
+
+			if (potentialBeats.Count > 0)
+			{
+				potentialBeats.Sort();
+				return potentialBeats[0];
+			}
+
+			return null;
 		}
 
 #if DEBUG_PLANNER
@@ -261,6 +312,11 @@ namespace Dissertation.Narrative
 				}
 
 				Score += (1.0f / affinity) * 10.0f; // * 10 as we want the affinity to have a large impact on the score
+			}
+
+			public bool IsBeatInPlan(Beat beat)
+			{
+				return Beats.Contains(beat);
 			}
 		}
 

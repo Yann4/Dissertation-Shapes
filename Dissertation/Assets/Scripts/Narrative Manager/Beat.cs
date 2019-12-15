@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
 namespace Dissertation.Narrative
 {
 	[Serializable]
-	public class Beat
+	public class Beat : IComparable<Beat>
 	{
 		public string Title = "Beat";
 
@@ -26,6 +25,7 @@ namespace Dissertation.Narrative
 
 		public int MaxRepetitions = 1;
 		public int RepetitionsPerformed { get; private set; } = 0;
+		public bool ExceededMaxRepititions { get { return MaxRepetitions != 0 && RepetitionsPerformed >= MaxRepetitions; } }
 
 		public List<Action> RequiredActions = new List<Action>();
 		public List<Action> OptionalActions = new List<Action>();
@@ -247,6 +247,25 @@ namespace Dissertation.Narrative
 			}
 
 			return Preconditions.Count == 0;
+		}
+
+		public int CompareTo(Beat other)
+		{
+			PlayerArchetype playerArchetype = App.WorldState.Archetype;
+			float thisAffinity = Archetype * playerArchetype;
+			float otherAffinity = other.Archetype * playerArchetype;
+
+			if(thisAffinity == otherAffinity)
+			{
+				if(Importance == other.Importance)
+				{
+					return RepetitionsPerformed.CompareTo(other.RepetitionsPerformed);
+				}
+
+				return Importance.CompareTo(other.Importance);
+			}
+
+			return thisAffinity.CompareTo(otherAffinity);
 		}
 	}
 }

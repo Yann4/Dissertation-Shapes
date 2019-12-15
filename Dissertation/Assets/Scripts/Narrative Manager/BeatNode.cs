@@ -150,8 +150,6 @@ namespace Dissertation.Narrative.Editor
 
 		public BeatNode(BinaryReader reader) : base(reader)
 		{
-			SetGeneratedColour();
-
 			_baseSelectedHeight = (10 * _elementHeight) + (PlayerArchetype.NumArchetypes * _elementHeight);
 
 			_unselectedSize = new Vector2(200.0f, _baseSelectedHeight);
