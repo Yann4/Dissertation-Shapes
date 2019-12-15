@@ -8,12 +8,13 @@ using UnityEditor;
 
 namespace Dissertation.Narrative
 {
-	public class PlayerArchetype
+	[Serializable]
+	public class PlayerArchetype : PropertyAttribute
 	{
 		public enum Type { Fighter, Storyteller, MethodActor, Tactician, PowerGamer }
 		public static readonly int NumArchetypes = Enum.GetNames(typeof(Type)).Length;
 
-		private float[] Values = new float[Enum.GetNames(typeof(Type)).Length];
+		public float[] Values = new float[Enum.GetNames(typeof(Type)).Length];
 
 		public PlayerArchetype()
 		{ }
@@ -103,4 +104,30 @@ namespace Dissertation.Narrative
 		}
 #endif //UNITY_EDITOR
 	}
+
+#if UNITY_EDITOR
+	[CustomPropertyDrawer(typeof(PlayerArchetype))]
+	public class PlayerArchetypeDrawer : PropertyDrawer
+	{
+		bool _foldout = false;
+		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+		{
+			EditorGUILayout.BeginVertical();
+
+			_foldout = EditorGUILayout.Foldout(_foldout, label.text);
+			if (_foldout)
+			{
+				SerializedProperty arrayProp = property.FindPropertyRelative("Values");
+				for (int i = 0; i < PlayerArchetype.NumArchetypes; i++)
+				{
+					// This will display an Inspector Field for each array item (layout this as desired)
+					SerializedProperty value = arrayProp.GetArrayElementAtIndex(i);
+					EditorGUILayout.Slider(value, 0.0f, 1.0f, new GUIContent(Enum.GetName(typeof(PlayerArchetype.Type), i)));
+				}
+			}
+
+			EditorGUILayout.EndVertical();
+		}
+	}
+#endif //UNITY_EDITOR
 }
