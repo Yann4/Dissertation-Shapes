@@ -35,6 +35,8 @@ namespace Dissertation.Narrative
 
 		public float Cost = 1;
 
+		public bool Generated = false;
+
 		public Beat()
 		{ }
 
@@ -76,6 +78,27 @@ namespace Dissertation.Narrative
 
 			CalculatePostconditions();
 		}
+
+#if UNITY_EDITOR
+		public Beat(List<WorldPropertyScriptable> preconditions, PlayerArchetype archetype, float importance, int maxRepititons, 
+			List<Action> requiredActions, List<Action> optionalActions, string title)
+		{
+			UID = UnityEditor.GUID.Generate().GetHashCode();
+
+			ScriptablePreconditions = preconditions;
+			Archetype = archetype;
+
+			Importance = importance;
+			MaxRepetitions = maxRepititons;
+
+			RequiredActions = requiredActions;
+			OptionalActions = optionalActions;
+
+			Title = title;
+
+			CalculatePostconditions();
+		}
+#endif //UNITY_EDITOR
 
 		public void Serialise(BinaryWriter writer)
 		{

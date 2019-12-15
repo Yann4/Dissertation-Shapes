@@ -53,6 +53,23 @@ namespace Dissertation.Narrative
 			writer.Write(guid);
 		}
 
+		public void FromRuntimeProperty(WorldProperty property, bool generateGuid)
+		{
+			_objectType = property.GetObjectClass();
+			_objectIndex = property.GetClassIndex();
+
+			Property = property.Property;
+
+			iValue = property.Value.iVal;
+			bValue = property.Value.bVal;
+			fValue = property.Value.fVal;
+
+			if(generateGuid)
+			{
+				guid = GUID.Generate().ToString();
+			}
+		}
+
 		public WorldProperty GetRuntimeProperty()
 		{
 			return new WorldProperty(ObjectID, Property, iValue, bValue, fValue );

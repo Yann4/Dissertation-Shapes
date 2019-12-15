@@ -20,7 +20,7 @@ namespace Dissertation.Narrative.Editor
 		{
 			base.OnEnable();
 
-			DataFolder = Path.Combine(Application.dataPath, "Data", "Conversation data");
+			DataFolder = Path.Combine(Application.dataPath, "Data", "Narrative");
 
 			_nodeStyle.alignment = TextAnchor.UpperCenter;
 			_selectedNodeStyle.alignment = TextAnchor.UpperCenter;

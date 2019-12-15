@@ -6,6 +6,7 @@ using Dissertation.Character;
 using Dissertation.Util;
 using System.Collections;
 using Dissertation.Narrative;
+using Dissertation.Narrative.Generator;
 
 namespace Dissertation
 {
@@ -27,6 +28,10 @@ namespace Dissertation
 		public static WorldStateManager WorldState { get; private set; }
 		private static NarrativePlanner Planner;
 
+#if UNITY_EDITOR
+		public static NarrativeGenerator Generator { get; private set; }
+#endif //UNITY_EDITOR
+
 		public static System.Action OnLevelLoaded;
 
 		private void Start()
@@ -37,6 +42,10 @@ namespace Dissertation
 
 			WorldState = new WorldStateManager();
 			Planner = new NarrativePlanner(WorldState, this, _beatGraph);
+
+#if UNITY_EDITOR
+			Generator = new NarrativeGenerator(_beatGraph, WorldState);
+#endif //UNITY_EDITOR
 
 			LoadScene(_HUDSceneName);
 			LoadScene(_whiteboxScene);

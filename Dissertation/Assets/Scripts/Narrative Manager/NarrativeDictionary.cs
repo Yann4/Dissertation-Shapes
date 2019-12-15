@@ -29,6 +29,46 @@ namespace Dissertation.Narrative
 			return foundAction;
 		}
 
+#if UNITY_EDITOR
+		public void AddWorldProperty(WorldPropertyScriptable worldProperty)
+		{
+			if(!WorldProperties.Contains(worldProperty))
+			{
+				WorldProperties.Add(worldProperty);
+				UnityEditor.EditorUtility.SetDirty(this);
+			}
+		}
+
+		public void AddAction(Action action)
+		{
+			if (!Actions.Contains(action))
+			{
+				Actions.Add(action);
+				UnityEditor.EditorUtility.SetDirty(this);
+			}
+		}
+
+		public void Remove<T>(T asset) where T : ScriptableObject
+		{
+			WorldPropertyScriptable property = asset as WorldPropertyScriptable;
+			if (property != null)
+			{
+				if (WorldProperties.Remove(property))
+				{
+					UnityEditor.EditorUtility.SetDirty(this);
+				}
+			}
+			else
+			{
+				Action action = asset as Action;
+				if (Actions.Remove(action))
+				{
+					UnityEditor.EditorUtility.SetDirty(this);
+				}
+			}
+		}
+#endif //UNITY_EDITOR
+
 		public static NarrativeDictionary GetAsset()
 		{
 			if(_instance == null)

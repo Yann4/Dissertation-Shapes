@@ -18,7 +18,7 @@ namespace Dissertation.Narrative
 		public List<WorldPropertyScriptable> Preconditions = new List<WorldPropertyScriptable>();
 		public List<WorldPropertyScriptable> Postconditions = new List<WorldPropertyScriptable>();
 
-		[SerializeField] private List<WorldPropertyScriptable> ExitCondition = new List<WorldPropertyScriptable>();
+		[SerializeField] public List<WorldPropertyScriptable> ExitConditions = new List<WorldPropertyScriptable>();
 
 		private List<WorldProperty> _runtimeExitConditions = new List<WorldProperty>();
 		[NonSerialized, HideInInspector] public List<WorldProperty> RuntimePreconditions = new List<WorldProperty>();
@@ -34,7 +34,7 @@ namespace Dissertation.Narrative
 				return null;
 			}
 
-			foreach (WorldPropertyScriptable prop in action.ExitCondition)
+			foreach (WorldPropertyScriptable prop in action.ExitConditions)
 			{
 				action._runtimeExitConditions.Add(prop.GetRuntimeProperty());
 			}

@@ -73,5 +73,19 @@ namespace Dissertation.UI
 		{
 			return _canvas.enabled;
 		}
+
+		public void RunGenerator()
+		{
+#if UNITY_EDITOR
+			App.Generator.RunGeneration();
+#endif //UNITY_EDITOR
+		}
+
+		public void DeleteGeneratedAssets()
+		{
+#if UNITY_EDITOR
+			Narrative.Generator.GeneratorUtils.DeleteAllGeneratedAssets();
+#endif //UNITY_EDITOR
+		}
 	}
 }

@@ -11,6 +11,15 @@ namespace Dissertation.Narrative
 		public PropertyKey Key;
 		public PropertyValue Value;
 
+		public WorldProperty(ObjectClass type, int index, EProperty property, int i, bool b, float f)
+		{
+			ObjectID = GetObjectID(type, index);
+			Property = property;
+
+			Key = new PropertyKey(ObjectID, Property);
+			Value = new PropertyValue(i, b, f);
+		}
+
 		public WorldProperty(long ID, EProperty property, int i, bool b, float f)
 		{
 			ObjectID = ID;
