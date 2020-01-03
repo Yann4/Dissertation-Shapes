@@ -1,16 +1,26 @@
 ﻿using Dissertation.Character.Player;
 using Dissertation.Input;
 using Dissertation.Util.Localisation;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Dissertation.UI
 {
 	public class PauseMenu : MenuBase, IPauser
 	{
+		[SerializeField] private List<GameObject> _disableInBuild = new List<GameObject>();
+
 		public override void Initialise()
 		{
 			base.Initialise();
 			SetVisible(false);
+
+#if !UNITY_EDITOR
+			foreach(GameObject toDisable in _disableInBuild)
+			{
+				toDisable.SetActive(false);
+			}
+#endif //!UNITY_EDITOR
 		}
 
 		protected override void Update()

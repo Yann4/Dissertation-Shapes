@@ -362,6 +362,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _destroyOnClose: 0
   _defaultSelectable: {fileID: 2962896814796541872}
+  _disableInBuild:
+  - {fileID: 4698676458618532539}
+  - {fileID: 4508011433394533859}
 --- !u!114 &6511777542739642199
 MonoBehaviour:
   m_ObjectHideFlags: 0
