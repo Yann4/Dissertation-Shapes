@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 namespace Dissertation.Narrative
 {
@@ -193,6 +194,13 @@ namespace Dissertation.Narrative
 
 		public void Perform()
 		{
+			AnalyticsEvent.LevelStart(Title, 
+				new Dictionary<string, object>()
+				{
+					{ "IsGenerated", Generated }
+				}
+			);
+
 			RepetitionsPerformed++;
 
 			_runningActions.AddRange(RequiredActions);
