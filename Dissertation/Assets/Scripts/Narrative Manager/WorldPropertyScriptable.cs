@@ -63,10 +63,13 @@ namespace Dissertation.Narrative
 			iValue = property.Value.iVal;
 			bValue = property.Value.bVal;
 			fValue = property.Value.fVal;
-
 			if(generateGuid)
 			{
+#if UNITY_EDITOR
 				guid = GUID.Generate().ToString();
+#else
+				Debug.LogError("Can't generate guid in a build");
+#endif //UNITY_EDITOR
 			}
 		}
 

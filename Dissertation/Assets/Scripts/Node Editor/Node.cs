@@ -23,10 +23,10 @@ namespace Dissertation.NodeGraph
 #if UNITY_EDITOR
 		private bool _isHeld = false;
 		protected bool _isSelected = false;
+#endif //UNITY_EDITOR
 
 		protected Vector2 _selectedSize;
 		protected Vector2 _unselectedSize;
-#endif //UNITY_EDITOR
 
 		public ConnectionPoint InPoint { get; private set; }
 		public ConnectionPoint OutPoint { get; private set; }
@@ -102,20 +102,24 @@ namespace Dissertation.NodeGraph
 		{
 			writer.Write(UID);
 
+#if UNITY_EDITOR
 			if (_isSelected)
 			{
 				NodeRect.size = _unselectedSize;
 			}
+#endif //UNITY_EDITOR
 
 			writer.Write(NodeRect.x);
 			writer.Write(NodeRect.y);
 			writer.Write(NodeRect.width);
 			writer.Write(NodeRect.height);
 
+#if UNITY_EDITOR
 			if (_isSelected)
 			{
 				NodeRect.size = _selectedSize;
 			}
+#endif //UNITY_EDITOR
 
 			writer.Write(_unselectedSize.x);
 			writer.Write(_unselectedSize.y);

@@ -19,8 +19,15 @@ namespace Dissertation.Narrative.Editor
 		private int _numOptionalActions = 0;
 
 		private readonly float _baseSelectedHeight;
-		private readonly float _elementHeight = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing + 2;
+
 #if UNITY_EDITOR
+		private readonly float _elementHeight = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing + 2;
+#else
+		private readonly float _elementHeight = 50.0f;
+#endif //UNITY_EDITOR
+
+#if UNITY_EDITOR
+
 		public BeatNode(Vector2 position, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onRemoveNode, GUID? guid = null)
 			: base(position, Vector2.zero, nodeStyle, selectedStyle, inPointStyle, outPointStyle, onClickInPoint, onClickOutPoint, onRemoveNode, guid)
 		{
@@ -140,22 +147,24 @@ namespace Dissertation.Narrative.Editor
 		public BeatNode(BinaryReader reader, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint, Action<Node> onRemoveNode)
 		: base(reader, nodeStyle, selectedStyle, inPointStyle, outPointStyle, onClickInPoint, onClickOutPoint, onRemoveNode)
 		{
-			SetGeneratedColour();
-
 			_baseSelectedHeight = (10 * _elementHeight) + (PlayerArchetype.NumArchetypes * _elementHeight);
 
 			_unselectedSize = new Vector2(200.0f, _baseSelectedHeight);
 			_selectedSize = new Vector2(300.0f, 700.0f);
+
+#if UNITY_EDITOR
+			SetGeneratedColour();
+#endif //UNITY_EDITOR
 		}
 
 		public BeatNode(BinaryReader reader) : base(reader)
 		{
 			_baseSelectedHeight = (10 * _elementHeight) + (PlayerArchetype.NumArchetypes * _elementHeight);
-
 			_unselectedSize = new Vector2(200.0f, _baseSelectedHeight);
 			_selectedSize = new Vector2(300.0f, 700.0f);
 		}
 
+#if UNITY_EDITOR
 		private void SetGeneratedColour()
 		{
 			if (BeatData.Generated)
@@ -169,6 +178,7 @@ namespace Dissertation.Narrative.Editor
 				_selectedNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1 on.png") as Texture2D;
 			}
 		}
+#endif //UNITY_EDITOR
 
 		public override void Serialize(BinaryWriter writer)
 		{
