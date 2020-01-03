@@ -96,7 +96,9 @@ namespace Dissertation.Character.AI
 			for(int state = 0; state < StateFactory.NumSpecialistStates - 1; state++)
 			{
 				SpecialistStates specialistState = (SpecialistStates)(1 << state);
-				if (specialistState != SpecialistStates.INVALID && AvailableBehaviours.HasFlag(specialistState) && StateFactory.ShouldEnterState(this, specialistState, out StateConfig config))
+
+				if (specialistState != SpecialistStates.INVALID && AvailableBehaviours.HasFlag(specialistState) 
+					&& StateFactory.ShouldEnterState(this, specialistState, out StateConfig config))
 				{
 					PushState( config );
 				}
@@ -205,7 +207,8 @@ namespace Dissertation.Character.AI
 			if (source.Owner.Config.Faction == CharacterFaction.Player)
 			{
 				App.AIBlackboard.MarkAsHostileToPlayer(this);
-				HUD.Instance.CreateMenu<SpeechBubble>().Show(transform, LocManager.GetTranslation("/Dialogue/Agent/Hostile/Attack"), () => App.AIBlackboard.Player.Health.IsDead);
+				HUD.Instance.CreateMenu<SpeechBubble>().Show(transform, LocManager.GetTranslation("/Dialogue/Agent/Hostile/Attack"),
+					() => App.AIBlackboard.Player.Health.IsDead);
 			}
 
 			if (AvailableBehaviours.HasFlag(SpecialistStates.Flee))
