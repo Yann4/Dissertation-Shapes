@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8e7774c07c211242a8007a404e4a2e7, type: 3}
+  m_Name: Get Robbed
+  m_EditorClassIdentifier: 
+  guid: af1ad85e80925ed4485ab23a130b2fff
+  Preconditions:
+  - {fileID: 11400000, guid: dd6a0e9ee6930744b8bbda74d4db9f8a, type: 2}
+  Postconditions:
+  - {fileID: 11400000, guid: a390714460a041243b72aadf96d8bcf8, type: 2}
+  ExitConditions: []
+  PerformFunction: 0

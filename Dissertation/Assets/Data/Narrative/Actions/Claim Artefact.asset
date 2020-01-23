@@ -9,13 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13823e498df81a6499d6c6541befbb5e, type: 3}
-  m_Name: Be dirt broke
+  m_Script: {fileID: 11500000, guid: b8e7774c07c211242a8007a404e4a2e7, type: 3}
+  m_Name: Claim Artefact
   m_EditorClassIdentifier: 
-  guid: 1a1ce7277f4dc2e4cbf417bc1b3863ad
-  _objectType: 1
-  _objectIndex: 0
-  Property: 4
-  iValue: 0
-  bValue: 0
-  fValue: 0
+  guid: d40ddcd1f121bc74da36708bffdd97d3
+  Preconditions:
+  - {fileID: 11400000, guid: 387f90336b4e4114c99ea64386263f0c, type: 2}
+  Postconditions: []
+  ExitConditions: []
+  PerformFunction: 0

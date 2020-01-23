@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b8e7774c07c211242a8007a404e4a2e7, type: 3}
-  m_Name: Get Robbed
+  m_Name: Learn to melee
   m_EditorClassIdentifier: 
-  guid: af1ad85e80925ed4485ab23a130b2fff
+  guid: 82765b19b52881146b21a54138ab44af
   Preconditions:
-  - {fileID: 11400000, guid: dd6a0e9ee6930744b8bbda74d4db9f8a, type: 2}
+  - {fileID: 11400000, guid: 1ea2b8f1e86814e4b84ac9acf5db3c48, type: 2}
   Postconditions:
-  - {fileID: 11400000, guid: a390714460a041243b72aadf96d8bcf8, type: 2}
+  - {fileID: 11400000, guid: 3bfc9615f9e52f6469c3bcf9a4372545, type: 2}
+  ExitConditions:
+  - {fileID: 11400000, guid: 3bfc9615f9e52f6469c3bcf9a4372545, type: 2}
   PerformFunction: 0

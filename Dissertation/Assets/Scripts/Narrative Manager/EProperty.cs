@@ -10,5 +10,6 @@
 		CanMelee,
 		CanDash,
 		CanShoot,
+		InsideTempleInterior,
 	}
 }

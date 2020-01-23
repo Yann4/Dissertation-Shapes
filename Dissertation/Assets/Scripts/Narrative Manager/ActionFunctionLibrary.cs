@@ -12,6 +12,7 @@
 			switch(action)
 			{
 				case Actions.NONE:
+					return true;
 				default:
 					return false;
 			}

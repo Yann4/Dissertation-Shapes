@@ -49,7 +49,11 @@ namespace Dissertation.Narrative
 				guid = GUID.Generate().ToString();
 				EditorUtility.SetDirty(this);
 			}
+
+			//Will only add the scriptable if it's not already been added
+			NarrativeDictionary.GetAsset().AddWorldProperty(this);
 #endif //UNITY_EDITOR
+
 			writer.Write(guid);
 		}
 

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Be Rich
   m_EditorClassIdentifier: 
   guid: cafc2b1bb80d87b4dbfa6963bfb334dc
+  _scriptID: {fileID: 0}
   _objectType: 1
   _objectIndex: 0
   Property: 3

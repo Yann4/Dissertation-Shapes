@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b8e7774c07c211242a8007a404e4a2e7, type: 3}
-  m_Name: Rob a bank
+  m_Name: Learn to shoot
   m_EditorClassIdentifier: 
-  guid: de09986c1bacf114c8d106ba671b3bd5
+  guid: 29e2117919aa6f248bfc90923195bb81
   Preconditions:
-  - {fileID: 11400000, guid: edd7904ffdb13544e9293732272bd434, type: 2}
-  - {fileID: 11400000, guid: ecc4897eed696d949a8d6d6627d00c95, type: 2}
-  Postconditions: []
-  ExitCondition: []
+  - {fileID: 11400000, guid: c9e1cf3148e326546aab705857333920, type: 2}
+  Postconditions:
+  - {fileID: 11400000, guid: ee80545bbe2bcf5429fc118c0f3a3106, type: 2}
+  ExitConditions:
+  - {fileID: 11400000, guid: ee80545bbe2bcf5429fc118c0f3a3106, type: 2}
   PerformFunction: 0

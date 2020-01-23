@@ -94,7 +94,10 @@ namespace Dissertation.NodeGraph
 
 			foreach (Node node in connectsTo)
 			{
-				ConnectedTo[node.PreviousOption] = node;
+				if (node.PreviousOption != -1)
+				{
+					ConnectedTo[node.PreviousOption] = node;
+				}
 			}
 		}
 

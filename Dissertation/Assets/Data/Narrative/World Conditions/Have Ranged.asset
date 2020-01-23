@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13823e498df81a6499d6c6541befbb5e, type: 3}
-  m_Name: No Dash
+  m_Name: Have Ranged
   m_EditorClassIdentifier: 
-  guid: d80a79e680195d840ac63f93d3145e48
+  guid: 5d1f9ba599c3012459de12fdc12e5de6
+  _scriptID: {fileID: 0}
   _objectType: 1
   _objectIndex: 0
-  Property: 6
+  Property: 7
   iValue: 0
-  bValue: 0
+  bValue: 1
   fValue: 0

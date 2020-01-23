@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13823e498df81a6499d6c6541befbb5e, type: 3}
-  m_Name: Be Broke
+  m_Name: No Melee
   m_EditorClassIdentifier: 
-  guid: 92dd077587b191b499156a84f5405c2b
+  guid: bfcc6f7ce94b85f41a14228a2bf7684a
+  _scriptID: {fileID: 0}
   _objectType: 1
   _objectIndex: 0
-  Property: 4
-  iValue: 10
+  Property: 5
+  iValue: 0
   bValue: 0
   fValue: 0

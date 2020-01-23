@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13823e498df81a6499d6c6541befbb5e, type: 3}
-  m_Name: Have Dash Ability
+  m_Name: Be dirt broke
   m_EditorClassIdentifier: 
-  guid: 962d20f116d33d8419b131c474672c42
+  guid: 1a1ce7277f4dc2e4cbf417bc1b3863ad
+  _scriptID: {fileID: 0}
   _objectType: 1
   _objectIndex: 0
-  Property: 6
+  Property: 4
   iValue: 0
-  bValue: 1
+  bValue: 0
   fValue: 0

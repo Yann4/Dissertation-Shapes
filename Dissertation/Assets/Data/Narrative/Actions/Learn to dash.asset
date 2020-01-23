@@ -17,4 +17,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 17c197610ce980941bcb54711ee1831c, type: 2}
   Postconditions:
   - {fileID: 11400000, guid: ecc4897eed696d949a8d6d6627d00c95, type: 2}
+  ExitConditions:
+  - {fileID: 11400000, guid: ecc4897eed696d949a8d6d6627d00c95, type: 2}
   PerformFunction: 0
