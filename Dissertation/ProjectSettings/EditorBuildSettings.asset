@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/HUD.unity
     guid: 8319a09ad4edbd441be52490c1c77334
   - enabled: 1
-    path: Assets/Scenes/TriangleVillage.unity
+    path: Assets/Scenes/World/TriangleVillage.unity
     guid: 55e89be6e95f2e34bb77fa8e83fc3f65
+  - enabled: 1
+    path: Assets/Scenes/World/OuterTemple.unity
+    guid: f31a5a8472f2a4943ae62bba18833891
   m_configObjects: {}
