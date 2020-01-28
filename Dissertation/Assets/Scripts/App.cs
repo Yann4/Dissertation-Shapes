@@ -7,6 +7,7 @@ using Dissertation.Util;
 using System.Collections;
 using Dissertation.Narrative;
 using Dissertation.Narrative.Generator;
+using Dissertation.Environment;
 
 namespace Dissertation
 {
@@ -19,6 +20,9 @@ namespace Dissertation
 		[SerializeField] private ConversationData _conversations;
 		[SerializeField] private TextAsset _beatGraph;
 		[SerializeField] private BeatTemplates _templates;
+
+		[SerializeField] private WorldConfig _worldConfig;
+		[SerializeField] private bool _loadWhitebox = false;
 
 		public static bool Paused { get { return _pause > 0; } }
 		private static int _pause = 0;
@@ -35,7 +39,7 @@ namespace Dissertation
 
 		public static System.Action OnLevelLoaded;
 
-		private void Start()
+		private IEnumerator Start()
 		{
 			new LocManager(_localisation); //Need to create the instance, but don't need to worry about holding a reference
 
@@ -48,8 +52,25 @@ namespace Dissertation
 			Generator = new NarrativeGenerator(_beatGraph, _templates, WorldState);
 #endif //UNITY_EDITOR
 
-			LoadScene(_HUDSceneName);
-			LoadScene(_whiteboxScene);
+			yield return LoadScene(_HUDSceneName);
+
+			if (_loadWhitebox || _worldConfig == null)
+			{
+				yield return LoadScene(_whiteboxScene);
+			}
+			else
+			{
+				foreach(WorldConfig.SceneLocation scene in _worldConfig.Scenes)
+				{
+					yield return LoadScene(scene.WorldSceneName);
+
+					Scene loadedScene = SceneManager.GetSceneByName(scene.WorldSceneName);
+					foreach(GameObject sceneRoot in loadedScene.GetRootGameObjects())
+					{
+						sceneRoot.transform.position += scene.Offset;
+					}
+				}
+			}
 
 			StartCoroutine(InvokeLevelLoaded());
 
@@ -64,12 +85,12 @@ namespace Dissertation
 			Planner.Enable();
 		}
 
-		private void LoadScene(string sceneName)
+		private IEnumerator LoadScene(string sceneName)
 		{
 			Scene scene = SceneManager.GetSceneByName(sceneName);
 			if (scene != null && !scene.isLoaded)
 			{
-				SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+				yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 			}
 		}
 

@@ -51,6 +51,8 @@ MonoBehaviour:
   _conversations: {fileID: 11400000, guid: 8b0aaf24b8fb77c48a3fb4a5b344447d, type: 2}
   _beatGraph: {fileID: 4900000, guid: f927776a954b27742bebcec0a6d75578, type: 3}
   _templates: {fileID: 11400000, guid: 2d9d4e4bc55dbe640b5ff42a14478728, type: 2}
+  _worldConfig: {fileID: 11400000, guid: ac74d50d4c2ad4b49bf7c18dca0beaaf, type: 2}
+  _loadWhitebox: 0
 --- !u!114 &298313269387603458
 MonoBehaviour:
   m_ObjectHideFlags: 0
