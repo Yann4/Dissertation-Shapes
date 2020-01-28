@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 namespace Dissertation.Util
 {
@@ -17,6 +18,13 @@ namespace Dissertation.Util
 		}
 
 		private List<Graph> _networksToDraw = new List<Graph>();
+
+		public static Action<LineDrawer> OnDrawerAwake;
+
+		private void Awake()
+		{
+			OnDrawerAwake.InvokeSafe(this);
+		}
 
 		public void AddGraph(Graph graph)
 		{
