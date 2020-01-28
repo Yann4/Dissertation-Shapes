@@ -1,4 +1,5 @@
-﻿using Dissertation.Util;
+﻿#define DRAW_DEBUG
+using Dissertation.Util;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +13,11 @@ namespace Dissertation.Pathfinding
 		public Transform Platform { get; private set; }
 
 		public static List<Node> AllNodes = new List<Node>();
+
+#if UNITY_EDITOR && DRAW_DEBUG
+		LineDrawer _debugDrawer = null;
+		LineDrawer.Graph _graph;
+#endif //UNITY_EDITOR && DRAW_DEBUG
 
 		private void Awake()
 		{
@@ -27,6 +33,21 @@ namespace Dissertation.Pathfinding
 				Debug.Assert(!AllNodes.Contains(this));
 				AllNodes.Add(this);
 			}
+
+#if UNITY_EDITOR && DRAW_DEBUG
+			_debugDrawer = FindObjectOfType<LineDrawer>();
+
+			if (_debugDrawer != null)
+			{
+				_graph = new LineDrawer.Graph()
+				{
+					CentrePoint = gameObject,
+					Points = Neighbours.ConvertAll<GameObject>(node => node.gameObject).ToArray()
+				};
+
+				_debugDrawer.AddGraph(_graph);
+			}
+#endif //UNITY_EDITOR && DRAW_DEBUG
 		}
 
 		public float DistanceToNeighbour(Node neighbour)
