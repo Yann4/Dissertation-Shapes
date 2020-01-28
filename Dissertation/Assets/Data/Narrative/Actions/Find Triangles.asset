@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8e7774c07c211242a8007a404e4a2e7, type: 3}
   m_Name: Find Triangles
   m_EditorClassIdentifier: 
-  guid: 
+  guid: b21da4122cc37d64f89645c6ee2d7a5f
   Preconditions: []
   Postconditions: []
   ExitConditions: []
