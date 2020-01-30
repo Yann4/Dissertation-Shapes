@@ -20,7 +20,7 @@ namespace Dissertation.Narrative
 
 		[SerializeField] public List<WorldPropertyScriptable> ExitConditions = new List<WorldPropertyScriptable>();
 
-		private List<WorldProperty> _runtimeExitConditions = new List<WorldProperty>();
+		[NonSerialized] private List<WorldProperty> _runtimeExitConditions = new List<WorldProperty>();
 		[NonSerialized, HideInInspector] public List<WorldProperty> RuntimePreconditions = new List<WorldProperty>();
 
 		public Actions PerformFunction = Actions.NONE;
