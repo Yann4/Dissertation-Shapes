@@ -36,6 +36,7 @@ namespace Dissertation.Narrative
 				case EProperty.CanMelee:
 				case EProperty.CanDash:
 				case EProperty.CanShoot:
+				case EProperty.CanDoubleJump:
 					return actualValue.Value.bVal == expectedValue.bVal;
 				case EProperty.MoneyEqual:
 					{

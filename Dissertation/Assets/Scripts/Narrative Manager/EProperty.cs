@@ -11,5 +11,6 @@
 		CanDash,
 		CanShoot,
 		InsideTempleInterior,
+		CanDoubleJump,
 	}
 }
