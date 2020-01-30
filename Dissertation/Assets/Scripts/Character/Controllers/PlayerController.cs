@@ -134,6 +134,13 @@ namespace Dissertation.Character.Player
 			}
 
 			CurrentShape = _playerConfig.DefaultShape;
+
+			SetWorldState();
+		}
+
+		private void SetWorldState()
+		{
+			App.WorldState.SetState(new Narrative.WorldProperty(ID, Narrative.EProperty.CanDoubleJump, _config.MaxJumps > 1));
 		}
 
 		protected override void OnDestroy()
