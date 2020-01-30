@@ -275,5 +275,15 @@ namespace Dissertation.Narrative
 
 			return thisAffinity.CompareTo(otherAffinity);
 		}
+
+		public override string ToString()
+		{
+			if(Generated)
+			{
+				return "Generated - " + Title;
+			}
+
+			return Title;
+		}
 	}
 }

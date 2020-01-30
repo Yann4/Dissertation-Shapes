@@ -83,6 +83,11 @@ namespace Dissertation.Narrative
 			return GetObjectID(type, 0);
 		}
 
+		public override string ToString()
+		{
+			return string.Format("ID {0}, Property {1} - {2}, {3}, {4}", Key.ObjectID, Key.Property, Value.bVal, Value.iVal, Value.fVal);
+		}
+
 		public struct PropertyKey : IEquatable<PropertyKey>
 		{
 			public long ObjectID;

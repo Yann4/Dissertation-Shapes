@@ -74,6 +74,11 @@ namespace Dissertation.UI
 			player.UnlockShape(Character.CharacterFaction.Square);
 		}
 
+		public void LogPlan()
+		{
+			App.LogPlan();
+		}
+
 		public override void SetVisible(bool visible)
 		{
 			_canvas.enabled = visible;

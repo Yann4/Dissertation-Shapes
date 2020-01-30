@@ -134,5 +134,10 @@ namespace Dissertation
 		{
 			Planner.Update();
 		}
+
+		public static void LogPlan()
+		{
+			Debug.Log(Planner.CurrentPlan());
+		}
 	}
 }

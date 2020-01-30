@@ -4,6 +4,7 @@ using Dissertation.Narrative.Editor;
 using Dissertation.NodeGraph;
 using Dissertation.Util;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace Dissertation.Narrative
@@ -160,6 +161,16 @@ namespace Dissertation.Narrative
 			}
 		}
 
+		public string CurrentPlan()
+		{
+			if(_currentPlan == null)
+			{
+				return "No current plan";
+			}
+
+			return _currentPlan.ToString();
+		}
+
 		private Beat SelectExtraBeat()
 		{
 			List<Beat> potentialBeats = new List<Beat>(_beatSet.Capacity);
@@ -181,9 +192,9 @@ namespace Dissertation.Narrative
 		}
 
 #if DEBUG_PLANNER
-		private void GeneratePlans(Beat targetState)
+		private void GeneratePlans(Beat TargetBeat)
 #else
-		private IEnumerator GeneratePlans(Beat targetState)
+		private IEnumerator GeneratePlans(Beat TargetBeat)
 #endif
 		{
 			_currentPlan = null;
@@ -219,7 +230,6 @@ namespace Dissertation.Narrative
 			int numPlans = starterBeats.Count;
 			if (numPlans > 0)
 			{
-				List<WorldProperty> goalState = targetState.Preconditions;
 				GoalOrientedActionPlanner[] jobs = new GoalOrientedActionPlanner[numPlans];
 				for (int idx = 0; idx < numPlans; idx++)
 				{
@@ -227,7 +237,7 @@ namespace Dissertation.Narrative
 					{
 						State = _worldState.GetCurrentWorldState(),
 						Beats = beatSet,
-						GoalState = goalState,
+						TargetBeat = TargetBeat,
 						StartBeat = starterBeats[idx],
 						Archetype = _worldState.Archetype,
 					};
@@ -247,7 +257,8 @@ namespace Dissertation.Narrative
 				Plan bestPlan = jobs[0].NarrativePlan;
 				foreach (GoalOrientedActionPlanner job in jobs)
 				{
-					if (job.NarrativePlan != null && job.NarrativePlan.Score < bestPlan.Score)
+					if ( (bestPlan == null && job.NarrativePlan != null) || 
+						(job.NarrativePlan != null && job.NarrativePlan.Score < bestPlan.Score))
 					{
 						bestPlan = job.NarrativePlan;
 					}
@@ -256,7 +267,7 @@ namespace Dissertation.Narrative
 				_currentPlan = bestPlan;
 				if(_currentPlan == null)
 				{
-					Debug.LogError("No plan found to beat " + targetState.Title);
+					Debug.LogError("No plan found to beat " + TargetBeat.Title);
 				}
 			}
 			else
@@ -286,7 +297,7 @@ namespace Dissertation.Narrative
 				}
 			}
 
-			public Plan(PlannerNode plan, PlayerArchetype archetype)
+			public Plan(PlannerNode plan, Beat TargetBeat, PlayerArchetype archetype)
 			{
 				Archetype = archetype;
 
@@ -296,6 +307,9 @@ namespace Dissertation.Narrative
 					Beats.Add(plan.NodeBeat);
 					plan = plan.Parent;
 				}
+
+				//Doesn't get added during the planning process, so add it here
+				Beats.Add(TargetBeat);
 
 				CalculateScore();
 			}
@@ -325,6 +339,25 @@ namespace Dissertation.Narrative
 			{
 				return Beats.Contains(beat);
 			}
+
+			public override string ToString()
+			{
+				StringBuilder plan = new StringBuilder();
+
+				for(int idx = 0; idx < Beats.Count; idx++)
+				{
+					if (idx == 0)
+					{
+						plan.Append(Beats[idx].Title);
+					}
+					else
+					{
+						plan.AppendFormat(" -> {0}", Beats[idx].Title);
+					}
+				}
+
+				return plan.ToString();
+			}
 		}
 
 		private struct GoalOrientedActionPlanner
@@ -332,7 +365,7 @@ namespace Dissertation.Narrative
 			public WorldState State; //Initial world state
 
 			public List<Beat> Beats; //Set of all available beats
-			public List<WorldProperty> GoalState;
+			public Beat TargetBeat;
 
 			public Beat StartBeat; //current beat (may not have finished executing - think this might be wrong)
 
@@ -363,7 +396,7 @@ namespace Dissertation.Narrative
 						}
 					}
 
-					NarrativePlan = new Plan(bestPlan, Archetype);
+					NarrativePlan = new Plan(bestPlan, TargetBeat, Archetype);
 				}
 			}
 
@@ -377,7 +410,7 @@ namespace Dissertation.Narrative
 					{
 						PlannerNode node = new PlannerNode(parent, ApplyBeatToWorldState(parent.State, beat), beat);
 
-						if (node.State.IsInState(GoalState))
+						if (node.State.IsInState(TargetBeat.Preconditions))
 						{
 							Leaves.Add(node);
 							foundSolution = true;
