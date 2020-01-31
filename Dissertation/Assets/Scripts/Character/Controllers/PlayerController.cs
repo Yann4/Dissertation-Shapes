@@ -140,7 +140,7 @@ namespace Dissertation.Character.Player
 
 		private void SetWorldState()
 		{
-			App.WorldState.SetState(new Narrative.WorldProperty(ID, Narrative.EProperty.CanDoubleJump, _config.MaxJumps > 1));
+			App.WorldState.SetState(new Narrative.WorldProperty(ID, Narrative.EProperty.CanDoubleJump, MaxJumps > 1));
 		}
 
 		protected override void OnDestroy()

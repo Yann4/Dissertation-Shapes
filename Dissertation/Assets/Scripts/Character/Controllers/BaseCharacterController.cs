@@ -172,6 +172,7 @@ namespace Dissertation.Character
 		private float _jumpAvailable; //The amount of "jump power" that you have left for this jump. To allow tapping the button and holding it to jump to different heights
 		private bool _canJump = false;
 		private int _numJumps = 0;
+		public int MaxJumps;
 
 		public enum Attack { Melee, Ranged, Dash }
 
@@ -214,6 +215,8 @@ namespace Dissertation.Character
 
 			_enemyMask = Config.EnemyMask;
 			_activeAttack = Config.DefaultAttack;
+
+			MaxJumps = Config.MaxJumps;
 
 			UpdateLayerCollision();
 
@@ -300,7 +303,7 @@ namespace Dissertation.Character
 			{
 				float horizontalMovement = CharacterYoke.Movement.x;
 
-				if ((_numJumps < _config.MaxJumps || IsGrounded) && !CharacterYoke.Jump)
+				if ((_numJumps < MaxJumps || IsGrounded) && !CharacterYoke.Jump)
 				{
 					_jumpAvailable = _config.JumpHeight;
 					_canJump = true;

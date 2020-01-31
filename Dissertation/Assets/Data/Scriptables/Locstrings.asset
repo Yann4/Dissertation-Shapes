@@ -17,6 +17,13 @@ MonoBehaviour:
     _english: If you don't get out of my sight right now you'll regret it!
   - _key: /Dialogue/Agent/Hostile/Attack
     _english: Right, that's it!
+  - _key: /Dialogue/Agent/Friendly/Greeting
+    _english: Hello, how can I help you?
+  - _key: /Dialogue/Agent/Friendly/GiveDoubleJump
+    _english: Oh, well in that case you'll need this. It should let you leap twice
+      as high!
+  - _key: /Dialogue/Player/Friendly/Greeting
+    _english: I'm looking to climb the mountain - how do I get to the top?
   - _key: /Menu/Quit_Header
     _english: Quit game
   - _key: /Menu/Quit_Body

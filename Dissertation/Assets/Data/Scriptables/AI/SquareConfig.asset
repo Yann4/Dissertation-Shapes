@@ -82,5 +82,4 @@ MonoBehaviour:
   _visionRange: 70
   _fleeHealthPercentage: 0.2
   AvailableConversations:
-  - GiveMoney
-  - GiveMoney
+  - GetDoubleJump

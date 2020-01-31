@@ -7,6 +7,7 @@ namespace Dissertation.Character
 		None,
 		TransferMoney,
 		Heal,
+		GiveAbility,
 	}
 
 	public enum ConversationPredicate : short

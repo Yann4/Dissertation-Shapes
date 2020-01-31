@@ -52,7 +52,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _maxJumps: 2
+  _maxJumps: 1
   _faction: 0
   _defaultAttack: 0
   _maxHealth: 5
