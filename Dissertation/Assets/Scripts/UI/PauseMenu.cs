@@ -79,6 +79,11 @@ namespace Dissertation.UI
 			App.LogPlan();
 		}
 
+		public void GivePlayerDoubleJump()
+		{
+			App.AIBlackboard.Player.MaxJumps = 2;
+		}
+
 		public override void SetVisible(bool visible)
 		{
 			_canvas.enabled = visible;
