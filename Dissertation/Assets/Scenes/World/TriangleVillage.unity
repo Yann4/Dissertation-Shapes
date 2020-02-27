@@ -182,16 +182,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Far Hut Left
       objectReference: {fileID: 0}
-    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
-        type: 3}
-      propertyPath: Neighbours.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
-        type: 3}
-      propertyPath: Neighbours.Array.data[1]
-      value: 
-      objectReference: {fileID: 1837366036}
     - target: {fileID: 6512790356603976036, guid: bc72c08e8450967478641ec7e46b9c02,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -247,6 +237,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
+        type: 3}
+      propertyPath: Neighbours.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
+        type: 3}
+      propertyPath: Neighbours.Array.data[1]
+      value: 
+      objectReference: {fileID: 1837366036}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bc72c08e8450967478641ec7e46b9c02, type: 3}
 --- !u!114 &226607050 stripped
@@ -279,16 +279,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Third Hut Left
       objectReference: {fileID: 0}
-    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
-        type: 3}
-      propertyPath: Neighbours.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
-        type: 3}
-      propertyPath: Neighbours.Array.data[1]
-      value: 
-      objectReference: {fileID: 899290991}
     - target: {fileID: 6512790356603976036, guid: bc72c08e8450967478641ec7e46b9c02,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -344,6 +334,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
+        type: 3}
+      propertyPath: Neighbours.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
+        type: 3}
+      propertyPath: Neighbours.Array.data[1]
+      value: 
+      objectReference: {fileID: 899290991}
     - target: {fileID: 8450395519376746556, guid: bc72c08e8450967478641ec7e46b9c02,
         type: 3}
       propertyPath: Neighbours.Array.size
@@ -398,16 +398,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Initial Hut
       objectReference: {fileID: 0}
-    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
-        type: 3}
-      propertyPath: Neighbours.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
-        type: 3}
-      propertyPath: Neighbours.Array.data[1]
-      value: 
-      objectReference: {fileID: 1374391357}
     - target: {fileID: 6512790356603976036, guid: bc72c08e8450967478641ec7e46b9c02,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -463,6 +453,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
+        type: 3}
+      propertyPath: Neighbours.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
+        type: 3}
+      propertyPath: Neighbours.Array.data[1]
+      value: 
+      objectReference: {fileID: 1374391357}
     - target: {fileID: 8450395519376746556, guid: bc72c08e8450967478641ec7e46b9c02,
         type: 3}
       propertyPath: Neighbours.Array.size
@@ -614,16 +614,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Entrance
       objectReference: {fileID: 0}
-    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
-        type: 3}
-      propertyPath: Neighbours.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
-        type: 3}
-      propertyPath: Neighbours.Array.data[1]
-      value: 
-      objectReference: {fileID: 790437534}
     - target: {fileID: 6512790356603976036, guid: bc72c08e8450967478641ec7e46b9c02,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -679,6 +669,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
+        type: 3}
+      propertyPath: Neighbours.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
+        type: 3}
+      propertyPath: Neighbours.Array.data[1]
+      value: 
+      objectReference: {fileID: 790437534}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bc72c08e8450967478641ec7e46b9c02, type: 3}
 --- !u!1 &1298274104 stripped
@@ -711,16 +711,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Second Hut Left
       objectReference: {fileID: 0}
-    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
-        type: 3}
-      propertyPath: Neighbours.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
-        type: 3}
-      propertyPath: Neighbours.Array.data[1]
-      value: 
-      objectReference: {fileID: 1914206168}
     - target: {fileID: 6512790356603976036, guid: bc72c08e8450967478641ec7e46b9c02,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -776,6 +766,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
+        type: 3}
+      propertyPath: Neighbours.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
+        type: 3}
+      propertyPath: Neighbours.Array.data[1]
+      value: 
+      objectReference: {fileID: 1914206168}
     - target: {fileID: 8450395519376746556, guid: bc72c08e8450967478641ec7e46b9c02,
         type: 3}
       propertyPath: Neighbours.Array.size
@@ -964,16 +964,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Second Hut Right
       objectReference: {fileID: 0}
-    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
-        type: 3}
-      propertyPath: Neighbours.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
-        type: 3}
-      propertyPath: Neighbours.Array.data[1]
-      value: 
-      objectReference: {fileID: 244048924}
     - target: {fileID: 6512790356603976036, guid: bc72c08e8450967478641ec7e46b9c02,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1029,6 +1019,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
+        type: 3}
+      propertyPath: Neighbours.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1071045645092225015, guid: bc72c08e8450967478641ec7e46b9c02,
+        type: 3}
+      propertyPath: Neighbours.Array.data[1]
+      value: 
+      objectReference: {fileID: 244048924}
     - target: {fileID: 8450395519376746556, guid: bc72c08e8450967478641ec7e46b9c02,
         type: 3}
       propertyPath: Neighbours.Array.size
@@ -1096,7 +1096,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1950702008}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 87.02, y: -16.06, z: 0}
+  m_LocalPosition: {x: 87.02, y: -11.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1841993325}
