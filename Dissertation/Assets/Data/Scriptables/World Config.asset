@@ -17,3 +17,5 @@ MonoBehaviour:
     Offset: {x: 0, y: 0, z: 0}
   - WorldSceneName: TriangleVillage
     Offset: {x: 50.7, y: 4.5, z: 0}
+  - WorldSceneName: CircleMountainTop
+    Offset: {x: 23, y: 70, z: 0}
