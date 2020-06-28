@@ -4,9 +4,9 @@ namespace Dissertation.UI
 {
 	public class InWorldMenu : MenuBase
 	{
-		[SerializeField] private Vector2 _offset;
+		[SerializeField] protected Vector2 _offset;
 
-		private Transform _trackedObject = null;
+		protected Transform _trackedObject = null;
 
 		private Vector2 _canvasOffset;
 		private RectTransform _canvasTransform;

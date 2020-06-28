@@ -1,46 +1,71 @@
-﻿using Dissertation.Util;
+﻿using Dissertation.UI;
+using Dissertation.Util;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider2D))]
-public class Teleporter : MonoBehaviour
+namespace Dissertation.Environment
 {
-	[SerializeField] private Teleporter _pairedTeleporter;
-	[SerializeField] private Transform _teleportPosition;
-	[SerializeField] private ParticleSystem _particleSystem;
-
-	private BoxCollider2D _collider;
-	private bool _teleportReady = true;
-
-	private void OnTriggerEnter2D(Collider2D collision)
+	[RequireComponent(typeof(BoxCollider2D))]
+	public class Teleporter : MonoBehaviour
 	{
-		if(_teleportReady && collision.gameObject.layer == Layers.Player)
+		[SerializeField] private Teleporter _pairedTeleporter;
+		[SerializeField] private Transform _teleportPosition;
+		[SerializeField] private ParticleSystem _particleSystem;
+
+		private BoxCollider2D _collider;
+		private bool _teleportReady = true;
+		private HoverText _hoverText;
+		private const string TeleporterPrompt = "/HUD/Teleporter_Prompt";
+
+		private void Start()
 		{
-			StartCoroutine(Teleport(collision.gameObject));
+			_hoverText = HUD.Instance.CreateMenu<HoverText>();
+			_hoverText.SetVisible(false);
+			_hoverText.SetText(Util.Localisation.LocManager.GetTranslation(TeleporterPrompt));
+			_hoverText.SetTrackedObject(transform, new Vector3(0.0f, 5.0f, 0.0f));
 		}
-	}
 
-	private void OnTriggerExit2D(Collider2D collision)
-	{
-		if (collision.gameObject.layer == Layers.Player)
+		private void OnTriggerEnter2D(Collider2D collision)
 		{
+			if (_teleportReady && collision.gameObject.layer == Layers.Player)
+			{
+				_hoverText.SetVisible(true);
+			}
+		}
+
+		private void OnTriggerStay2D(Collider2D collision)
+		{
+			if (_teleportReady && collision.gameObject.layer == Layers.Player)
+			{
+				if (Input.InputManager.GetButtonDown(Input.InputAction.Interact))
+				{
+					StartCoroutine(Teleport(collision.gameObject));
+				}
+			}
+		}
+
+		private void OnTriggerExit2D(Collider2D collision)
+		{
+			if (collision.gameObject.layer == Layers.Player)
+			{
+				_hoverText.SetVisible(false);
+			}
+		}
+
+		private IEnumerator Teleport(GameObject obj)
+		{
+			_teleportReady = false;
+
+			_particleSystem.Play();
+
+			yield return new WaitForSeconds(2.0f);
+
+			obj.transform.position = _pairedTeleporter._teleportPosition.position;
+
+			yield return new WaitForSeconds(0.5f);
+
+			_particleSystem.Stop();
 			_teleportReady = true;
 		}
-	}
-
-	private IEnumerator Teleport(GameObject obj)
-	{
-		_pairedTeleporter._teleportReady = false;
-		_particleSystem.Play();
-
-		yield return new WaitForSeconds(2.0f);
-
-		obj.transform.position = _pairedTeleporter._teleportPosition.position;
-
-		yield return new WaitForSeconds(0.5f);
-
-		_particleSystem.Stop();
-		_teleportReady = true;
 	}
 }
