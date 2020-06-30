@@ -62,7 +62,7 @@ namespace Dissertation.Character.Player
 		}
 
 		private CharacterFaction _shape;
-		private CharacterFaction CurrentShape
+		public CharacterFaction CurrentShape
 		{
 			get { return _shape; }
 			set
