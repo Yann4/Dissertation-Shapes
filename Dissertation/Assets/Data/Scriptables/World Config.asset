@@ -21,3 +21,5 @@ MonoBehaviour:
     Offset: {x: 27, y: 171, z: 0}
   - WorldSceneName: SquareCity
     Offset: {x: -80, y: 20, z: 0}
+  - WorldSceneName: InnerTemple
+    Offset: {x: -13.7, y: -1.4, z: 0}
