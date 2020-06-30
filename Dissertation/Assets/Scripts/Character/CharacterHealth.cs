@@ -70,5 +70,10 @@ namespace Dissertation.Character
 			App.WorldState.SetState(new Narrative.WorldProperty(_character.ID, Narrative.EProperty.IsDead, false));
 			OnRespawn.InvokeSafe();
 		}
+
+		public void Kill()
+		{
+			ModifyHealth(-CurrentHealth);
+		}
 	}
 }
