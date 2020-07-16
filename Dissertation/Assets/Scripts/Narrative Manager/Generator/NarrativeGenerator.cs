@@ -20,12 +20,13 @@ namespace Dissertation.Narrative.Generator
 
 		private Vector2 _generatedBeatStartLocation = new Vector2(-100, 0);
 
-		public NarrativeGenerator(TextAsset nodeGraph, BeatTemplates templates, WorldStateManager worldState)
+		public NarrativeGenerator(TextAsset nodeGraph, TextAsset ruleSet, BeatTemplates templates, WorldStateManager worldState)
 		{
 			_nodeGraph = nodeGraph;
 			_nodeGraphPath = AssetDatabase.GetAssetPath(_nodeGraph);
 			_worldState = worldState;
 			_templates = templates;
+			RuleManager rules = new RuleManager(ruleSet);
 		}
 
 		public void RunGeneration()
@@ -47,10 +48,10 @@ namespace Dissertation.Narrative.Generator
 
 			List<Beat> generatedBeats = new List<Beat>();
 
-			foreach(Beat template in _templates.Templates)
-			{
-				CheckTemplateBeat(template, generatedBeats);
-			}
+// 			foreach(Beat template in _templates.Templates)
+// 			{
+// 				CheckTemplateBeat(template, generatedBeats);
+// 			}
 
 			Vector2 pos = _generatedBeatStartLocation;
 			foreach(Beat beat in generatedBeats)

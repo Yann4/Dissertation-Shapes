@@ -1,0 +1,3 @@
+Storyline > Test($(npc:1))
+Test > Test($(npc:1), $(npc:2),$(valuable:3))
+Test($(thief:1)) > Test($(thief:1)) + gest
