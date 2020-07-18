@@ -14,6 +14,7 @@ namespace Dissertation.Narrative.Generator
 		private string _nodeGraphPath;
 		private WorldStateManager _worldState;
 		private BeatTemplates _templates;
+		private RuleManager _ruleManager;
 
 		private List<Node> _nodes = new List<Node>();
 		private List<Connection> _connections = new List<Connection>();
@@ -26,7 +27,7 @@ namespace Dissertation.Narrative.Generator
 			_nodeGraphPath = AssetDatabase.GetAssetPath(_nodeGraph);
 			_worldState = worldState;
 			_templates = templates;
-			RuleManager rules = new RuleManager(ruleSet);
+			_ruleManager = new RuleManager(ruleSet, _templates);
 		}
 
 		public void RunGeneration()
@@ -48,10 +49,14 @@ namespace Dissertation.Narrative.Generator
 
 			List<Beat> generatedBeats = new List<Beat>();
 
-// 			foreach(Beat template in _templates.Templates)
-// 			{
-// 				CheckTemplateBeat(template, generatedBeats);
-// 			}
+			foreach(Rule storyline in _ruleManager.GetStorylineRules())
+			{
+				Beat[] storyBeats = GenerateStoryline(storyline);
+				if(storyBeats != null)
+				{
+					generatedBeats.AddRange(storyBeats);
+				}
+			}
 
 			Vector2 pos = _generatedBeatStartLocation;
 			foreach(Beat beat in generatedBeats)
@@ -63,14 +68,36 @@ namespace Dissertation.Narrative.Generator
 			NodeUtils.SaveGraph(_nodeGraphPath, _nodes, _connections);
 		}
 
-		private void CheckTemplateBeat(Beat template, List<Beat> outGeneratedBeats)
+		private Beat[] GenerateStoryline(Rule storyline)
 		{
-			switch(template.Title)
+			Rule toDecompose = new Rule(storyline);
+			HashSet<NarrativeObject> ruleObjects = new HashSet<NarrativeObject>();
+
+			for (int idx = 0; idx < toDecompose.Right.Count; idx++)
 			{
-				default:
-					Debug.LogErrorFormat("Not sure how to generate beats for the template '{0}'", template.Title);
-					return;
+				if (toDecompose.Right[idx].CanDecompose)
+				{
+					Rule replaceWith = _ruleManager.GetWeightedRandomMatchingRule(toDecompose.Right[idx], ruleObjects);
+					if(replaceWith == null)
+					{
+						//If we can't decompose any of the tokens in the rule, we just can't fulfil that rule, so quit out
+						Debug.LogWarningFormat($"Can't decompose token {toDecompose.Right[idx]}, when generating from storyline {storyline}");
+						return null;
+					}
+
+					toDecompose.Right.RemoveAt(idx);
+					toDecompose.Right.InsertRange(idx, replaceWith.Right);
+				}
 			}
+
+			List<Beat> beats = new List<Beat>();
+			foreach(Token token in toDecompose.Right)
+			{
+				Debug.Assert(!token.CanDecompose, "Shouldn't be able to decompose this token");
+				beats.AddRange(NarrativePlanner.LoadBeats(token.Graph));
+			}
+
+			return beats.ToArray();
 		}
 	}
 }

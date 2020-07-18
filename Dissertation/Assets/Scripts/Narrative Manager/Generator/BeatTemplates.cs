@@ -1,23 +1,24 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace Dissertation.Narrative.Generator
 {
-	[CreateAssetMenu(fileName = "BeatTemplates.asset", menuName = "Dissertation/Scriptables/Narrative/Beat Templates")]
+	[CreateAssetMenu(fileName = "RuleTemplates.asset", menuName = "Dissertation/Scriptables/Narrative/Rule Templates")]
 	public class BeatTemplates : ScriptableObject
 	{
-		public Token[] Tokens = new Token[0];
-
-		public TextAsset GetGraph(string name)
+		[System.Serializable]
+		public class NamedGraph
 		{
-			foreach(Token token in Tokens)
-			{
-				if(token.Name == name)
-				{
-					return token.Graph;
-				}
-			}
+			public string Name;
+			public TextAsset Graph;
+		}
 
-			return null;
+		public NamedGraph[] Beats;
+
+		public TextAsset GetTemplate(string name)
+		{
+			NamedGraph template = Beats.FirstOrDefault(x => x.Name == name);
+			return template == null ? null : template.Graph;
 		}
 	}
 }

@@ -1,10 +1,10 @@
-﻿
-using System;
+﻿using System;
 using UnityEngine;
 
 namespace Dissertation.Narrative.Generator
 {
-	public class Parameter
+	[System.Serializable]
+	public struct Parameter : System.IComparable<Parameter>
 	{
 		public Tags Tag;
 		public int Label;
@@ -29,9 +29,9 @@ namespace Dissertation.Narrative.Generator
 
 		public override bool Equals(object obj)
 		{
-			Parameter rhs = obj as Parameter;
-			if(rhs != null)
+			if (obj is Parameter)
 			{
+				Parameter rhs = (Parameter)obj;
 				return Tag == rhs.Tag && Label == rhs.Label;
 			}
 
@@ -41,6 +41,22 @@ namespace Dissertation.Narrative.Generator
 		public override int GetHashCode()
 		{
 			return Tag.GetHashCode() ^ Label.GetHashCode() ^ base.GetHashCode();
+		}
+
+		public int CompareTo(Parameter other)
+		{
+			if(object.ReferenceEquals(other, null))
+			{
+				return 1;
+			}
+
+			int result = Tag.CompareTo(other.Tag);
+			if(result == 0)
+			{
+				result = Label.CompareTo(other.Label);
+			}
+
+			return result;
 		}
 	}
 }
