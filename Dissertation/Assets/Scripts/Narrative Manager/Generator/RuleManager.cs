@@ -16,9 +16,16 @@ namespace Dissertation.Narrative.Generator
 		{
 			_Templates = templates;
 
-			foreach(string line in ruleSet.text.Split('\n'))
+			if (ruleSet == null)
 			{
-				_Rules.Add(new Rule(line, templates));
+				Debug.LogWarning("Ruleset asset null, no narrative generation can occur");
+			}
+			else
+			{
+				foreach (string line in ruleSet.text.Split('\n'))
+				{
+					_Rules.Add(new Rule(line, templates));
+				}
 			}
 		}
 
