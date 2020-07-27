@@ -182,10 +182,10 @@ namespace Dissertation.Character
 		protected Attack _activeAttack;
 
 		//Attacking state variables
-		protected bool IsAttacking { get { return IsMeleeAttacking || IsRangedAttacking || IsDashAttacking; } }
-		protected bool IsMeleeAttacking { get; private set; }
-		protected bool IsRangedAttacking { get; private set; }
-		protected bool IsDashAttacking { get; private set; }
+		public bool IsAttacking { get { return IsMeleeAttacking || IsRangedAttacking || IsDashAttacking; } }
+		public bool IsMeleeAttacking { get; private set; }
+		public bool IsRangedAttacking { get; private set; }
+		public bool IsDashAttacking { get; private set; }
 
 		private float _meleeAttackEndTime;
 		private float _lastRangedAttackTime;
