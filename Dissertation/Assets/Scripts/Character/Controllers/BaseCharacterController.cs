@@ -117,6 +117,9 @@ namespace Dissertation.Character
 		public bool IsGrounded { get { return _collisionState.Below; } }
 		protected bool CanMove { get { return !Health.IsDead && !IsMeleeAttacking && !IsDashAttacking; } }
 
+		private float _startedFalling = 0.0f;
+		protected float FallingFor { get { return Time.time - _startedFalling; } }
+
 		public float RunSpeedModifier = 1.0f;
 
 		/// <summary>
@@ -179,10 +182,10 @@ namespace Dissertation.Character
 		protected Attack _activeAttack;
 
 		//Attacking state variables
-		protected bool IsAttacking { get { return IsMeleeAttacking || IsRangedAttacking || IsDashAttacking; } }
-		protected bool IsMeleeAttacking { get; private set; }
-		protected bool IsRangedAttacking { get; private set; }
-		protected bool IsDashAttacking { get; private set; }
+		public bool IsAttacking { get { return IsMeleeAttacking || IsRangedAttacking || IsDashAttacking; } }
+		public bool IsMeleeAttacking { get; private set; }
+		public bool IsRangedAttacking { get; private set; }
+		public bool IsDashAttacking { get; private set; }
 
 		private float _meleeAttackEndTime;
 		private float _lastRangedAttackTime;
@@ -268,6 +271,12 @@ namespace Dissertation.Character
 			HandleAttacking();
 
 			HandleMovement();
+
+			//If we've been falling for 5 seconds, kill ourselves
+			if (!IsGrounded && FallingFor >= 5.0f)
+			{
+				Health.Kill();
+			}
 
 			HandleSpriteFacing();
 		}
@@ -607,7 +616,16 @@ namespace Dissertation.Character
 
 			// set our becameGrounded state based on the previous and current collision state
 			if (!_collisionState.WasGroundedLastFrame && _collisionState.Below)
+			{
 				_collisionState.BecameGroundedThisFrame = true;
+				_startedFalling = 0.0f;
+			}
+
+			//Check if we started falling this frame
+			if(_collisionState.WasGroundedLastFrame && !_collisionState.Below)
+			{
+				_startedFalling = Time.time;
+			}
 
 			// if we are going up a slope we artificially set a y velocity so we need to zero it out here
 			if (_isGoingUpSlope)

@@ -35,18 +35,23 @@ namespace Dissertation.Narrative
 			_worldState = worldState;
 			_toRunCoroutineOn = toRunCoroutineOn;
 
-			List<Node> nodes = new List<Node>();
-			BeatNode startNode = NodeUtils.LoadGraph(beatAsset.bytes, NodeUtils.CreateNode<BeatNode>, nodes) as BeatNode;
-
-			_beatSet.Clear();
-			_beatSet.Capacity = nodes.Capacity;
-
-			foreach(Node node in nodes)
-			{
-				_beatSet.Add((node as BeatNode).BeatData);
-			}
+			_beatSet = LoadBeats(beatAsset);
 
 			OnFinished += OnFinishedPlanning;
+		}
+
+		public static List<Beat> LoadBeats(TextAsset asset)
+		{
+			List<Node> nodes = new List<Node>();
+			BeatNode startNode = NodeUtils.LoadGraph(asset.bytes, NodeUtils.CreateNode<BeatNode>, nodes) as BeatNode;
+
+			List<Beat> beats = new List<Beat>();
+			foreach (Node node in nodes)
+			{
+				beats.Add((node as BeatNode).BeatData);
+			}
+
+			return beats;
 		}
 
 		public void Enable()

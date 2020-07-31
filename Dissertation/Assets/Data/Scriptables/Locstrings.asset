@@ -32,3 +32,5 @@ MonoBehaviour:
     _english: Ok
   - _key: /Menu/Cancel
     _english: Cancel
+  - _key: /HUD/Teleporter_Prompt
+    _english: Press R to Teleport

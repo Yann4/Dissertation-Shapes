@@ -57,9 +57,15 @@ namespace Dissertation.Pathfinding
 		private void OnLevelLoaded()
 		{
 			List<OffSceneLink> toLink = new List<OffSceneLink>(FindObjectsOfType<OffSceneLink>());
-
-			for(int inspecting = toLink.Count - 1; inspecting >= 0 && toLink.Count > 0; inspecting--)
+			Debug.Assert(toLink.Count % 2 == 0, "There's an uneven number of offscene links. If you add one in, be sure to add the thing it's linking to.");
+			if (toLink.Count % 2 != 0)
 			{
+				return;
+			}
+
+			while(toLink.Count > 0)
+			{
+				int inspecting = toLink.Count - 1;
 				int closestLink = -1;
 				float closestDistance = float.MaxValue;
 				for(int idx = 0; idx < inspecting; idx++)

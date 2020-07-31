@@ -200,7 +200,7 @@ namespace Dissertation.Character.AI
 		{
 			if(source.Owner == null)
 			{
-				//means it's debug stuff and can be ignored
+				//means it's debug stuff (or falling to our death) and can be ignored
 				return;
 			}
 

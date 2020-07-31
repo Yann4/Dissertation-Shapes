@@ -1,4 +1,5 @@
-﻿using Dissertation.Util;
+﻿using Dissertation.Environment;
+using Dissertation.Util;
 using System;
 using UnityEngine;
 
@@ -46,6 +47,12 @@ namespace Dissertation.Character
 			{
 				OnHit.InvokeSafe(characterHit);
 				characterHit.Health.Damage(this);
+			}
+
+			Wall wall = collision.gameObject.GetComponent<Wall>();
+			if(wall != null)
+			{
+				wall.Damage(this);
 			}
 		}
 

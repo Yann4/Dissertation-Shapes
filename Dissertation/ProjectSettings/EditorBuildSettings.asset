@@ -20,4 +20,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/World/OuterTemple.unity
     guid: f31a5a8472f2a4943ae62bba18833891
+  - enabled: 1
+    path: Assets/Scenes/World/CircleMountainTop.unity
+    guid: d7d55a85bf8f8d34b86e98a3abe80d4b
+  - enabled: 1
+    path: Assets/Scenes/World/SquareCity.unity
+    guid: 7c4bf4de7656a914cbccff80173bcc7a
+  - enabled: 1
+    path: Assets/Scenes/World/InnerTemple.unity
+    guid: a46eb457492d20f4e9d04ee1376aef60
   m_configObjects: {}

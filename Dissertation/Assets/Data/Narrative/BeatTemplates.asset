@@ -12,4 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 940fdabcc74ab0545a4be5804f2c756b, type: 3}
   m_Name: BeatTemplates
   m_EditorClassIdentifier: 
-  Templates: []
+  Beats:
+  - Name: test
+    Graph: {fileID: 4900000, guid: c519b9a6bf9c9544c9ff18d7aab08281, type: 3}
+  - Name: testThief
+    Graph: {fileID: 4900000, guid: c519b9a6bf9c9544c9ff18d7aab08281, type: 3}
