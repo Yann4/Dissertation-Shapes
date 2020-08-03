@@ -100,6 +100,11 @@ namespace Dissertation
 			SceneManager.UnloadSceneAsync(scene);
 		}
 
+		public static void EndGame(bool success)
+		{
+			Debug.Log("Yay");
+		}
+
 		public static void Pause()
 		{
 			if (!Paused && _pause + 1 > 0)
