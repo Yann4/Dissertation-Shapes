@@ -1,5 +1,4 @@
-﻿using Dissertation.Util;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Dissertation.Environment
 {
@@ -29,6 +28,11 @@ namespace Dissertation.Environment
 			_renderer.sprite = state ? _onSprite : _offSprite;
 			_state = state;
 			_toToggle.SetActive(state);
+
+			if(!state)
+			{
+				GetComponent<Collider2D>().enabled = false;
+			}
 		}
 
 		private void OnTriggerEnter2D(Collider2D collision)

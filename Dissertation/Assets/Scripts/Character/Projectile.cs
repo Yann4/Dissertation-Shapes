@@ -49,7 +49,7 @@ namespace Dissertation.Character
 		{
 			base.OnTriggerEnter2D(collision);
 
-			if (!CollisionIsOwner(collision))
+			if (!CollisionIsOwner(collision) || collision.IsTouchingLayers(Layers.ObstacleMask))
 			{
 				ReturnToPool();
 			}
