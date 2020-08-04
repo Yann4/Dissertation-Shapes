@@ -104,6 +104,7 @@ namespace Dissertation.Character
 		[SerializeField] protected SpriteRenderer _characterSprite;
 
 		[SerializeField] protected GameObject _dashAttack;
+
 		private SpriteRenderer _dashAttackHighlightSprite;
 		private Collider2D _dashAttackCollider;
 
@@ -199,11 +200,16 @@ namespace Dissertation.Character
 		protected GameObject _meleeAttack;
 		protected PrefabPool _rangedAttackPool;
 
-		public virtual void OnSpawn(Spawner spawner)
+		public virtual void OnSpawn(Spawner spawner, CharacterConfig config)
 		{
 			_spawnedBy = spawner;
+			if (config != null)
+			{
+				_config = config;
+			}
 
-			_entity = GetComponent<EntityID>();
+			Debug.Assert(Config != null);
+			_entity = gameObject.AddComponent<EntityID>();
 			_entity.SetID(Config.CharacterID);
 		}
 
@@ -227,6 +233,8 @@ namespace Dissertation.Character
 
 			Inventory.Initialise(this, Config.DefaultContents);
 
+			_characterSprite.color = Config.SpriteTint;
+
 			//Setup melee attack
 			_meleeAttackEndTime = Time.time;
 			_lastRangedAttackTime = Time.time;
@@ -244,6 +252,7 @@ namespace Dissertation.Character
 
 			//Setup dash attack
 			_dashAttackHighlightSprite = _dashAttack.GetComponent<SpriteRenderer>();
+			_dashAttackHighlightSprite.color = Config.SpriteTint;
 
 			_dashAttackCollider = _dashAttack.GetComponent<Collider2D>();
 			_dashAttackCollider.enabled = false;

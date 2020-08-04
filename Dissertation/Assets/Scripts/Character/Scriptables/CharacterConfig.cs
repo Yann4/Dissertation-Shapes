@@ -33,6 +33,9 @@ public class CharacterConfig : ScriptableObject
 	[SerializeField] private ScriptableID _characterID;
 	public ScriptableID CharacterID { get { return _characterID; } }
 
+	[SerializeField] private Color _tint = Color.white;
+	public Color SpriteTint { get { return _tint; } }
+
 	[Header("Movement config")]
 	[SerializeField] private float _gravity = -25f;
 	public float Gravity { get { return _gravity; } }
