@@ -7,9 +7,9 @@ namespace Dissertation
 {
 	public class EntityID : MonoBehaviour
 	{
-		[SerializeField, Tooltip("This will take precedence over the values on this MonoBehaviour")] ScriptableID _scriptID;
+		[SerializeField] private ScriptableID _scriptID;
 		[SerializeField] private ObjectClass _class = ObjectClass.ANY;
-		[SerializeField] private int _id = -1;
+		[SerializeField] private int _id = INVALID_ID;
 
 		public ObjectClass Class { get { return _class; } }
 		public long ObjectID { get; private set; }
