@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8be2e93b104c124f985ffb812cb10be, type: 3}
+  m_Name: Green_Circle
+  m_EditorClassIdentifier: 
+  _platformMask:
+    serializedVersion: 2
+    m_Bits: 65792
+  _oneWayPlatformMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _enemyMask:
+    serializedVersion: 2
+    m_Bits: 24576
+  _triggerMask:
+    serializedVersion: 2
+    m_Bits: 6144
+  _characterID: {fileID: 11400000, guid: bf8e4629409b2904c8fb54fd1ea86e57, type: 2}
+  _tint: {r: 0.34509805, g: 0.8666667, b: 0.23529412, a: 1}
+  _gravity: -25
+  _runSpeed: 8
+  _jumpHeight: 20
+  _jumpSpeed:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.3
+      inSlope: 451.14676
+      outSlope: 451.14676
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.054166667
+    - serializedVersion: 3
+      time: 0.9791667
+      value: 100
+      inSlope: -98.57
+      outSlope: -98.57
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.058333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _maxJumps: 1
+  _faction: 3
+  _defaultAttack: 2
+  _maxHealth: 5
+  _baseMeleeDamage: 2
+  _meleeAttackSpeed: 0.3
+  _meleeAttackCooldown: 0.75
+  _baseRangedDamage: 1
+  _projectileSpeed: 13
+  _rangedAttackSpeed: 0.73
+  _rangedAttackCooldown: 0.3
+  _dashAttackDistance: 10
+  _dashAttackDuration: 0.1
+  _dashAttackCooldown: 1
+  _dashAttackBaseDamage: 3
+  _dashCooldownHighlight: {r: 0, g: 0, b: 0, a: 1}
+  _defaultContents:
+    Currency: 100
+  _dropInventoryPrefab: {fileID: 2193934937260656237, guid: e2f2ecf3cfd66b84a934ace6555d9644,
+    type: 3}
+  _meleeAttackPrefab: {fileID: 2664483916951406324, guid: 0690dbae7f576c841b9521512f146542,
+    type: 3}
+  _rangedAttackPrefab: {fileID: 6078864212887572438, guid: 8073af09f076c51488647ba17b5605a2,
+    type: 3}
+  _defaultState: 2
+  _traits:
+  - {fileID: 11400000, guid: 625f08c1e11a6fa4586694869f108d43, type: 2}
+  _visionRange: 70
+  _fleeHealthPercentage: 0.2
+  AvailableConversations: []
