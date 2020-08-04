@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
 using UnityEditor;
+using UnityEngine;
 
 namespace Dissertation.Util
 {
@@ -26,6 +27,12 @@ namespace Dissertation.Util
 			serializedObject.Update();
 			EditorGUILayout.LabelField("ID", _objectID.intValue.ToString());
 			EditorGUILayout.PropertyField(_objectClass);
+
+			if(GUILayout.Button("Regenerate ID"))
+			{
+				_objectID.intValue = (int)System.DateTime.UtcNow.ToBinary();
+			}
+
 			serializedObject.ApplyModifiedProperties();
 		}
 	}
