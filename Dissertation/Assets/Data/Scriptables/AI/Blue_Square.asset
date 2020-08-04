@@ -82,5 +82,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4de3604033b1f0e4ebd46c9ff73ef770, type: 2}
   _visionRange: 70
   _fleeHealthPercentage: 0.2
-  AvailableConversations:
-  - GetDoubleJump
+  AvailableConversations: []

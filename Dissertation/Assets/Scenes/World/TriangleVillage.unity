@@ -170,6 +170,52 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &154191055
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 154191056}
+  - component: {fileID: 154191057}
+  m_Layer: 0
+  m_Name: BlueTriangle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &154191056
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154191055}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 29.3, y: -2.7, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1841993325}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &154191057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154191055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e3a4f3b91cfcd4db35d80fefa91d40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spawnerType: 2
+  _characterConfig: {fileID: 11400000, guid: 410890e93fda6344db8738a179daa208, type: 2}
+  _primaryPlayerSpawnPoint: 0
 --- !u!1001 &226607049
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -386,6 +432,98 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 244048922}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &322349657
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 322349658}
+  - component: {fileID: 322349659}
+  m_Layer: 0
+  m_Name: GreenTriangle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &322349658
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 322349657}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 66.39, y: -7.22, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1841993325}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &322349659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 322349657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e3a4f3b91cfcd4db35d80fefa91d40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spawnerType: 2
+  _characterConfig: {fileID: 11400000, guid: 0cbe0d2c0941d4b4bab9d4560f61ac08, type: 2}
+  _primaryPlayerSpawnPoint: 0
+--- !u!1 &446017769
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 446017770}
+  - component: {fileID: 446017771}
+  m_Layer: 0
+  m_Name: PinkTriangle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &446017770
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446017769}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 86.9, y: -12.6, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1841993325}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &446017771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446017769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e3a4f3b91cfcd4db35d80fefa91d40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spawnerType: 2
+  _characterConfig: {fileID: 11400000, guid: 7207ec75517d171489841f120c8de430, type: 2}
+  _primaryPlayerSpawnPoint: 0
 --- !u!1001 &620222696
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -943,6 +1081,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1950702009}
+  - {fileID: 322349658}
+  - {fileID: 154191056}
+  - {fileID: 446017770}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1082,7 +1223,7 @@ GameObject:
   - component: {fileID: 1950702009}
   - component: {fileID: 1950702010}
   m_Layer: 0
-  m_Name: JumpMaster
+  m_Name: RedTriangle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1096,7 +1237,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1950702008}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 87.02, y: -11.8, z: 0}
+  m_LocalPosition: {x: 52.5, y: -8.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1841993325}
@@ -1114,6 +1255,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9e3a4f3b91cfcd4db35d80fefa91d40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawnerType: 1
-  _characterConfig: {fileID: 11400000, guid: eb3b1a6e63a5c3f409fbf1866a110b3f, type: 2}
+  _spawnerType: 2
+  _characterConfig: {fileID: 11400000, guid: 7b1f9aca731c77045b4db8b0a4f3a389, type: 2}
   _primaryPlayerSpawnPoint: 0

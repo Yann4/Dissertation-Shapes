@@ -50,6 +50,8 @@ namespace Dissertation.Character.AI
 
 			_agentConfig = _config as AgentConfig;
 
+			gameObject.name = _agentConfig.name;
+
 			for(int traitType = 0; traitType < (int)DesireType.COUNT; traitType++)
 			{
 				_desires[traitType] = new Desire((DesireType)traitType);
