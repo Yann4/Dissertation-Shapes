@@ -79,7 +79,7 @@ MonoBehaviour:
     type: 3}
   _defaultState: 2
   _traits:
-  - {fileID: 11400000, guid: 4de3604033b1f0e4ebd46c9ff73ef770, type: 2}
+  - {fileID: 11400000, guid: 625f08c1e11a6fa4586694869f108d43, type: 2}
   _visionRange: 70
   _fleeHealthPercentage: 0.2
   AvailableConversations: []

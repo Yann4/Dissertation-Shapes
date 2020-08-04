@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a8be2e93b104c124f985ffb812cb10be, type: 3}
-  m_Name: Red_Circle 2
+  m_Name: Blue_Circle
   m_EditorClassIdentifier: 
   _platformMask:
     serializedVersion: 2
@@ -24,8 +24,8 @@ MonoBehaviour:
   _triggerMask:
     serializedVersion: 2
     m_Bits: 6144
-  _characterID: {fileID: 11400000, guid: f8b0ad23147f0cd40b8f276374ec94c6, type: 2}
-  _tint: {r: 1, g: 1, b: 1, a: 1}
+  _characterID: {fileID: 11400000, guid: a56c875540e25964b9345b805fa44924, type: 2}
+  _tint: {r: 0.015686275, g: 0.47058824, b: 1, a: 1}
   _gravity: -25
   _runSpeed: 8
   _jumpHeight: 20
@@ -79,7 +79,7 @@ MonoBehaviour:
     type: 3}
   _defaultState: 2
   _traits:
-  - {fileID: 11400000, guid: 625f08c1e11a6fa4586694869f108d43, type: 2}
+  - {fileID: 11400000, guid: 4de3604033b1f0e4ebd46c9ff73ef770, type: 2}
   _visionRange: 70
   _fleeHealthPercentage: 0.2
   AvailableConversations: []

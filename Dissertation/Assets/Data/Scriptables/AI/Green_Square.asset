@@ -24,8 +24,8 @@ MonoBehaviour:
   _triggerMask:
     serializedVersion: 2
     m_Bits: 6144
-  _characterID: {fileID: 11400000, guid: 0fbe9177f83e24b43836300d8e6ab8b7, type: 2}
-  _tint: {r: 1, g: 1, b: 1, a: 1}
+  _characterID: {fileID: 11400000, guid: 9c583c2b4bd6a9545a8216c0fdf2de71, type: 2}
+  _tint: {r: 0.34509805, g: 0.8666667, b: 0.23529412, a: 1}
   _gravity: -25
   _runSpeed: 8
   _jumpHeight: 20
@@ -79,7 +79,7 @@ MonoBehaviour:
     type: 3}
   _defaultState: 2
   _traits:
-  - {fileID: 11400000, guid: 4acebae6ec28df74ca1f5bdd5120354d, type: 2}
+  - {fileID: 11400000, guid: 625f08c1e11a6fa4586694869f108d43, type: 2}
   _visionRange: 70
   _fleeHealthPercentage: 0.2
   AvailableConversations:
