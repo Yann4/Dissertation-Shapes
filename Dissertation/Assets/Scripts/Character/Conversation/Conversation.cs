@@ -68,6 +68,12 @@ namespace Dissertation.Character
 		{
 			foreach(TextAsset reference in conversationReferences)
 			{
+				if(reference == null)
+				{
+					Debug.LogError(string.Format("Conversation reference was null on {0}", gameObject.name), gameObject);
+					continue;
+				}
+
 				ConversationFragment conversation = App.AIBlackboard.GetConversation(reference);
 				if (conversation != null)
 				{
