@@ -19,6 +19,6 @@ namespace Dissertation.Character.AI
 		public float FleeHealthPercentage { get { return _fleeHealthPercentage; } }
 
 		[Header("Dialogue")]
-		[SerializeField] public string[] AvailableConversations = new string[0];
+		[SerializeField] public TextAsset[] AvailableConversations = new TextAsset[0];
 	}
 }

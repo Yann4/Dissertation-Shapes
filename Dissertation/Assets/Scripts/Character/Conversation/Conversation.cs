@@ -64,14 +64,14 @@ namespace Dissertation.Character
 		}
 
 		//Sets up stack of conversations
-		private void SetupConversations( string[] conversationReferences )
+		private void SetupConversations( TextAsset[] conversationReferences )
 		{
-			foreach(string reference in conversationReferences)
+			foreach(TextAsset reference in conversationReferences)
 			{
 				ConversationFragment conversation = App.AIBlackboard.GetConversation(reference);
 				if (conversation != null)
 				{
-					_availableConversations.Push(reference);
+					_availableConversations.Push(reference.name);
 				}
 				else
 				{

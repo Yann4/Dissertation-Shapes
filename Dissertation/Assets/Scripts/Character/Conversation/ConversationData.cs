@@ -12,7 +12,6 @@ namespace Dissertation.Character
 		[Serializable]
 		public struct DataMap
 		{
-			public string Reference;
 			public TextAsset Asset;
 
 			[NonSerialized] public ConversationFragment ConversationStart;
@@ -29,11 +28,11 @@ namespace Dissertation.Character
 			}
 		}
 
-		public ConversationFragment GetConversation(string reference)
+		public ConversationFragment GetConversation(string assetName)
 		{
 			foreach(DataMap map in Conversations)
 			{
-				if(map.Reference == reference)
+				if(map.Asset.name == assetName)
 				{
 					return map.ConversationStart;
 				}
