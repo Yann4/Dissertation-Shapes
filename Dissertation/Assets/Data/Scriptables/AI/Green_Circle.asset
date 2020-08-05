@@ -82,4 +82,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 625f08c1e11a6fa4586694869f108d43, type: 2}
   _visionRange: 70
   _fleeHealthPercentage: 0.2
-  AvailableConversations: []
+  AvailableConversations:
+  - {fileID: 4900000, guid: 18173731badd5364c83b95122a5ea8cf, type: 3}

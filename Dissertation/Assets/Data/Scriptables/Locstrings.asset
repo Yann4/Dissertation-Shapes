@@ -19,11 +19,21 @@ MonoBehaviour:
     _english: Right, that's it!
   - _key: /Dialogue/Agent/Friendly/Greeting
     _english: Hello, how can I help you?
+  - _key: /Dialogue/Agent/Friendly/Greeting_hurt
+    _english: Oh, hey - you seem hurt. Can I help?
   - _key: /Dialogue/Agent/Friendly/GiveDoubleJump
     _english: Oh, well in that case you'll need this. It should let you leap twice
       as high!
+  - _key: /Dialogue/Agent/Friendly/Affronted_goodbye
+    _english: Well. Sod off then.
+  - _key: /Dialogue/Agent/Friendly/Heal_player
+    _english: Great, hold still and I'll get you patched up.
   - _key: /Dialogue/Player/Friendly/Greeting
     _english: I'm looking to climb the mountain - how do I get to the top?
+  - _key: /Dialogue/Player/Friendly/Accept_help
+    _english: Yes please
+  - _key: /Dialogue/Player/Friendly/Reject_help
+    _english: No, I don't trust strangers
   - _key: /Menu/Quit_Header
     _english: Quit game
   - _key: /Menu/Quit_Body

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Conversation Data
   m_EditorClassIdentifier: 
   Conversations:
-  - Reference: GetDoubleJump
-    Asset: {fileID: 4900000, guid: ecd5dbd0c9874c04d90b9fd2896d7ba1, type: 3}
+  - Asset: {fileID: 4900000, guid: ecd5dbd0c9874c04d90b9fd2896d7ba1, type: 3}
+  - Asset: {fileID: 4900000, guid: 18173731badd5364c83b95122a5ea8cf, type: 3}
