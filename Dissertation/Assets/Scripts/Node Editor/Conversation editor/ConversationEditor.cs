@@ -7,9 +7,7 @@ namespace Dissertation.NodeGraph.Editor
 {
 	public class ConversationEditor : NodeEditor
 	{
-		new protected const string Title = "Conversation Editor";
-
-		[MenuItem("Window/" + Title)]
+		[MenuItem("Window/Conversation Editor")]
 		private static void OpenWindow()
 		{
 			OpenWindow<ConversationEditor>();
@@ -37,6 +35,11 @@ namespace Dissertation.NodeGraph.Editor
 		protected override Node CreateNode(BinaryReader reader)
 		{
 			return new ConversationNode(reader, _nodeStyle, _selectedNodeStyle, _inStyle, _outStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode);
+		}
+
+		protected override string Title()
+		{
+			return "Conversation Editor";
 		}
 	}
 }

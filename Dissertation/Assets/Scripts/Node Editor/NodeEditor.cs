@@ -8,7 +8,6 @@ namespace Dissertation.NodeGraph.Editor
 {
 	public class NodeEditor : EditorWindow
 	{
-		protected const string Title = "Node Editor";
 		protected string DataFolder;
 		
 		protected GUIStyle _nodeStyle;
@@ -33,13 +32,13 @@ namespace Dissertation.NodeGraph.Editor
 		protected static void OpenWindow<T>() where T : NodeEditor
 		{
 			T window = GetWindow < T >();
-			window.titleContent = new GUIContent(Title);
+			window.titleContent = new GUIContent(window.Title());
 		}
 
 		protected virtual void OnEnable()
 		{
 			_tempPath = Path.Combine(Application.temporaryCachePath, "nodeEditorTemp.nodegraph");
-			DataFolder = Path.Combine(Application.dataPath, "Data", Title);
+			DataFolder = Path.Combine(Application.dataPath, "Data", Title());
 
 			_nodeStyle = new GUIStyle();
 			_nodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
@@ -345,6 +344,11 @@ namespace Dissertation.NodeGraph.Editor
 		{
 			_selectedInPoint = null;
 			_selectedOutPoint = null;
+		}
+
+		protected virtual string Title()
+		{
+			return "Node Editor";
 		}
 	}
 }
