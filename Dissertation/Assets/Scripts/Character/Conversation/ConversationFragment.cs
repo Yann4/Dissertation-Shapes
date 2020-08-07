@@ -13,7 +13,8 @@ namespace Dissertation.Character
 	public enum ConversationPredicate : short
 	{
 		None,
-		PlayerIsHurt
+		PlayerIsHurt,
+		NoDoubleJump
 	}
 
 	public class ConversationFragment

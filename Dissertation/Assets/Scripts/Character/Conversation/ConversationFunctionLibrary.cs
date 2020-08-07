@@ -79,6 +79,8 @@ namespace Dissertation.Character
 			{
 				case ConversationPredicate.PlayerIsHurt:
 					return IsPlayerHurt();
+				case ConversationPredicate.NoDoubleJump:
+					return App.AIBlackboard.Player.MaxJumps < 2;
 				default:
 					return true;
 			}
