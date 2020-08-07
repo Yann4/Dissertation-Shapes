@@ -309,7 +309,7 @@ namespace Dissertation.Character.Player
 			return next;
 		}
 
-		private bool FactionUnlocked(CharacterFaction faction)
+		public bool FactionUnlocked(CharacterFaction faction)
 		{
 			switch (faction)
 			{
