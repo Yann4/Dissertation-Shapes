@@ -92,7 +92,7 @@ namespace Dissertation.Character
 			_currentFragment = App.AIBlackboard.GetConversation(conversationReference);
 			_talkingTo = listener;
 
-			StartCoroutine(RunConversation());
+			StartCoroutine(RunConversation(conversationReference));
 		}
 
 		//Starts next conversation off stack
@@ -106,7 +106,7 @@ namespace Dissertation.Character
 			StartConversation(_availableConversations.Pop(), other);
 		}
 
-		private IEnumerator RunConversation()
+		private IEnumerator RunConversation(string conversationReference)
 		{
 			SetPromptVisible( false );
 			IsInConversation = true;
@@ -126,6 +126,12 @@ namespace Dissertation.Character
 
 			_talkingTo = null;
 			IsInConversation = false;
+
+			if(ConversationFunctionLibrary.ShouldRerun(_currentFragment.ShouldRerun, _owner))
+			{
+				_availableConversations.Push(conversationReference);
+			}
+
 			ConversationEnded.InvokeSafe(_owner);
 
 			if (_conversationTrigger.bounds.Contains(App.AIBlackboard.Player.transform.position))

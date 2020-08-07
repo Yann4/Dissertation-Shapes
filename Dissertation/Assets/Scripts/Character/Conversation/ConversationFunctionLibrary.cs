@@ -1,5 +1,6 @@
 ﻿using Dissertation.Character.Player;
 using System;
+using UnityEngine;
 using Data = Dissertation.Character.ConversationFragment.ConversationData;
 
 namespace Dissertation.Character
@@ -83,6 +84,22 @@ namespace Dissertation.Character
 					return App.AIBlackboard.Player.MaxJumps < 2;
 				default:
 					return true;
+			}
+		}
+
+		public static bool ShouldRerun(RerunPredicate predicate, BaseCharacterController speaker)
+		{
+			switch (predicate)
+			{
+				case RerunPredicate.Never:
+					return false;
+				case RerunPredicate.Always:
+					return true;
+				case RerunPredicate.IfPlayerCantDoubleJump:
+					return App.AIBlackboard.Player.MaxJumps == 1;
+				default:
+					Debug.LogErrorFormat("RerunPredicate {0} not implemented", predicate);
+					return false;
 			}
 		}
 

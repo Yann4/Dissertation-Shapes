@@ -17,6 +17,13 @@ namespace Dissertation.Character
 		NoDoubleJump
 	}
 
+	public enum RerunPredicate : short
+	{
+		Never,
+		Always,
+		IfPlayerCantDoubleJump,
+	}
+
 	public class ConversationFragment
 	{
 		public class ConversationData
@@ -58,6 +65,8 @@ namespace Dissertation.Character
 
 		public ConversationFragment[] NextFragments;
 
+		public RerunPredicate ShouldRerun = RerunPredicate.Never;
+
 		public ConversationFragment(bool isPlayer, int SentenceOptions)
 		{
 			IsPlayer = isPlayer;
@@ -70,6 +79,8 @@ namespace Dissertation.Character
 				ToSay[idx] = string.Empty;
 				OptionOutputData[idx] = new ConversationData();
 			}
+
+			ShouldRerun = RerunPredicate.Never;
 		}
 
 		public ConversationFragment(BinaryReader reader)
@@ -92,6 +103,8 @@ namespace Dissertation.Character
 			{
 				OptionOutputData[idx] = new ConversationData(reader);
 			}
+
+			ShouldRerun = (RerunPredicate)reader.ReadInt16();
 		}
 
 		public void Serialise(BinaryWriter writer)
@@ -111,6 +124,8 @@ namespace Dissertation.Character
 			{
 				data.Serialise(writer);
 			}
+
+			writer.Write((short)ShouldRerun);
 		}
 	}
 }

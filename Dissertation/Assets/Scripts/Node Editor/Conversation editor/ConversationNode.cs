@@ -14,6 +14,7 @@ namespace Dissertation.NodeGraph
 		private const int _sentenceOptions = 2;
 		private string _outputEnumTemp = "None";
 		private string _predicateEnumTemp = "None";
+		private string _rerunPredicateEnumTemp = "Never";
 		private string[] _intTemp = new string[_sentenceOptions];
 		private string[] _floatTemp = new string[_sentenceOptions];
 
@@ -92,23 +93,36 @@ namespace Dissertation.NodeGraph
 
 			if (_isSelected)
 			{
-				GUI.Label(currentContentRect, new GUIContent("ConversationOutput value (should map to enum)"));
-				currentContentRect.y += currentContentRect.height + 5;
-				_outputEnumTemp = GUI.TextField(currentContentRect, _outputEnumTemp);
-				if (Enum.TryParse(_outputEnumTemp, out ConversationOutput output) && output != Sentence.Output)
 				{
-					Sentence.Output = output;
+					GUI.Label(currentContentRect, new GUIContent("ConversationOutput value (should map to enum)"));
+					currentContentRect.y += currentContentRect.height + 5;
+					_outputEnumTemp = GUI.TextField(currentContentRect, _outputEnumTemp);
+					if (Enum.TryParse(_outputEnumTemp, out ConversationOutput output) && output != Sentence.Output)
+					{
+						Sentence.Output = output;
+					}
+					currentContentRect.y += currentContentRect.height + 5;
 				}
-				currentContentRect.y += currentContentRect.height + 5;
-
-				GUI.Label(currentContentRect, new GUIContent("Predicate value (should map to enum)"));
-				currentContentRect.y += currentContentRect.height + 5;
-				_predicateEnumTemp = GUI.TextField(currentContentRect, _predicateEnumTemp);
-				if (Enum.TryParse(_predicateEnumTemp, out ConversationPredicate pred) && pred != Sentence.IsAvailable)
 				{
-					Sentence.IsAvailable = pred;
+					GUI.Label(currentContentRect, new GUIContent("Predicate value (should map to enum)"));
+					currentContentRect.y += currentContentRect.height + 5;
+					_predicateEnumTemp = GUI.TextField(currentContentRect, _predicateEnumTemp);
+					if (Enum.TryParse(_predicateEnumTemp, out ConversationPredicate pred) && pred != Sentence.IsAvailable)
+					{
+						Sentence.IsAvailable = pred;
+					}
+					currentContentRect.y += currentContentRect.height + 5;
 				}
-				currentContentRect.y += currentContentRect.height + 5;
+				{
+					GUI.Label(currentContentRect, new GUIContent("ShouldRerun value (should map to enum)"));
+					currentContentRect.y += currentContentRect.height + 5;
+					_rerunPredicateEnumTemp = GUI.TextField(currentContentRect, _rerunPredicateEnumTemp);
+					if (Enum.TryParse(_predicateEnumTemp, out RerunPredicate pred) && pred != Sentence.ShouldRerun)
+					{
+						Sentence.ShouldRerun = pred;
+					}
+					currentContentRect.y += currentContentRect.height + 5;
+				}
 
 				for (int idx = 0; idx < Sentence.OptionOutputData.Length; idx++)
 				{
