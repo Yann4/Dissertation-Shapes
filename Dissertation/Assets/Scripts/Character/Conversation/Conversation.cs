@@ -129,7 +129,7 @@ namespace Dissertation.Character
 			_talkingTo = null;
 			IsInConversation = false;
 
-			if(ConversationFunctionLibrary.ShouldRerun(_currentFragment.ShouldRerun, _owner))
+			if (ConversationFunctionLibrary.ShouldRerun(App.AIBlackboard.GetConversation(conversationReference).ShouldRerun, _owner))
 			{
 				_availableConversations.Insert(0, conversationReference);
 			}
