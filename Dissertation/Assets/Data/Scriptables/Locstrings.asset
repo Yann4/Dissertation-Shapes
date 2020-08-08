@@ -28,12 +28,29 @@ MonoBehaviour:
     _english: Well. Sod off then.
   - _key: /Dialogue/Agent/Friendly/Heal_player
     _english: Great, hold still and I'll get you patched up.
+  - _key: /Dialogue/Agent/Friendly/Offer_trade
+    _english: Hey, you. Wanna buy something special?
+  - _key: /Dialogue/Agent/Friendly/End_Trade_Miffed
+    _english: Fair enough, suit yerself. You know where I am if you change your mind
+  - _key: /Dialogue/Agent/Friendly/End_Trade_Happy
+    _english: Excellent. Here you go mate, pleasure doing business
+  - _key: /Dialogue/Agent/Friendly/Offer_triangle_Ability
+    _english: I nicke..acuqired the ability to look like those ponces on the other
+      side of the mountain. 1000 geo and it's yours
   - _key: /Dialogue/Player/Friendly/Greeting
     _english: I'm looking to climb the mountain - how do I get to the top?
   - _key: /Dialogue/Player/Friendly/Accept_help
     _english: Yes please
   - _key: /Dialogue/Player/Friendly/Reject_help
     _english: No, I don't trust strangers
+  - _key: /Dialogue/Player/Friendly/Reject_offer
+    _english: No, you seem dodgy as hell
+  - _key: /Dialogue/Player/Friendly/Accept_offer
+    _english: Yeah, why not. What have you got?
+  - _key: /Dialogue/Player/Friendly/Accept
+    _english: Go on then, here you go
+  - _key: /Dialogue/Player/Friendly/Reject
+    _english: How much? Not on your life.
   - _key: /Menu/Quit_Header
     _english: Quit game
   - _key: /Menu/Quit_Body
