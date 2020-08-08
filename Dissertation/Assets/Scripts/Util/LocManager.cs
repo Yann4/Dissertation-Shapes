@@ -18,6 +18,7 @@ namespace Dissertation.Util.Localisation
 
 		private string GetTranslation_Internal(string key)
 		{
+			key = key.Trim();
 			string translation = _data.GetTranslation(key);
 			if(translation == null)
 			{
