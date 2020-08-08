@@ -21,7 +21,7 @@ namespace Dissertation.Character
 		private ConversationPrompt _prompt;
 
 		private ConversationFragment _currentFragment;
-		private Stack<string> _availableConversations = new Stack<string>();
+		private List<string> _availableConversations = new List<string>();
 
 		private bool _dialogueClosed = false;
 		private int _optionSelected = 0;
@@ -51,7 +51,7 @@ namespace Dissertation.Character
 
 		private void Update()
 		{
-			if (IsConversationAvailable())
+			if (IsConversationAvailable() != -1)
 			{
 				foreach (BaseCharacterController character in _potentialParticipants)
 				{
@@ -74,10 +74,10 @@ namespace Dissertation.Character
 					continue;
 				}
 
-				ConversationFragment conversation = App.AIBlackboard.GetConversation(reference);
+				ConversationFragment conversation = App.AIBlackboard.GetOrLoadConversation(reference);
 				if (conversation != null)
 				{
-					_availableConversations.Push(reference.name);
+					_availableConversations.Add(reference.name);
 				}
 				else
 				{
@@ -87,7 +87,7 @@ namespace Dissertation.Character
 		}
 
 		//Starts specific conversation
-		public void StartConversation( string conversationReference, BaseCharacterController listener )
+		private void StartConversation( string conversationReference, BaseCharacterController listener )
 		{
 			_currentFragment = App.AIBlackboard.GetConversation(conversationReference);
 			_talkingTo = listener;
@@ -96,14 +96,16 @@ namespace Dissertation.Character
 		}
 
 		//Starts next conversation off stack
-		public void TryStartConversation(BaseCharacterController other)
+		private void TryStartConversation(BaseCharacterController other)
 		{
-			if ( IsInConversation || !IsConversationAvailable() || !_conversationTrigger.bounds.Contains(other.transform.position) )
+			int availableConversation = IsConversationAvailable();
+			if ( availableConversation == -1 || IsInConversation || !_conversationTrigger.bounds.Contains(other.transform.position) )
 			{
 				return;
 			}
 
-			StartConversation(_availableConversations.Pop(), other);
+			StartConversation(_availableConversations[availableConversation], other);
+			_availableConversations.RemoveAt(availableConversation);
 		}
 
 		private IEnumerator RunConversation(string conversationReference)
@@ -129,7 +131,7 @@ namespace Dissertation.Character
 
 			if(ConversationFunctionLibrary.ShouldRerun(_currentFragment.ShouldRerun, _owner))
 			{
-				_availableConversations.Push(conversationReference);
+				_availableConversations.Insert(0, conversationReference);
 			}
 
 			ConversationEnded.InvokeSafe(_owner);
@@ -209,7 +211,7 @@ namespace Dissertation.Character
 
 		private void OnTriggerEnter2D(Collider2D collision)
 		{
-			if (IsConversationAvailable())
+			if (IsConversationAvailable() != -1)
 			{
 				BaseCharacterController character = collision.gameObject.GetComponent<BaseCharacterController>();
 
@@ -227,7 +229,7 @@ namespace Dissertation.Character
 
 		private void OnTriggerExit2D(Collider2D collision)
 		{
-			if (IsConversationAvailable())
+			if (IsConversationAvailable() != -1)
 			{
 				BaseCharacterController character = collision.gameObject.GetComponent<BaseCharacterController>();
 
@@ -245,12 +247,23 @@ namespace Dissertation.Character
 
 		private void SetPromptVisible(bool visible)
 		{
-			_prompt.SetVisible( visible && IsConversationAvailable() );
+			_prompt.SetVisible( visible && IsConversationAvailable() != -1 );
 		}
 
-		private bool IsConversationAvailable()
+		private int IsConversationAvailable()
 		{
-			return _availableConversations.Count > 0 && ConversationFunctionLibrary.IsAvailable(App.AIBlackboard.GetConversation(_availableConversations.Peek()).IsAvailable, _owner);
+			if(_availableConversations.Count > 0)
+			{
+				for(int idx = 0; idx < _availableConversations.Count; idx++)
+				{
+					if (ConversationFunctionLibrary.IsAvailable(App.AIBlackboard.GetConversation(_availableConversations[idx]).IsAvailable, _owner))
+					{
+						return idx;
+					}
+				}
+			}
+
+			return -1;
 		}
 	}
 }

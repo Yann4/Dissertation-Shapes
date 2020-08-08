@@ -1,6 +1,5 @@
 ﻿using Dissertation.NodeGraph;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,22 +9,36 @@ namespace Dissertation.Character
 	public class ConversationData : ScriptableObject
 	{
 		[Serializable]
-		public struct DataMap
+		public class DataMap
 		{
 			public TextAsset Asset;
 
 			[NonSerialized] public ConversationFragment ConversationStart;
 		}
 
-		[SerializeField] private DataMap[] Conversations;
+		[SerializeField] private List<DataMap> Conversations = new List<DataMap>();
 
 		public void Setup()
 		{
-			for(int idx = 0; idx < Conversations.Length; idx++)
+			for(int idx = 0; idx < Conversations.Count; idx++)
 			{
 				ConversationNode node = NodeUtils.LoadGraph(Conversations[idx].Asset.bytes, NodeUtils.CreateNode<ConversationNode>) as ConversationNode;
 				Conversations[idx].ConversationStart = node.Sentence;
 			}
+		}
+
+		public ConversationFragment GetOrLoadConversation(TextAsset conversationAsset)
+		{
+			ConversationFragment conversation = GetConversation(conversationAsset.name);
+			if (conversation == null)
+			{
+				ConversationNode node = NodeUtils.LoadGraph(conversationAsset.bytes, NodeUtils.CreateNode<ConversationNode>) as ConversationNode;
+				Conversations.Add(new DataMap() { ConversationStart = node.Sentence, Asset = conversationAsset });
+
+				conversation = GetConversation(conversationAsset.name);
+			}
+
+			return conversation;
 		}
 
 		public ConversationFragment GetConversation(string assetName)

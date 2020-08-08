@@ -22,6 +22,10 @@ namespace Dissertation.Character
 				case ConversationOutput.GiveAbility:
 					GiveAbility(listener, parameters.sVal);
 					break;
+				case ConversationOutput.BuyAbility:
+					GiveAbility(listener, parameters.sVal);
+					TransferMoney(speaker, listener, parameters.iVal);
+					break;
 			}
 		}
 
@@ -76,12 +80,19 @@ namespace Dissertation.Character
 
 		public static bool IsAvailable( ConversationPredicate predicate, BaseCharacterController speaker )
 		{
-			switch(predicate)
+			switch (predicate)
 			{
 				case ConversationPredicate.PlayerIsHurt:
 					return IsPlayerHurt();
 				case ConversationPredicate.NoDoubleJump:
 					return App.AIBlackboard.Player.MaxJumps < 2;
+				case ConversationPredicate.PlayerIsSquare:
+					return App.AIBlackboard.Player.CurrentShape == CharacterFaction.Square;
+				case ConversationPredicate.PlayerIsCircle:
+					return App.AIBlackboard.Player.CurrentShape == CharacterFaction.Circle;
+				case ConversationPredicate.PlayerIsTriangle:
+					return App.AIBlackboard.Player.CurrentShape == CharacterFaction.Triangle;
+				case ConversationPredicate.None:
 				default:
 					return true;
 			}
@@ -97,6 +108,10 @@ namespace Dissertation.Character
 					return true;
 				case RerunPredicate.IfPlayerCantDoubleJump:
 					return App.AIBlackboard.Player.MaxJumps == 1;
+				case RerunPredicate.IfPlayerDoesntHaveTriangleAbility:
+					return !App.AIBlackboard.Player.FactionUnlocked(CharacterFaction.Triangle);
+				case RerunPredicate.IfPlayerDoesntHaveCircleAbility:
+					return !App.AIBlackboard.Player.FactionUnlocked(CharacterFaction.Circle);
 				default:
 					Debug.LogErrorFormat("RerunPredicate {0} not implemented", predicate);
 					return false;

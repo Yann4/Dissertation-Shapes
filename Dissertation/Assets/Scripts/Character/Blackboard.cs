@@ -201,14 +201,14 @@ namespace Dissertation.Character.AI
 			died.Health.OnDied -= OnCriminalDie;
 		}
 
-		public ConversationFragment GetConversation(TextAsset conversation)
+		public ConversationFragment GetConversation(string conversationName)
 		{
-			return GetConversation(conversation.name);
+			return _conversations.GetConversation(conversationName);
 		}
 
-		public ConversationFragment GetConversation(string conversationAssetName)
+		public ConversationFragment GetOrLoadConversation(TextAsset conversationAsset)
 		{
-			return _conversations.GetConversation(conversationAssetName);
+			return _conversations.GetOrLoadConversation(conversationAsset);
 		}
 
 		public List<Inventory> GetAvailableMinePoints()

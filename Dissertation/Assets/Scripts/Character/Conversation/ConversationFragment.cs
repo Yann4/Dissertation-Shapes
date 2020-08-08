@@ -8,13 +8,17 @@ namespace Dissertation.Character
 		TransferMoney,
 		Heal,
 		GiveAbility,
+		BuyAbility,
 	}
 
 	public enum ConversationPredicate : short
 	{
 		None,
 		PlayerIsHurt,
-		NoDoubleJump
+		NoDoubleJump,
+		PlayerIsSquare,
+		PlayerIsCircle,
+		PlayerIsTriangle,
 	}
 
 	public enum RerunPredicate : short
@@ -22,6 +26,8 @@ namespace Dissertation.Character
 		Never,
 		Always,
 		IfPlayerCantDoubleJump,
+		IfPlayerDoesntHaveTriangleAbility,
+		IfPlayerDoesntHaveCircleAbility,
 	}
 
 	public class ConversationFragment
