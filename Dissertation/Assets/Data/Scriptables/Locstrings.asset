@@ -28,6 +28,9 @@ MonoBehaviour:
     _english: Well. Sod off then.
   - _key: /Dialogue/Agent/Friendly/Heal_player
     _english: Great, hold still and I'll get you patched up.
+  - _key: /Dialogue/Agent/Friendly/Square_wont_trade
+    _english: Sod off you impoverished git. Come back with more money when you look
+      like someone I respect
   - _key: /Dialogue/Agent/Friendly/Offer_trade
     _english: Hey, you. Wanna buy something special?
   - _key: /Dialogue/Agent/Friendly/End_Trade_Miffed
@@ -35,7 +38,7 @@ MonoBehaviour:
   - _key: /Dialogue/Agent/Friendly/End_Trade_Happy
     _english: Excellent. Here you go mate, pleasure doing business
   - _key: /Dialogue/Agent/Friendly/Offer_triangle_Ability
-    _english: I nicke..acuqired the ability to look like those ponces on the other
+    _english: I nicke..acquired the ability to look like those ponces on the other
       side of the mountain. 1000 geo and it's yours
   - _key: /Dialogue/Player/Friendly/Greeting
     _english: I'm looking to climb the mountain - how do I get to the top?

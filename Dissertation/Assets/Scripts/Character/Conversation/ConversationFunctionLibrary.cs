@@ -92,6 +92,10 @@ namespace Dissertation.Character
 					return App.AIBlackboard.Player.CurrentShape == CharacterFaction.Circle;
 				case ConversationPredicate.PlayerIsTriangle:
 					return App.AIBlackboard.Player.CurrentShape == CharacterFaction.Triangle;
+				case ConversationPredicate.PlayerHasCashAndIsSquare:
+					return App.AIBlackboard.Player.Inventory.Contents.Currency >= 1000 && App.AIBlackboard.Player.CurrentShape == CharacterFaction.Square;
+				case ConversationPredicate.NOTPlayerHasCashAndIsSquare:
+					return !(App.AIBlackboard.Player.Inventory.Contents.Currency >= 1000 && App.AIBlackboard.Player.CurrentShape == CharacterFaction.Square);
 				case ConversationPredicate.None:
 				default:
 					return true;

@@ -25,6 +25,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 6144
   _characterID: {fileID: 11400000, guid: f3ccffb62f138d9489ae3ac85eb5db5e, type: 2}
+  _tint: {r: 1, g: 1, b: 1, a: 1}
   _gravity: -25
   _runSpeed: 6.04
   _jumpHeight: 20
@@ -69,7 +70,7 @@ MonoBehaviour:
   _dashAttackBaseDamage: 3
   _dashCooldownHighlight: {r: 0, g: 0, b: 0, a: 0.69803923}
   _defaultContents:
-    Currency: 0
+    Currency: 900
   _dropInventoryPrefab: {fileID: 2193934937260656237, guid: a64de79fd66ce364dbed821dc4956ce8,
     type: 3}
   _meleeAttackPrefab: {fileID: 2664483916951406324, guid: 0690dbae7f576c841b9521512f146542,

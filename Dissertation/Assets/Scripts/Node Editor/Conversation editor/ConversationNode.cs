@@ -97,7 +97,7 @@ namespace Dissertation.NodeGraph
 					GUI.Label(currentContentRect, new GUIContent("ConversationOutput value (should map to enum)"));
 					currentContentRect.y += currentContentRect.height + 5;
 					_outputEnumTemp = GUI.TextField(currentContentRect, _outputEnumTemp);
-					if (Enum.TryParse(_outputEnumTemp, out ConversationOutput output) && output != Sentence.Output)
+					if (Enum.TryParse(_outputEnumTemp, true, out ConversationOutput output) && output != Sentence.Output)
 					{
 						Sentence.Output = output;
 					}
@@ -107,7 +107,7 @@ namespace Dissertation.NodeGraph
 					GUI.Label(currentContentRect, new GUIContent("Predicate value (should map to enum)"));
 					currentContentRect.y += currentContentRect.height + 5;
 					_predicateEnumTemp = GUI.TextField(currentContentRect, _predicateEnumTemp);
-					if (Enum.TryParse(_predicateEnumTemp, out ConversationPredicate pred) && pred != Sentence.IsAvailable)
+					if (Enum.TryParse(_predicateEnumTemp, true, out ConversationPredicate pred) && pred != Sentence.IsAvailable)
 					{
 						Sentence.IsAvailable = pred;
 					}
@@ -117,7 +117,7 @@ namespace Dissertation.NodeGraph
 					GUI.Label(currentContentRect, new GUIContent("ShouldRerun value (should map to enum)"));
 					currentContentRect.y += currentContentRect.height + 5;
 					_rerunPredicateEnumTemp = GUI.TextField(currentContentRect, _rerunPredicateEnumTemp);
-					if (Enum.TryParse(_predicateEnumTemp, out RerunPredicate pred) && pred != Sentence.ShouldRerun)
+					if (Enum.TryParse(_rerunPredicateEnumTemp, true, out RerunPredicate pred) && pred != Sentence.ShouldRerun)
 					{
 						Sentence.ShouldRerun = pred;
 					}
