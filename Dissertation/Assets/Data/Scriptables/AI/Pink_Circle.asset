@@ -71,6 +71,7 @@ MonoBehaviour:
   _dashCooldownHighlight: {r: 0, g: 0, b: 0, a: 1}
   _defaultContents:
     Currency: 100
+    Abilities: 01000000
   _dropInventoryPrefab: {fileID: 2193934937260656237, guid: e2f2ecf3cfd66b84a934ace6555d9644,
     type: 3}
   _meleeAttackPrefab: {fileID: 2664483916951406324, guid: 0690dbae7f576c841b9521512f146542,
@@ -82,4 +83,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4acebae6ec28df74ca1f5bdd5120354d, type: 2}
   _visionRange: 70
   _fleeHealthPercentage: 0.2
-  AvailableConversations: []
+  AvailableConversations:
+  - {fileID: 4900000, guid: df6f5bd3e0f26274ab24aafacbc4ce15, type: 3}
+  - {fileID: 4900000, guid: 8a6d7285372a5044891d2206e9ffc725, type: 3}

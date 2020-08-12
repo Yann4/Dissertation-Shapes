@@ -71,6 +71,7 @@ MonoBehaviour:
   _dashCooldownHighlight: {r: 0, g: 0, b: 0, a: 1}
   _defaultContents:
     Currency: 100
+    Abilities: 00000000
   _dropInventoryPrefab: {fileID: 2193934937260656237, guid: e2f2ecf3cfd66b84a934ace6555d9644,
     type: 3}
   _meleeAttackPrefab: {fileID: 2664483916951406324, guid: 0690dbae7f576c841b9521512f146542,
