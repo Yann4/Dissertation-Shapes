@@ -19,12 +19,20 @@ namespace Dissertation.Character.Player
 		private bool _triangleUnlocked;
 		private bool _circleUnlocked;
 
+		private const string _doubleJumpTutorial = "/Tutorial/Unlock_Double_Jump";
+		private const string _triangleTutorial = "/Tutorial/Unlock_Triangle";
+		private const string _circleTutorial = "/Tutorial/Unlock_Circle";
+		private const string _squareTutorial = "/Tutorial/Unlock_Square";
+
 		private bool SquareUnlocked
 		{
 			set
 			{
-				_squareUnlocked = value;
-				App.WorldState.SetState(new Narrative.WorldProperty(ID, Narrative.EProperty.CanMelee, value));
+				if (value != _squareUnlocked)
+				{
+					_squareUnlocked = value;
+					App.WorldState.SetState(new Narrative.WorldProperty(ID, Narrative.EProperty.CanMelee, value));
+				}
 			}
 
 			get
@@ -37,8 +45,11 @@ namespace Dissertation.Character.Player
 		{
 			set
 			{
-				_triangleUnlocked = value;
-				App.WorldState.SetState(new Narrative.WorldProperty(ID, Narrative.EProperty.CanShoot, value));
+				if (value != _triangleUnlocked)
+				{
+					_triangleUnlocked = value;
+					App.WorldState.SetState(new Narrative.WorldProperty(ID, Narrative.EProperty.CanShoot, value));
+				}
 			}
 
 			get
@@ -51,8 +62,11 @@ namespace Dissertation.Character.Player
 		{
 			set
 			{
-				_circleUnlocked = value;
-				App.WorldState.SetState(new Narrative.WorldProperty(ID, Narrative.EProperty.CanDash, value));
+				if (value != _circleUnlocked)
+				{
+					_circleUnlocked = value;
+					App.WorldState.SetState(new Narrative.WorldProperty(ID, Narrative.EProperty.CanDash, value));
+				}
 			}
 
 			get
@@ -183,20 +197,39 @@ namespace Dissertation.Character.Player
 			StartCoroutine(HandleDeath());
 		}
 
-		public void UnlockShape(CharacterFaction shape)
+		private bool UnlockShape(CharacterFaction shape)
 		{
 			switch (shape)
 			{
 				case CharacterFaction.Square:
+					if(SquareUnlocked)
+					{
+						return false;
+					}
+
 					SquareUnlocked = true;
 					break;
 				case CharacterFaction.Triangle:
+					if(TriangleUnlocked)
+					{
+						return false;
+					}
+
 					TriangleUnlocked = true;
 					break;
 				case CharacterFaction.Circle:
+					if(CircleUnlocked)
+					{
+						return false;
+					}
+
 					CircleUnlocked = true;
 					break;
+				default:
+					throw new System.NotImplementedException();
 			}
+
+			return true;
 		}
 
 		private IEnumerator HandleDeath()
@@ -322,6 +355,56 @@ namespace Dissertation.Character.Player
 			}
 
 			return false;
+		}
+
+		public override void UnlockAbility(Inventory.Ability ability)
+		{
+			switch (ability)
+			{
+				case Inventory.Ability.DoubleJump:
+					if (MaxJumps != 2)
+					{
+						MaxJumps = 2;
+						ShowDialogue(_doubleJumpTutorial);
+					}
+					break;
+				case Inventory.Ability.Triangle:
+					if(UnlockShape(CharacterFaction.Triangle))
+					{
+						ShowDialogue(_triangleTutorial);
+					}
+					break;
+				case Inventory.Ability.Circle:
+					if(!UnlockShape(CharacterFaction.Circle))
+					{
+						ShowDialogue(_circleTutorial);
+					}
+					break;
+				case Inventory.Ability.Square:
+					if(!UnlockShape(CharacterFaction.Square))
+					{
+						ShowDialogue(_squareTutorial);
+					}
+					break;
+				default:
+					throw new System.NotImplementedException();
+			}
+		}
+
+		private void ShowDialogue(string locstring)
+		{
+			StartCoroutine(ShowSpeech(locstring));
+		}
+
+		private IEnumerator ShowSpeech(string locstring)
+		{
+			yield return new WaitUntil(() => HUD.Instance.FindMenu<SpeechBubble>(false) == null);
+
+			SpeechBubble dialogue = HUD.Instance.CreateMenu<SpeechBubble>();
+
+			dialogue.Show(transform, Util.Localisation.LocManager.GetTranslation(locstring));
+
+			yield return new WaitUntil(() => HUD.Instance.FindMenu<SpeechBubble>(false) == null);
 		}
 	}
 }

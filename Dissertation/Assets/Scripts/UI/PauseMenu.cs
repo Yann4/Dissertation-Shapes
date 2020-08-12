@@ -69,9 +69,9 @@ namespace Dissertation.UI
 		public void UnlockAllShapes()
 		{
 			PlayerController player = FindObjectOfType<PlayerController>();
-			player.UnlockShape(Character.CharacterFaction.Circle);
-			player.UnlockShape(Character.CharacterFaction.Triangle);
-			player.UnlockShape(Character.CharacterFaction.Square);
+			player.UnlockAbility(Character.Inventory.Ability.Circle);
+			player.UnlockAbility(Character.Inventory.Ability.Triangle);
+			player.UnlockAbility(Character.Inventory.Ability.Square);
 		}
 
 		public void LogPlan()

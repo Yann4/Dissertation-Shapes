@@ -9,10 +9,19 @@ namespace Dissertation.Character
 {
 	public class Inventory : MonoBehaviour
 	{
+		public enum Ability
+		{
+			DoubleJump,
+			Triangle,
+			Circle,
+			Square
+		}
+
 		[Serializable]
 		public class InventoryContents
 		{
 			public uint Currency = 0;
+			public List<Ability> Abilities = new List<Ability>();
 
 			public InventoryContents() { }
 
@@ -26,6 +35,8 @@ namespace Dissertation.Character
 				if(additionalContents != null)
 				{
 					Currency += additionalContents.Currency;
+					Abilities.AddRange(additionalContents.Abilities);
+
 					additionalContents.Clear();
 				}
 			}
@@ -33,6 +44,7 @@ namespace Dissertation.Character
 			public void Clear()
 			{
 				Currency = 0;
+				Abilities.Clear();
 			}
 
 			public bool IsEmpty()
@@ -115,6 +127,10 @@ namespace Dissertation.Character
 			if(Owner != null)
 			{
 				App.WorldState.SetState(new Narrative.WorldProperty(Owner.ID, Narrative.EProperty.MoneyEqual, Contents.Currency));
+				foreach(Ability ability in Contents.Abilities)
+				{
+					Owner.UnlockAbility(ability);
+				}
 			}
 		}
 

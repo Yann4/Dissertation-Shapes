@@ -21,6 +21,8 @@ namespace Dissertation.Character
 		PlayerIsTriangle,
 		PlayerHasCashAndIsSquare,
 		NOTPlayerHasCashAndIsSquare,
+		NOTPlayerHasCashAndIsTriangle,
+		PlayerHasCashAndIsTriangle,
 	}
 
 	public enum RerunPredicate : short

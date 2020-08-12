@@ -5,6 +5,7 @@
 using Dissertation.Environment;
 using Dissertation.Input;
 using Dissertation.Util;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -99,6 +100,7 @@ namespace Dissertation.Character
 		[SerializeField] private Rigidbody2D _rigidBody2D;
 
 		[SerializeField] private CharacterHealth _health;
+
 		public CharacterHealth Health { get { return _health; } }
 
 		[SerializeField] protected SpriteRenderer _characterSprite;
@@ -888,6 +890,18 @@ namespace Dissertation.Character
 					if (rayDistance < _skinWidth + kSkinWidthFloatFudgeFactor)
 						break;
 				}
+			}
+		}
+
+		public virtual void UnlockAbility(Inventory.Ability ability)
+		{
+			switch (ability)
+			{
+				case Inventory.Ability.DoubleJump:
+					MaxJumps = 2;
+					break;
+				default:
+					throw new NotImplementedException();
 			}
 		}
 

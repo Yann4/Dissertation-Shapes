@@ -47,7 +47,7 @@ namespace Dissertation.Character
 						PlayerController player = listener as PlayerController;
 						if(player != null)
 						{
-							player.UnlockShape(CharacterFaction.Square);
+							player.UnlockAbility(Inventory.Ability.Square);
 						}
 
 						break;
@@ -57,7 +57,7 @@ namespace Dissertation.Character
 						PlayerController player = listener as PlayerController;
 						if (player != null)
 						{
-							player.UnlockShape(CharacterFaction.Circle);
+							player.UnlockAbility(Inventory.Ability.Circle);
 						}
 
 						break;
@@ -67,7 +67,7 @@ namespace Dissertation.Character
 						PlayerController player = listener as PlayerController;
 						if (player != null)
 						{
-							player.UnlockShape(CharacterFaction.Triangle);
+							player.UnlockAbility(Inventory.Ability.Triangle);
 						}
 
 						break;
@@ -94,8 +94,12 @@ namespace Dissertation.Character
 					return App.AIBlackboard.Player.CurrentShape == CharacterFaction.Triangle;
 				case ConversationPredicate.PlayerHasCashAndIsSquare:
 					return App.AIBlackboard.Player.Inventory.Contents.Currency >= 1000 && App.AIBlackboard.Player.CurrentShape == CharacterFaction.Square;
+				case ConversationPredicate.PlayerHasCashAndIsTriangle:
+					return App.AIBlackboard.Player.Inventory.Contents.Currency >= 1000 && App.AIBlackboard.Player.CurrentShape == CharacterFaction.Triangle;
 				case ConversationPredicate.NOTPlayerHasCashAndIsSquare:
 					return !(App.AIBlackboard.Player.Inventory.Contents.Currency >= 1000 && App.AIBlackboard.Player.CurrentShape == CharacterFaction.Square);
+				case ConversationPredicate.NOTPlayerHasCashAndIsTriangle:
+					return !(App.AIBlackboard.Player.Inventory.Contents.Currency >= 1000 && App.AIBlackboard.Player.CurrentShape == CharacterFaction.Triangle);
 				case ConversationPredicate.None:
 				default:
 					return true;
