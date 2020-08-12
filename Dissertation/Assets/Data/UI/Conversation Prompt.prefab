@@ -77,7 +77,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Press T to talk
+  m_Text: Press R to talk
 --- !u!114 &452547590195828068
 MonoBehaviour:
   m_ObjectHideFlags: 0
