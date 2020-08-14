@@ -34,11 +34,13 @@ namespace Dissertation.UI
 		private void Start()
 		{
 			CreateMenu<PauseMenu>();
+			CreateMenu<Respawner>();
 		}
 
 		private void OnDestroy()
 		{
 			DestroyMenu<PauseMenu>();
+			DestroyMenu<Respawner>();
 		}
 
 		private T FindPrefab<T>() where T : MenuBase

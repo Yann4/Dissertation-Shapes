@@ -73,7 +73,10 @@ namespace Dissertation.Character
 
 		public void Kill()
 		{
-			ModifyHealth(-CurrentHealth);
+			if (!IsDead)
+			{
+				ModifyHealth(-CurrentHealth);
+			}
 		}
 	}
 }
