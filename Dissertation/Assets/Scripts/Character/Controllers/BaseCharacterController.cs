@@ -894,16 +894,7 @@ namespace Dissertation.Character
 		}
 
 		public virtual void UnlockAbility(Inventory.Ability ability)
-		{
-			switch (ability)
-			{
-				case Inventory.Ability.DoubleJump:
-					MaxJumps = 2;
-					break;
-				default:
-					throw new NotImplementedException();
-			}
-		}
+		{ }
 
 		/// <summary>
 		/// checks the center point under the BoxCollider2D for a slope. If it finds one then the deltaMovement is adjusted so that

@@ -206,7 +206,7 @@ namespace Dissertation.Character.AI
 				return;
 			}
 
-			if (source.Owner.Config.Faction == CharacterFaction.Player)
+			if (source.Owner.Config.Faction == CharacterFaction.Player && !App.AIBlackboard.IsHostileToPlayer(this))
 			{
 				App.AIBlackboard.MarkAsHostileToPlayer(this);
 				HUD.Instance.CreateMenu<SpeechBubble>().Show(transform, LocManager.GetTranslation("/Dialogue/Agent/Hostile/Attack"),

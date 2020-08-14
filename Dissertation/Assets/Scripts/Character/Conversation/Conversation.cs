@@ -32,9 +32,15 @@ namespace Dissertation.Character
 		public static Action<ConversationFragment, AgentController> ConversationStarted;
 		public static Action<AgentController> ConversationEnded;
 
+		private Coroutine _conversation = null;
+		private DialogueBox _currentDialogue = null;
+		private SpeechBubble _currentBubble = null;
+
 		private void Start()
 		{
 			SetupConversations(_owner._agentConfig.AvailableConversations);
+
+			_owner.Health.OnDied += OnOwnerDie;
 
 			_prompt = HUD.Instance.CreateMenu<ConversationPrompt>();
 			_prompt.Setup(_owner);
@@ -92,7 +98,7 @@ namespace Dissertation.Character
 			_currentFragment = App.AIBlackboard.GetConversation(conversationReference);
 			_talkingTo = listener;
 
-			StartCoroutine(RunConversation(conversationReference));
+			_conversation = StartCoroutine(RunConversation(conversationReference));
 		}
 
 		//Starts next conversation off stack
@@ -140,6 +146,8 @@ namespace Dissertation.Character
 			{
 				SetPromptVisible(true);
 			}
+
+			_conversation = null;
 		}
 
 		private IEnumerator ShowSpeech(string locstring, bool isPlayer)
@@ -150,13 +158,16 @@ namespace Dissertation.Character
 
 			_dialogueClosed = false;
 
-			SpeechBubble dialogue = HUD.Instance.CreateMenu<SpeechBubble>();
-			dialogue.OnClose += OnDialogueClosed;
-			dialogue.Show(toTrack, LocManager.GetTranslation(locstring), PlayerPressedSkip);
+			_currentBubble = HUD.Instance.CreateMenu<SpeechBubble>();
+			_currentBubble.OnClose += OnDialogueClosed;
+			_currentBubble.Show(toTrack, LocManager.GetTranslation(locstring), PlayerPressedSkip);
 
 			yield return new WaitUntil(() => _dialogueClosed);
 
-			dialogue.OnClose -= OnDialogueClosed;
+			if (_currentBubble != null)
+			{
+				_currentBubble.OnClose -= OnDialogueClosed;
+			}
 		}
 
 		private IEnumerator ShowPlayerSpeech(string option1, string option2)
@@ -169,8 +180,8 @@ namespace Dissertation.Character
 			{
 				_dialogueClosed = false;
 
-				DialogueBox dialogue = HUD.Instance.FindMenu<DialogueBox>();
-				dialogue.Show("", "", LocManager.GetTranslation(option1), LocManager.GetTranslation(option2), Option1Selected, Option2Selected);
+				_currentDialogue = HUD.Instance.FindMenu<DialogueBox>();
+				_currentDialogue.Show("", "", LocManager.GetTranslation(option1), LocManager.GetTranslation(option2), Option1Selected, Option2Selected);
 
 				yield return new WaitUntil(() => _dialogueClosed);
 			}
@@ -190,6 +201,9 @@ namespace Dissertation.Character
 			{
 				_currentFragment = null;
 			}
+
+			_currentDialogue = null;
+			_currentBubble = null;
 		}
 
 		private void Option1Selected()
@@ -252,7 +266,7 @@ namespace Dissertation.Character
 
 		private int IsConversationAvailable()
 		{
-			if(_availableConversations.Count > 0)
+			if(_availableConversations.Count > 0 && WantsToTalk())
 			{
 				for(int idx = 0; idx < _availableConversations.Count; idx++)
 				{
@@ -264,6 +278,32 @@ namespace Dissertation.Character
 			}
 
 			return -1;
+		}
+
+		private bool WantsToTalk()
+		{
+			return !_owner.Health.IsDead && !App.AIBlackboard.IsHostileToPlayer(_owner);
+		}
+
+		private void OnOwnerDie(BaseCharacterController obj)
+		{
+			_prompt.SetVisible(false);
+
+			if (_conversation != null)
+			{
+				StopCoroutine(_conversation);
+				_conversation = null;
+
+				if (_currentDialogue != null)
+				{
+					HUD.Instance.DestroyMenu(_currentDialogue);
+				}
+
+				if (_currentBubble != null)
+				{
+					HUD.Instance.DestroyMenu(_currentBubble);
+				}
+			}
 		}
 	}
 }
