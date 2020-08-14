@@ -28,7 +28,7 @@ MonoBehaviour:
     _english: Well. Sod off then.
   - _key: /Dialogue/Agent/Friendly/Heal_player
     _english: Great, hold still and I'll get you patched up.
-  - _key: /Dialogue/Agent/Friendly/Square_wont_trade
+  - _key: /Dialogue/Agent/Friendly/Wont_trade
     _english: Sod off you impoverished git. Come back with more money when you look
       like someone I respect
   - _key: /Dialogue/Agent/Friendly/Offer_trade
@@ -64,3 +64,15 @@ MonoBehaviour:
     _english: Cancel
   - _key: /HUD/Teleporter_Prompt
     _english: Press R to Teleport
+  - _key: /Tutorial/Unlock_Double_Jump
+    _english: You've gained the ability to double jump! Press the jump button again
+      while in midair.
+  - _key: /Tutorial/Unlock_Triangle
+    _english: You've gained the secrets of the triangles, and you can now perform
+      their ranged attacks. Press Q to transform and E to attack.
+  - _key: /Tutorial/Unlock_Circle
+    _english: You've gained the secrets of the circles, and you can now perform their
+      dash attacks. Press Q to transform and E to attack.
+  - _key: /Tutorial/Unlock_Square
+    _english: You've gained the secrets of the square, and you can now perform their
+      melee attacks. Press Q to transform and E to attack.
