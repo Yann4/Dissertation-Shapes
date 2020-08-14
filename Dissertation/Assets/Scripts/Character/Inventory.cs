@@ -28,6 +28,7 @@ namespace Dissertation.Character
 			public InventoryContents(InventoryContents other)
 			{
 				Currency = other.Currency;
+				Abilities = new List<Ability>(other.Abilities);
 			}
 
 			public void Add(InventoryContents additionalContents)
@@ -49,7 +50,7 @@ namespace Dissertation.Character
 
 			public bool IsEmpty()
 			{
-				return Currency == 0;
+				return Currency == 0 && Abilities.Count == 0;
 			}
 
 			public InventoryContents Copy()
@@ -113,7 +114,6 @@ namespace Dissertation.Character
 			if (!OnGround)
 			{
 				Owner.Health.OnDied += OnDie;
-				Owner.Health.OnRespawn += DropInventory;
 			}
 		}
 
@@ -155,13 +155,13 @@ namespace Dissertation.Character
 			if (!OnGround && Owner != null)
 			{
 				Owner.Health.OnDied -= OnDie;
-				Owner.Health.OnRespawn -= DropInventory;
 			}
 		}
 
 		private void OnDie(BaseCharacterController died)
 		{
 			_deathLocation = Owner.transform.position;
+			DropInventory();
 		}
 
 		private void DropInventory()
