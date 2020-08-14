@@ -54,7 +54,12 @@ namespace Dissertation.Pathfinding
 					return path;
 				}
 
-				openSet.Remove(current);
+				if(!openSet.Remove(current))
+				{
+					Debug.LogError("Tried to remove node that wasn't in the open set");
+					return null;
+				}
+
 				closedSet.Add(current);
 
 				foreach(Node neighbour in current.Neighbours)
