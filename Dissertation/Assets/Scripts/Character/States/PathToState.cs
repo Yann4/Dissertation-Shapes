@@ -48,7 +48,7 @@ namespace Dissertation.Character.AI
 		public override void OnEnable()
 		{
 			base.OnEnable();
-			if (_currentPathIndex < _path.Count)
+			if (_path != null && _currentPathIndex < _path.Count)
 			{
 				Vector3 owner = Config.Owner.transform.position;
 				Node nearest = Pathfinder.NearestNode(owner);
@@ -115,7 +115,7 @@ namespace Dissertation.Character.AI
 
 		protected override bool IsValid()
 		{
-			if( !_config.IsPathStillValid() )
+			if( _path == null || !_config.IsPathStillValid() )
 			{
 				return false;
 			}
